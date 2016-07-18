@@ -143,6 +143,24 @@
             <version>1.9.5</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- broker related -->
+        <dependency>
+            <groupId>com.esotericsoftware.kryo</groupId>
+            <artifactId>kryo</artifactId>
+            <version>2.22</version>
+        </dependency>
+        <dependency>
+            <groupId>SharedObjects</groupId>
+            <artifactId>SharedObjects</artifactId>
+            <version>0.0.2-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.zeromq</groupId>
+            <artifactId>jeromq</artifactId>
+            <version>0.3.2</version>
+        </dependency>
+
     </dependencies>
     <build>
         <defaultGoal>install</defaultGoal>
