@@ -14,7 +14,7 @@
 		initOnce: function() {
 	        ncc.listWallets = function() {
 	        	ncc.set('landingPage.listingWallets', true);
-	        	ncc.getRequest('wallet/list', 
+	        	ncc.getRequest('wallet/list',
 					function(data) {
 						ncc.set('wallets', data.wallets);
 					},
@@ -39,7 +39,7 @@
 
 	        	if (!walletData) {
 					ncc.set('landingPage.openingWallet', true);
-			    	ncc.postRequest('wallet/open', 
+			    	ncc.postRequest('wallet/open',
 			    		{
 							wallet: wallet,
 							password: password
@@ -53,6 +53,12 @@
 									ncc.set('contacts', Utils.processContacts(data.accountLabels));
 								}
 							);
+                            ncc.postRequest('trading/storage/info', {
+                                    tradingStorage: wallet
+                                }, function(data) {
+                                    ncc.set('trading.info', Utils.processTradingInfo(data));
+                                }
+                            );
 			        	},
 						{
 							complete: function() {

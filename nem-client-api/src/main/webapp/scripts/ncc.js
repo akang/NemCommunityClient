@@ -4,16 +4,20 @@ define([
     'languages',
     'TransactionType', 'jquery', 'ractive', 'mustache', 'tooltipster', 'Utils', 'NccModal',
     'ConfirmModal', 'InputModal', 'SettingsModal', 'SendNemModal', 'NewNamespaceModal', 'NewMosaicModal', 'SignMultisigModal',
-    'ModificationConfirmModal', 'SignatureConfirmModal', 'TransactionConfirmModal',
-    'TransactionDetailsModal', 'AccountDetailsModal', 'MosaicDetailsModal',
-    'ConvertMultisigModal', 'GenericDelegatedModal', 'GenericDelegatedConfirmModal'
+    'ModificationConfirmModal', 'SignatureConfirmModal', 'TransactionConfirmModal', 'TransactionDetailsModal', 'AccountDetailsModal', 'ConvertMultisigModal',
+    'GenericDelegatedModal', 'GenericDelegatedConfirmModal', 'PlaceOrderModal', 'TransferFiatModal',
+    'SetUserDetailsModal', 'ViewUserDetailsModal', 'SetXemWithdrawalAccountModal', 'SetFiatWithdrawalAccountModal',
+    'SelectTradingAccountModal', 'WithdrawModal', 'OrderUpdateModal', 'MatchModal', 'WithdrawalAccountTxModal',
+    'SetBtcWithdrawalAccountModal', 'KickstartModal', 'PagerAdaptor'
 ],
 function(languages,
     TransactionType, $, Ractive, Mustache, tooltipster, Utils, NccModal,
     ConfirmModal, InputModal, SettingsModal, SendNemModal, NewNamespaceModal, NewMosaicModal, SignMultisigModal,
-    ModificationConfirmModal, SignatureConfirmModal, TransactionConfirmModal,
-    TransactionDetailsModal, AccountDetailsModal, MosaicDetailsModal,
-    ConvertMultisigModal, GenericDelegatedModal, GenericDelegatedConfirmModal) {
+    ModificationConfirmModal, SignatureConfirmModal, TransactionConfirmModal, TransactionDetailsModal, AccountDetailsModal, ConvertMultisigModal,
+    GenericDelegatedModal, GenericDelegatedConfirmModal, PlaceOrderModal, TransferFiatModal,
+    SetUserDetailsModal, ViewUserDetailsModal, SetXemWithdrawalAccountModal, SetFiatWithdrawalAccountModal,
+    SelectTradingAccountModal, WithdrawModal, OrderUpdateModal, MatchModal, WithdrawalAccountTxModal,
+    SetBtcWithdrawalAccountModal, KickstartModal, PagerAdaptor) {
 
     var NccRactive = Ractive.extend({
         el: document.body,
@@ -28,7 +32,6 @@ function(languages,
             sendNemModal: SendNemModal,
             newNamespaceModal: NewNamespaceModal,
             newMosaicModal: NewMosaicModal,
-            mosaicDetailsModal: MosaicDetailsModal,
             signMultisigModal: SignMultisigModal,
             modificationConfirmModal: ModificationConfirmModal,
             signatureConfirmModal: SignatureConfirmModal,
@@ -39,7 +42,20 @@ function(languages,
             convertMultisigModal: ConvertMultisigModal,
             activateDelegatedModal: GenericDelegatedModal,
             deactivateDelegatedModal: GenericDelegatedModal,
-            genericDelegatedConfirmModal: GenericDelegatedConfirmModal
+            genericDelegatedConfirmModal: GenericDelegatedConfirmModal,
+            placeOrderModal: PlaceOrderModal,
+            transferFiatModal: TransferFiatModal,
+            setUserDetailsModal: SetUserDetailsModal,
+            viewUserDetailsModal: ViewUserDetailsModal,
+            setXemWithdrawalAccountModal: SetXemWithdrawalAccountModal,
+            setFiatWithdrawalAccountModal: SetFiatWithdrawalAccountModal,
+            setBtcWithdrawalAccountModal: SetBtcWithdrawalAccountModal,
+            selectTradingAccountModal: SelectTradingAccountModal,
+            withdrawModal: WithdrawModal,
+            orderUpdateModal: OrderUpdateModal,
+            matchModal: MatchModal,
+            withdrawalAccountTxModal: WithdrawalAccountTxModal,
+            kickstartModal: KickstartModal
         },
         Status:
         {
@@ -53,6 +69,7 @@ function(languages,
                 STATUS_NO_REMOTE_NIS_AVAILABLE: 7,
                 STATUS_LOADING: 8
         },
+        adaptors: [ PagerAdaptor ],
         sortAccounts: function(accounts) {
             var contactsRef = this.get('privateLabels');
 
@@ -72,9 +89,17 @@ function(languages,
             });
             return accounts;
         },
+        nextPage: function(pagerKeypath) {
+            this.get(pagerKeypath).nextPage();
+        },
+        previousPage: function(pagerKeypath) {
+            this.get(pagerKeypath).previousPage();
+        },
         computed: {
             allAccounts: function() {
-                return [this.get('wallet.primaryAccount')].concat(this.sortAccounts(this.get('wallet.otherAccounts')));
+                var primaryAccount = this.get('wallet.primaryAccount');
+                var otherAccounts = this.get('wallet.otherAccounts') || [];
+                return (primaryAccount ? [primaryAccount] : []).concat(this.sortAccounts(otherAccounts.slice()));
             },
             appStatus: function() {
                 switch (this.get('nccStatus.code')) {
@@ -96,6 +121,20 @@ function(languages,
                             message: this.get('texts.common.appStatus.nccStarting')
                         };
                     default: // probably RUNNING
+                        switch (ncc.get('brokerStatus.code')) {
+                            case ncc.Status.STATUS_STOPPED:
+                                return {
+                                    type: 'critical',
+                                    message: this.get('texts.common.appStatus.brokerUnavailable')
+                                };
+                        }
+                        switch (ncc.get('tradeSocketStatus.code')) {
+                            case ncc.Status.STATUS_STOPPED:
+                                return {
+                                    type: 'critical',
+                                    message: this.get('texts.common.appStatus.tradeSocketStopped')
+                                };
+                        }
                         switch (this.get('nisStatus.code')) {
                             case null:
                             case undefined:
@@ -185,7 +224,7 @@ function(languages,
                                     type: 'warning',
                                     message: this.get('texts.common.appStatus.noRemoteNisAvailable')
                                 };
-                       }
+                        }
                 }
             },
             loadingDb: function() {
@@ -235,6 +274,29 @@ function(languages,
                     result[contact.address] = contact.privateLabel;
                 }
                 return result;
+            },
+            escrowAccounts: function() {
+                var xemEscrows = this.get('trading.xem.escrowAccounts');
+                var fiatEscrowGroups = this.get('trading.fiat');
+                var btcEscrows = this.get('trading.btc.escrowAccounts');
+
+                if (!xemEscrows || !btcEscrows || !fiatEscrowGroups) {
+                    return null;
+                }
+
+                var fiatEscrows = [];
+                fiatEscrowGroups.forEach(function(group) {
+                    fiatEscrows.push.apply(fiatEscrows, group.escrowAccounts);
+                });
+
+                return xemEscrows.concat(fiatEscrows).concat(btcEscrows);
+            },
+            tradingAccount: function() {
+                var tradingAccountAddress = this.get('trading.info.tradingAccount.address');
+                if (!tradingAccountAddress) return;
+                return this.get('allAccounts').find(function(account) {
+                    return account.address === tradingAccountAddress;
+                });
             }
         },
         ajaxError: function(jqXHR, textStatus, errorThrown) {
@@ -256,8 +318,9 @@ function(languages,
             }
 
             if (undefined !== data.error) {
+                var message = undefined;
                 var propertyName = undefined;
-                if (400 == data.status)
+                // if (400 == data.status)
                 switch (data.status) {
                     case 200:
                         return true;
@@ -272,21 +335,14 @@ function(languages,
                         break;
                 }
 
-                var message = undefined;
                 if (propertyName) {
                     message = this.get('texts.faults.' + data.status);
                     message += ' (' + propertyName + ')';
                 }
 
-                var dataMessage;
-                if (data.message)
-                    dataMessage = "NIS: " + data.message.replace(/_/g, " ");
-                else if (data.error)
-                    dataMessage = data.status + ": " + data.error;
-                else
-                    dataMessage = data.status + ": ";
-
-                return showError(data.status, message || dataMessage);
+                //var dataMessage = data.message && "NIS: " + data.message.replace(/_/g, " ");
+                //return showError(data.status, message || dataMessage);
+                return showError(data.status, message);
             }
 
             return true;
@@ -345,7 +401,7 @@ function(languages,
                 }
             };
             $.extend(s, settings);
-            $.ajax(this.apiPath(api), s);
+            $.ajax(self.apiPath(api), s);
         },
         getRequest: function(api, successCb, settings, silent) {
             return this._ajaxRequest('get', api, undefined, successCb, settings, silent);
@@ -447,6 +503,7 @@ function(languages,
         toggleOff: function(id) {
             Utils.toggleOff(this, id);
         },
+
         fill: function(template) {
             // The first argument could be whether it should return the HTML decoded version
             if (typeof arguments[0] === 'boolean') {
@@ -494,6 +551,52 @@ function(languages,
 
             ncc.fire('refreshAccount');
         },
+
+        refreshTradingAccounts: function(tradingStorage) {
+            ncc.ensureBrokerConnected(function() {
+                if(!tradingStorage) tradingStorage = ncc.get('wallet.wallet');
+
+                if(!ncc.get('userDetails.submitted')) {
+                    return false;
+                }
+
+                ncc.postRequest('trading/accounts/xem', {
+                    tradingStorage: tradingStorage
+                }, function(response) {
+                    ncc.set('trading.xem', Utils.processTradingAccounts(response, {
+                        processAddress: true
+                    }));
+                });
+
+                ncc.postRequest('trading/accounts/fiat', {
+                    tradingStorage: tradingStorage
+                }, function(response) {
+                    ncc.set('trading.fiat', Utils.processFiatAccounts(response.data));
+                });
+
+                ncc.postRequest('trading/accounts/btc', {
+                    tradingStorage: tradingStorage
+                }, function(response) {
+                    ncc.set('trading.btc', Utils.processTradingAccounts(response, {
+                        processAddress: false
+                    }));
+                });
+            })
+        },
+
+        ensureBrokerConnected: function(callback) {
+            var interval;
+            var checkBroker = function() {
+                if (ncc.get('brokerStatus') && ncc.get('brokerStatus.code') !== ncc.Status.STATUS_STOPPED) {
+                    callback();
+                    clearInterval(interval);
+                }
+            };
+            interval = setInterval(checkBroker, 3000);
+            checkBroker();
+        },
+
+
 
         signToken: function(address) {
             var wallet = ncc.get('wallet.wallet');
@@ -740,6 +843,24 @@ function(languages,
                 var oldParams = ncc.get('params');
                 var paramsChanged = JSON.stringify(oldParams) !== JSON.stringify(params);
 
+                if (!isBack) {
+                    var queryString = '';
+                    if (params) {
+                        queryString = Utils.toQueryString(params);
+                    } else if (isInit) {
+                        queryString = location.search;
+                        params = Utils.queryStringToJson(location.search);
+                    }
+                    var url = layouts[layouts.length - 1].url + queryString;
+
+                    if (isInit) {
+                        history.replaceState({ page: page, params: params }, 'entry', url);
+                    } else {
+                        history.pushState({ page: page, params: params }, null, url);
+                    }
+                }
+                ncc.set('params', params);
+
                 for (var i = 0; i < layouts.length; i++) {
                     var layout = layouts[i];
                     var keypath = 'layout.' + i;
@@ -749,7 +870,7 @@ function(languages,
                         layout.initOnce();
                         layout.alreadyInit = true;
                     }
-                        
+
                     if (paramsChanged && layout.paramsChanged) {
                         var abort = layout.paramsChanged(params);
                         if (abort) return;
@@ -795,24 +916,6 @@ function(languages,
                         self.set('layout.' + i, null);
                     }
                 }
-
-                if (!isBack) {
-                    var queryString = '';
-                    if (params) {
-                        queryString = Utils.toQueryString(params);
-                    } else if (isInit) {
-                        queryString = location.search;
-                        params = Utils.queryStringToJson(location.search);
-                    }
-                    var url = layouts[layouts.length - 1].url + queryString;
-                    
-                    if (isInit) {
-                        history.replaceState({ page: page, params: params }, 'entry', url);
-                    } else {
-                        history.pushState({ page: page, params: params }, null, url);
-                    }
-                }
-                ncc.set('params', params);
             };
 
             loadLayout(page);

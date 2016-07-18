@@ -4,7 +4,7 @@
 http_path = "/"
 css_dir = "styles/css"
 sass_dir = "styles/sass"
-output_style = :compressed
+# output_style = :compressed
 line_comments = false
 
 # You can select your preferred output style here (can be overridden via the command line):

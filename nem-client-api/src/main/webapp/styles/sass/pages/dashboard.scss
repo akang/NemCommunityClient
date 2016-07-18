@@ -22,7 +22,7 @@
 	font-size: 12px;
 	font-weight: $fontWeight-black;
 	text-transform: uppercase;
-	color: #444444;	
+	color: #444444;
 	cursor: pointer;
 }
 
@@ -193,14 +193,14 @@
 .transactionsTile-sendNemButton,
 .transactionsTile-convertMultisigButton,
 .transactionsTile-signMultisigButton {
-	$bgColor: #34b7af;
+	$bgColor: #41ce7d;
 	margin-left: 10px;
 	height: 27px;
 	background-color: $bgColor;
 	color: #fff;
 	font-size: 13px;
 	font-weight: $fontWeight-medium;
-	
+
 	&:before {
 		margin-right: 5px;
 		font-size: 16px;
@@ -210,20 +210,6 @@
 	&:hover {
 		background-color: lighten($bgColor, 10%);
 	}
-
-	&:disabled {
-		background-color: #888888;
-		pointer-events: none;
-	}
-}
-
-//
-//
-//
-
-.namespacesMosaics-newNamespaceButton,
-.namespacesMosaics-newMosaicButton {
-    color: #fff;
 
 	&:disabled {
 		background-color: #888888;
@@ -244,7 +230,7 @@
 // ================================================================================
 
 .tile-messages {
-	background-color: #fabe00;
+	background-color: #e6801d;
 
 	.tile-title {
 		font-size: 16px;
@@ -257,7 +243,7 @@
 // ================================================================================
 
 .tile-news {
-	background-color: #34b7af;
+	background-color: #27d782;
 
 	.tile-title {
 		font-size: 16px;

@@ -32,6 +32,28 @@ define({
 			131: 'O nome do arquivo de contatos é um diretório.',
 			132: 'A extensão do arquivo de contatos está incorreta.',
 			133: 'Não foi possível deletar o arquivo de contatos.',
+			141: 'The trading storage file does not exist.',
+			142: 'Trading storage has not been created.',
+			143: 'Trading storage file is corrupt. Please recover your trading storage from a backup.',
+			144: 'The provided password for the trading storage is not correct.',
+			145: 'No password was provided for the trading storage.',
+			149: 'Another trading storage with the same name exists already. Please choose an other trading storage name.',
+			151: 'The trading storage name is a directory.',
+			152: 'The extension of the trading storage file is incorrect.',
+			153: 'The trading storage could not be deleted.',
+			154: 'Can\'t add BTC escrow address.',
+			155: 'Can\'t add XEM escrow public key.',
+			156: 'Trading storage already contains this bank account.',
+			157: 'Trading storage does not contain any Fiat account with this address',
+			161: 'The broker storage file does not exist.',
+			162: 'Broker storage has not been created.',
+			163: 'Broker storage file is corrupt. Please recover your trading storage from a backup.',
+			164: 'The provided password for the broker storage is not correct.',
+			165: 'No password was provided for the broker storage.',
+			169: 'Another broker storage with the same name exists already. Please choose an other broker storage name.',
+			171: 'The broker storage name is a directory.',
+			172: 'The extension of the broker storage file is incorrect.',
+			173: 'The broker storage could not be deleted.',
 			202: 'Não é possível enviar mensagem, porque o destinatário ainda não possui chave pública.',
 			203: 'A conta não pode ser convertida em MultiSig, pois nem todos os consignatários são conhecidos. Eles ainda precisarão estarem na mesma carteira ou terem realizado pelo menos uma transação.',
 			305: 'O NIS não está disponível. Tente reiniciar o cliente Nem. Se você estiver utilizando um NIS remoto, verifique se a configuração do hospedeiro e procure por erros de digitação ou utiliize outro NIS remoto.',
@@ -49,6 +71,9 @@ define({
 			1000: 'Chave privada e pública não combinam.',
 			1001: 'Chave publica e endereço não combinam.',
 			1002: 'O endereço não pertence a rede principal de peers.',
+			1110: 'Specified broker storage is not open',
+			1111: 'Specified trading storage is not open',
+			1112: 'Wallet containing your trading account is not open',
 			1203: 'O prazo final fornecido está no passado. O prazo limite deve estar dentro do período de um dia.',
 			1204: 'O prazo final fornecido está no futuro. O prazo limite deve estar dentro do período de um dia.',
 			1205: 'A sua conta não tem o saldo suficiente para realizar essa transação.',
@@ -68,7 +93,79 @@ define({
 			1274: 'Não é permitido transação para contas Multisig.',
 			1275: 'Modificação de conta do tipo Multisig foi rejeitada. Uma das contas adicionadas já é consignatária.',
 			1321: 'Conta desconhecida, Por favor, faça uma transação para conseguir uma chave pública.',
-
+			2101: 'Broker is not available.',
+			2102: 'Unknown broker error. ',
+			2103: 'Can\'t send request to broker.',
+			2200: "SUCCESS",
+			2201: "Processing",
+			2202: "Internal error.",
+			2203: "Is broker connected?",
+			2204: "Broker is connected",
+			2303: "Not enough coins..",
+			2304: "Not enough coins to pay fee.",
+			2305: "Failed to find lockbox.",
+			2306: "Escrow account does not exist.",
+			2307: "Withdraw account does not exist.",
+			2308: "Failed to create withdraw request.",
+			2309: "Escrow account is invalid for this order!",
+			2310: "Withdraw account is invalid for this order!",
+			2311: "Invalid trade pair!",
+			2312: "Invalid field: ",
+			2313: "Canceling order.",
+			2314: "Order volume is too small!",
+			2315: "Matching engine is not available",
+			2316: "Such withdraw account already exist.",
+			2401: "INSUFFICIENT BALANCE",
+			2402: "INVALID PEG ORDER",
+			2403: "INVALID CANCEL ORDER",
+			2404: "ORDER CANCELLED",
+			2405: "NO SUCH ORDER TO UPDATE",
+			2406: "INVALID MARKET ORDER",
+			2407: "INVALID ORDER",
+			2408: "Order does not exist!",
+			2409: "Order does not belong to your broker!",
+			2411: "Invalid response from matching engine!",
+			2412: "Order with such id already exists!",
+			2413: "Instrument is not suported",
+			2500: "Request is invalid.",
+			2501: "Escrow account in not set up.",
+			2502: "Request must be signed!",
+			2511: "Signer is invalid.",
+			2512: "Signature format is invalid.",
+			2513: "Invalid request body.",
+			2514: "Bad signature",
+			2600: "Type of operator options request is invalid.",
+			2601: "Failed to get operator's options.",
+			2602: "Failed to update operator's options.",
+			2603: "User does not own this account.",
+			2604: "Trade instument does not exist.",
+			2610: "Type of trade pair request is invalid.",
+			2611: "Trade pair does not exist",
+			2612: "Failed to delete trade pair.",
+			2613: "Trade pair with such products already exists",
+			2614: "Failed to save trade pair",
+			2615: "Failed to update trade pair",
+			2616: "Failed to get trade pair.",
+			2617: "Failed to get trade pairs.",
+			2650: "Port is already occupied.",
+			2660: "User does not exist.",
+			2661: "User does not exist.",
+			2662: "Broker does not exist.",
+			2670: "Failed to get trade instruments.",
+			2675: "Failed to get trading history.",
+			2680: "Failed to get pending orders.",
+			2685: "Failed to save userDetails.",
+			2686: "Failed to get userDetails.",
+			2687: "Failed to update userDetails.",
+			2700: "Failed to get account.",
+			2709: "Too small withdraw amount",
+			2801: 'Unknown instrument came from the Bank API.',
+			2802: 'Could not connect to the Bank API.',
+			2803: 'Could not authenticate to the Bank API.',
+			2804: 'Invalid Bank API URL.',
+			2805: 'Error getting bank account details.',
+			2806: 'Transfer error.',
+			2851: 'Invalid BTC private key.'
 		},
 		common: {
 			success: 'Successo',
@@ -91,6 +188,8 @@ define({
 					1: '1 dia',
 					many: '{{1}} dias'
 				},
+				brokerUnavailable: 'The broker engine is not reachable',
+				tradeSocketStopped: 'Trading updates unavailable.',
 				synchronized: 'NIS está sincronizado!!',
 				noRemoteNisAvailable: 'Não foi encontrado servidor NIS na rede. Você está conectado à internet?'
 			},
@@ -111,7 +210,15 @@ define({
 			hours: 'hora(s)',
 			hoursDue: 'Tempo para desativar',
 			hoursDueExplanation: 'Se a transação não estiver incluida até a data limite, ela será rejeitada.',
+			amount: 'Amount',
+			price: 'Price',
+			escrowAccount: 'Escrow account',
+			withdrawalAccount: 'Withdrawal account',
+			escrowAddress: 'Escrow address',
+			notAuthorized: 'You should first setup User details.',
+			pleaseSelect: 'Please select',
 			closeButton: 'Fechar',
+			saveButton: 'Save',
 			cancelButton: 'Cancelar',
 			sendButton: 'Enviar',
 			account: 'Conta',
@@ -136,6 +243,24 @@ define({
 			54: 'TRANSAÇÃO MULTISIG',
 			55: 'TRANSAÇÃO MULTISIG',
 
+		},
+		Validity: {
+			GOOD_TILL_CANCELLED: 'Good till cancelled',
+			HOURS: 'Due by (hours)'
+		},
+		TradeOperationType: {
+			1: 'Buy',
+			2: 'Sell'
+		},
+		PriceVariant: {
+			1: 'Market',
+			2: 'Custom'
+		},
+		Strategy: {
+			1: 'Limit',
+			2: 'Market',
+			3: 'Stop',
+			4: 'Peg'
 		},
 		transactionDirections: {
 			pending: 'Pendente',
@@ -205,8 +330,7 @@ define({
 				convert: 'Converter',
 				txConfirm: {
 					title: 'Confirmar Conversão para conta Multisig',
-					total: 'Total',
-
+					total: 'Total'
 				},
 				warning: 'A conta do tipo Multisig está na lista dos consignatários. Isso resultará no corte de acesso ao dinheiro da conta. Muito provavelmente você <b>NÃO QUER</b> fazer isso.',
 				minCosignatoriesDefaultLabel: 'Usar número co-signatários padrão',
@@ -244,6 +368,8 @@ define({
 				labelDesc: 'Esta conta está identificada como {{1}}',
 				nullLabelDesc: 'Esta conta não tem uma identificação',
 				amount: 'Total',
+				escrow: 'Escrow',
+				other: 'Other',
 				recipient: 'Destinatário',
 				recipientValidation: 'Endereços de contas devem ter pelo menos 40 caracteres, excluindo o caractere - .',
 				message: 'Mensagem',
@@ -271,7 +397,8 @@ define({
 				},
 				loadingWarning: {
 					title: 'Carregando blocos'
-				}
+				},
+
 			},
 			clientInfo: {
 				title: 'Informações do programa',
@@ -285,7 +412,6 @@ define({
 				notConnected: 'Desconectado da nuvem de peers',
 				loading: 'Carregando...'
 			},
-			mosaicDetails: 'Mosaic Details',
 			transactionDetails: {
 				title: 'Detalhes da transação',
 				id: 'ID',
@@ -413,10 +539,6 @@ define({
 				passwordNotMatchTitle: 'Oopa!',
 				passwordNotMatchMessage: 'As senhas não conferem. Por favor, tente novamente.'
 			},
-			exportWalletLight: {
-				title: 'Export for lightwallet',
-				export: 'Export'
-			},
 			changeAccountLabel: {
 				title: 'Trocar identificação da conta',
 				label: 'Nova identificação',
@@ -479,6 +601,259 @@ define({
 			removeContact: {
 				title: 'Remover contato',
 				remove: 'Remover'
+			},
+			placeOrder: {
+				title: 'Place order',
+				cancel: 'Cancel',
+				sell: 'Sell',
+				buy: 'Buy',
+				place: 'Place order',
+				placing: 'Placing',
+				hours: 'Hours',
+				youWillSpend: 'You will spend',
+				youWillGet: 'You will get',
+				brokersCommission: "broker's commission",
+				validity: 'Validity',
+				strategy: 'Strategy',
+				buying: 'buying',
+				selling: 'selling',
+				upTo: 'up to',
+				validities: {
+					GTC: 'Good Till Cancelled',
+
+				},
+				priceVariants: {
+					market: 'Market price',
+					custom: 'Custom price'
+				},
+				placeSuccess: 'Order successfully placed',
+				strategies: {
+					limit: 'Limit',
+					market: 'Market',
+					stop: 'Stop',
+					peg: 'Peg'
+				},
+				blankMarketPrice: 'Can\'t find a suitable market price',
+				minStep: 'Minimal step'
+			},
+			removeOrder: {
+				title: 'Remove order',
+				message: 'Are you sure you want to remove this order?',
+				removeSuccess: 'Order successfully removed'
+			},
+			transferFiat: {
+				transferFiat: 'Transfer Fiat',
+				depositFiat: 'Deposit Fiat',
+				tradeInstrument: 'Trade instrument',
+				cancel: 'Cancel',
+				transfer: 'Transfer',
+				transferring: 'Transferring',
+				deposit: 'Deposit',
+				depositing: 'Depositing',
+				escrow: 'Escrow',
+				other: 'Other',
+				transferSuccess: 'Money transferred successfully!',
+				depositSuccess: 'Money deposited successfully!',
+				noInstruments: 'No instruments available',
+				noEscrow: 'No escrow account',
+				noAccounts: 'No bank accounts found',
+				senderAccount: 'Sender account',
+				recipientAccount: 'Recipient account',
+				receiveInstrument: 'Receive instrument',
+				balance: 'balance',
+				narrative: 'Narrative'
+			},
+			viewUserDetails: {
+				title: 'User Details',
+				message: 'Your personal details',
+				cancel: 'Cancel',
+				editDetails: 'Edit details',
+				confirm: 'Confirm'
+			},
+			setUserDetails: {
+				setup: {
+					title: 'Setup User Details',
+					success: 'User details setup successfully'
+				},
+				edit: {
+					title: 'Edit User Details',
+					success: 'User details updated successfully'
+				},
+				id: 'User id',
+				next: 'Next',
+				cancel: 'Cancel',
+				back: 'Back',
+				finish: 'Finish',
+				submitting: 'Submitting',
+				processing: 'Processing',
+				update: 'Update',
+				updating: 'Updating',
+				firstName: 'First name',
+				lastName: 'Last name',
+				dateOfBirth: 'Date of birth',
+				country: 'Country',
+				selectCountry: 'Select country',
+				passport: 'Passport',
+				address: 'Address',
+				contactNumber: 'Contact number',
+				email: 'Email address',
+				steps: {
+					1: {
+						prompt: 'Please enter your personal data'
+					},
+					3: {
+						prompt: 'You will not be able to change these fields later',
+						agreePrompt: 'I agree with ',
+						agreeLink: 'terms of usage'
+					},
+					4: {
+						prompt: 'Please check all the details and return if you want to change them'
+					}
+				}
+			},
+			noDetails: {
+				title: 'setup user details',
+				message: 'You need to first setup user details, would you like to do it right now?',
+				setup: 'Setup'
+			},
+			setFiatWithdrawalAccount: {
+				selectTradeInstrument: 'Select currency',
+				title: 'Set Fiat Withdrawal Account',
+				detailsMessage: 'The new Fiat withdrawal account will be associated with your current user details, you can update them before establishing the new withdrawal account.',
+				message: 'You are almost there, now you should type in the address of the Fiat account that will be used as a withdrawal account and attach it to a currency.',
+				createSuccess: 'Fiat Withdrawal account created successfully',
+				tradeInstrument: 'Trade instrument',
+				cancel: 'Cancel',
+				finish: 'Finish',
+				finishing: 'Finishing',
+
+			},
+			setXemWithdrawalAccount: {
+				title: 'Create XEM Withdrawal Account',
+				detailsMessage: 'The new XEM withdrawal account will be associated with your current user details, you can update them before establishing the new withdrawal account.',
+				message: 'You are almost there, now you should type in the address of the account that will be used as a withdraw account.',
+				createSuccess: 'XEM Withdrawal account created successfully',
+				cancel: 'Cancel',
+				finish: 'Finish',
+				finishing: 'Finishing',
+
+			},
+			setBtcWithdrawalAccount: {
+				title: 'Setup BTC Withdrawal Account',
+				message: 'Type in the address of your Bitcoin account to be used as the withdrawal account',
+				detailsMessage: 'The new BTC withdrawal account will be associated with your current user details, you can update them before establishing the new withdrawal account.',
+				address: 'Bitcoin address',
+				setup: 'Setup',
+				settingUp: 'Setting up',
+				setupSuccess: 'BTC withdrawal account setup successfully'
+			},
+			requestBtcEscrowAccount: {
+				title: "Request BTC escrow",
+				message: "Do you want to request a BTC escrow account from the broker?",
+				requestSuccess: 'Your BTC escrow request was sent to your broker'
+			},
+			confirmWithPassword: {
+				title: 'Confirm action',
+				confirm: 'Confirm',
+				message: 'In order to complete this action you should confirm your password.',
+				password: 'Password',
+				wallet: 'Wallet'
+			},
+			tradePairNotAvailable: {
+				title: 'Not available',
+				message: 'This trade pair is not available, please go and setup the trade instruments that it is compound of. Do you want to do it ?'
+			},
+			selectTradingAccount: {
+				title: 'Select trading account',
+				message: 'Please select the account that will be used as the main account in trading operations',
+				tradingAccount: 'Trading account',
+				submit: 'Submit',
+				submitting: 'Submitting',
+				selectAccount: 'Select account'
+			},
+			brokerNotBooted: {
+				title: 'Broker not booted',
+				message: 'Broker is not available. Please boot it prior to continuing.'
+			},
+			withdraw: {
+				xem: {
+					title: 'Withdraw XEM'
+				},
+				btc: {
+					title: 'Withdraw BTC'
+				},
+				fiat: {
+					title: 'Withdraw Fiat'
+				},
+				escrowBalance: 'balance in escrow',
+				withdraw: 'Withdraw',
+				processing: 'Processing',
+				withdrawSuccess: 'Money withdrawn sucessfully!',
+				cancel: 'Cancel',
+				setupWithdraw: 'setup',
+				noWithdraw: 'not set yet:'
+			},
+			orderUpdate: {
+				title: 'Order Update',
+				buying: 'Buying',
+				selling: 'Selling',
+				eachFor: 'Each for',
+				fee: 'Fee',
+				strategy: 'Strategy',
+				total: 'Total',
+				ok: 'OK',
+				orderDetails: 'Order details',
+				price: 'Price',
+				amount: 'Amount',
+				matchOccurred: 'New match occurred!',
+				orderInfo: 'Order info',
+				matchInfo: 'Match info',
+				reservedAmount: 'Reserved amount'
+			},
+			publishTx: {
+				message: 'In order to complete the operation, you will need to send a transaction. It will cost you:',
+				insufficientBalance: 'Insufficient balance',
+				insufficientBalanceMessage: 'You don\'t have enough XEM on your active account to perform the operation. You need to have at least:',
+				kickstartOptionMessage: "You can make a transfer to a broker's kickstart account and get XEM coins in exchange for the Fiat money.",
+				exchangeFiatForXem: 'Exchange Fiat for XEM'
+			},
+			withdrawalAccountTx: {
+				title: 'Withdrawal account transaction',
+				ok: 'OK',
+				cancel: 'Cancel'
+			},
+			addFiatAccount: {
+				title: 'Add Fiat account',
+				message: 'Enter the data about the new Fiat account',
+				tradeInstrument: 'Trade instrument',
+				accountNumber: 'Account number',
+				btcPrivateKey: 'BTC private key',
+				correspondingKey: 'corresponding BitId key',
+				add: 'Add',
+				successMessage: 'Fiat account added successfully',
+				detailsMessage: 'The new Fiat account will be associated with your current user details, you can update them before establishing the new withdrawal account.'
+			},
+			kickstart: {
+				title: 'Kickstart',
+				message: "You can get XEMs in exchange for the Fiat money. Broker will transfer your XEM coins to the selected recipient account. The transfer commission will be payed with the XEMs taken from exchange.",
+				senderAccount: 'Sender account',
+				noAccounts: 'No accounts available',
+				recipientAccount: 'Recipient account',
+				kickstartAccount: "Broker's kickstart account",
+				noAccountsFound: 'No accounts found',
+				noAccountsForInstrument: 'No kickstart receive accounts were registered for this instrument',
+				balance: 'Balance',
+				transfer: 'Transfer',
+				transferring: 'Transferring',
+				cancel: 'Cancel',
+				willGet: 'You will get',
+				rate: 'Rate',
+				selectSender: 'Select sender',
+				transferSuccess: 'Money transferred successfully'
+			},
+			noBankAccounts: {
+				title: 'No Bank accounts',
+				message: 'Please setup at least one Fiat account first.'
 			}
 		},
 		landing: {
@@ -504,61 +879,51 @@ define({
 				copyright: 'Fotografado por <em>Cas Cornelissen</em>'
 			},
 			carousel: {
-				items: [
-					{
-						title: 'Como o NCC funciona?',
-						description: '<em>Segurança</em> baseada em forte criptografia para evitar roubo de moedas &amp; ativos.'
-					},
-					{
-						title: 'NEM infraestrutura de servidores remotos',
-						description: 'Utilizando um NIS remotor, você não precisa sicronizar o blockchain na inicialização.',
+				items: [{
+					title: 'Como o NCC funciona?',
+					description: '<em>Segurança</em> baseada em forte criptografia para evitar roubo de moedas &amp; ativos.'
+				}, {
+					title: 'NEM infraestrutura de servidores remotos',
+					description: 'Utilizando um NIS remotor, você não precisa sicronizar o blockchain na inicialização.',
 
-					},
-					{
-						title: 'Colheita Remota',
-						description: 'Com a colheita Remota, você pode colheitar de servidores NIS remotos!',
+				}, {
+					title: 'Colheita Remota',
+					description: 'Com a colheita Remota, você pode colheitar de servidores NIS remotos!',
 
-					},
-					{
-						title: 'Transações de multi assinatura',
-						description: 'Assegure seu Xem e seus investimentos via transações de multi assinaturas do blockchain.',
+				}, {
+					title: 'Transações de multi assinatura',
+					description: 'Assegure seu Xem e seus investimentos via transações de multi assinaturas do blockchain.',
 
-					},
-					{
-						title: 'Suporte a sua Linguagem nativa',
-						description: 'A interface do usuário do NEM suporta multiplas linguagens. Veja em "Opções".'
-					},
-					{
-						title: 'Voce tem alguma pergunta ou quer realizar um feedback ?',
-						description: '<a href="http://forum.ournem.com">forum.ournem.com</a> | #ournem no freenode.org | Telegram',
+				}, {
+					title: 'Suporte a sua Linguagem nativa',
+					description: 'A interface do usuário do NEM suporta multiplas linguagens. Veja em "Opções".'
+				}, {
+					title: 'Voce tem alguma pergunta ou quer realizar um feedback ?',
+					description: '<a href="http://forum.ournem.com">forum.ournem.com</a> | #ournem no freenode.org | Telegram',
 
-					}
-				]
+				}]
 			},
 			about: {
-				sections: [
-					{
-						title: 'Como o NCC funciona?',
-						paragraphs: [
-							'<strong>NCC</strong> providencia acesso aos seus ativos e moedas como uma carteira de moeda digital tradicional faz. Você pode',
-							'<strong>NCC</strong> requerer acesso a um servidor <strong>NIS</strong> para operar. O padrão é ter um servidor local ativo (está instalado junto com o <strong>NCC</strong>)',
-							'Você também pode configurar acesso a um servidor remoto <strong>NIS</strong>.'
-						],
-						listItems: [
-							'Tenha múltiplas carteiras',
-							'Defina múltiplas carteiras para serem incluídas em uma carteira'
-						]
-					},
-					{
-						title: 'O que é &#42;NIS?',
-						paragraphs: [
-							'Este componente é responsável por manter a nuvem <strong>NEM</strong> viva.',
-							'Quanto mais servidores<strong>NIS</strong>, melhor será a segurança da rede.',
-							'<strong>NIS</strong> é o ponto de acesso a nuvem <strong>NEM</strong> de servidores.'
-						],
-						legend: '<strong>&#42;NIS</strong> significa <strong>NEM Infraestrutura de Servidores</strong>'
-					}
-				]
+				sections: [{
+					title: 'Como o NCC funciona?',
+					paragraphs: [
+						'<strong>NCC</strong> providencia acesso aos seus ativos e moedas como uma carteira de moeda digital tradicional faz. Você pode',
+						'<strong>NCC</strong> requerer acesso a um servidor <strong>NIS</strong> para operar. O padrão é ter um servidor local ativo (está instalado junto com o <strong>NCC</strong>)',
+						'Você também pode configurar acesso a um servidor remoto <strong>NIS</strong>.'
+					],
+					listItems: [
+						'Tenha múltiplas carteiras',
+						'Defina múltiplas carteiras para serem incluídas em uma carteira'
+					]
+				}, {
+					title: 'O que é &#42;NIS?',
+					paragraphs: [
+						'Este componente é responsável por manter a nuvem <strong>NEM</strong> viva.',
+						'Quanto mais servidores<strong>NIS</strong>, melhor será a segurança da rede.',
+						'<strong>NIS</strong> é o ponto de acesso a nuvem <strong>NEM</strong> de servidores.'
+					],
+					legend: '<strong>&#42;NIS</strong> significa <strong>NEM Infraestrutura de Servidores</strong>'
+				}]
 			},
 			footer: {
 				copyright: '&copy; Copyright 2015. NEM Community Client.'
@@ -580,12 +945,12 @@ define({
 				changeWalletPassword: 'Trocar a senha da carteira',
 				mergeWallets: 'Mesclar carteiras',
 				exportWallet: 'Exportar carteira',
-				exportWalletLight: 'Export for Lightwallet',
 				createAccount: 'Criar uma nova Conta',
 				createRealAccountData: 'Criar dados da conta real',
 				verifyRealAccountData: 'Verificar dados da conta Verdadeira',
 				showPrivateKey: 'Mostrar a chave PRIVADA da conta',
 				showRemotePrivateKey: 'Mostrar a chave PRIVADA da conta Remota',
+				getXemInExchangeForFiat: 'Get XEM in exchange for Fiat',
 				viewDetails: 'Ver detalhes da conta',
 				addAccount: 'Adicionar uma conta existente',
 				changeAccountLabel: 'Renomear carteira',
@@ -596,7 +961,8 @@ define({
 				closeProgram: 'Fechar programa',
 				copyClipboard: 'Copiar para a área de transferência',
 				copyDisabled: 'Para copiar um endereço, é necessári oter o Adobre Flash instalado.',
-				convertMultisig: 'Converter outra conta para o tipo Multisig'
+				convertMultisig: 'Converter outra conta para o tipo Multisig',
+				bootBroker: 'Boot broker'
 			},
 			nav: [
 				'Painel Administrativo',
@@ -604,13 +970,15 @@ define({
 				'Arquivo de contatos',
 				'Transações',
 				'Blocos colhidos',
+				'Trading',
+				'Financial transactions',
+				'Fiat panel',
 				'Exchange de ativos',
 				'Novidades',
 				'Aplicações',
 				'Contas',
 				'Configurações',
 				'Fechar programa',
-				'Namespaces & Mosaics'
 			],
 			bootNodeWarning: 'Um nó local precisa ser inicializado para poder utilizar o NIS.'
 		},
@@ -725,7 +1093,7 @@ define({
 			},
 			table: {
 				columns: [
-					'Owner',
+					'',
 					'Namespace & Mosaic',
 					'Creation',
 					'Expiration (est.)'
@@ -775,13 +1143,212 @@ define({
 			edit: 'Editar',
 			remove: 'Remover'
 		},
+		trading: {
+			buy: 'Buy',
+			sell: 'Sell',
+			trading: {
+				title: 'Trading',
+				placeOrder: 'Place order',
+				baseInstrument: 'Base currency',
+				quoteInstrument: 'Quote currency'
+			},
+			allTradePairs: {
+				title: 'Market trade pairs',
+				base: 'Base',
+				quote: 'Quote',
+				bid: 'Bid',
+				ask: 'Ask',
+				noPairs: 'No trade pairs available'
+			},
+			depthQuotes: {
+				title: 'Market Depth Quotes',
+				buy: 'Buy',
+				sell: 'Sell',
+				price: 'Price',
+				noQuotes: 'No quotes available'
+			},
+			tradeOptions: {
+				title: 'Options',
+				showPanel: 'Show panel',
+				panelDropdown: {
+					tradeHistory: 'Trade History',
+					escrowBalances: 'Escrow Balances',
+					pendingOrders: 'Pending Orders'
+				}
+			},
+			tradeHistory: {
+				title: 'Trade History',
+				amount: 'Amount',
+				price: 'Price',
+				time: 'Time',
+				noHistory: 'No transaction using this trade pair yet'
+			},
+			escrowBalances: {
+				title: 'Escrow Balances',
+				tradeInstrument: 'Currency',
+				balance: 'Balance',
+				noBalances: 'You haven\'t established any escrow balances yet.',
+				reserve: 'Reserve'
+			},
+			pendingOrders: {
+				title: 'Pending Orders',
+				base: 'Base',
+				quote: 'Quote',
+				amount: 'Amount',
+				price: 'Price',
+				perOne: 'per 1',
+				createdOn: 'Created on',
+				type: 'Type',
+				noOrders: 'You haven\'t placed any orders yet.',
+				strategy: 'Strategy',
+				remove: 'Remove'
+			},
+			graphChart: {
+				title: 'Graph Chart',
+				step: 'Step',
+				steps: {
+					fifteenMinutes: '15 minutes',
+					oneHour: '1 hour',
+					oneDay: '1 day'
+				},
+				OHLC: 'OHLC',
+				volume: 'Volume'
+			}
+		},
+		financialTransactions: {
+			deposit: 'Deposit',
+			depositXem: 'Deposit XEM',
+			depositFiat: 'Deposit Fiat',
+			withdraw: 'Withdraw',
+			escrowAddress: 'Escrow address',
+			escrows: {
+				title: 'Escrow accounts',
+				filters: {
+					all: 'All',
+					xem: 'XEM',
+					fiat: 'Fiat',
+					btc: 'BTC'
+				},
+				statuses: {
+					requested: 'Requested',
+					confirmed: 'Confirmed',
+					established: 'Established',
+					invalid: 'Invalid'
+				},
+				noEscrows: 'No escrow accounts yet',
+				tradeInstrument: 'Currency',
+				balance: 'Balance',
+				reserve: 'Reserve',
+				expiry: 'Payments expire',
+				current: 'Current for this currency'
+			},
+			settings: {
+				title: 'Settings',
+				status: 'Status',
+				userDetails: 'User details',
+				xem: 'XEM',
+				fiat: 'Fiat',
+				btc: 'BTC',
+				notSetup: 'Not set yet',
+				notAvailableYet: 'Not available yet',
+				withdrawalAccount: 'Withdrawal account number',
+				requestWithdrawalAccount: 'Request account',
+				setupEscrowWarning: 'Please request an escrow',
+				setWithdrawalWarning: 'Please set withdrawal account',
+				processing: 'Processing',
+				accountNumber: 'Account number',
+				userDetailsSettings: {
+					header: 'Your profile details',
+					showMoreDetails: 'Show more details',
+					editDetails: 'Edit user details',
+					firstName: 'First name',
+					lastName: 'Last name',
+					dateOfBirth: 'Date of birth',
+					noUserDetails: 'You haven\'t setup user details yet!',
+					pendingUserDetails: 'Your submitted user details are being processed',
+					setupUserDetails: 'Setup user details'
+				},
+				xemSettings: {
+					accountHeader: 'XEM account numbers',
+					requestNewEscrow: 'Request new XEM escrow account',
+					setWithdrawal: 'Set new XEM withdrawal account',
+					selectTradingAccount: 'Change trading account'
+				},
+				fiatSettings: {
+					tradeInstrument: 'Trade instrument',
+					accountHeader: 'Fiat account numbers',
+					requestNewEscrow: 'Request new Fiat escrow account',
+					setWithdrawal: 'Set withdrawal account',
+					noInstruments: 'No instruments available',
+					bankAccount: 'Bank account'
+				},
+				btcSettings: {
+					accountHeader: 'BTC account numbers',
+					requestNewEscrow: 'Request new BTC escrow account',
+					setupWithdrawal: 'Setup new BTC withdrawal account',
+					generateAuthKey: 'Generate a BTC key for auth.',
+					withdrawBtc: 'Withdraw BTC'
+				}
+			},
+			tradingOperations: {
+				title: 'Trading operations',
+				type: 'Type',
+				operation: 'Operation',
+				date: 'Date',
+				senderOrRecipient: 'Sender/Recipient',
+				message: 'Message',
+				confirmations: 'Confirmations',
+				fee: 'Fee',
+				amount: 'Amount',
+				filters: {
+					0: 'All',
+					1: 'Deposit',
+					2: 'Withdraw',
+					3: 'BTC escrow request',
+					4: 'BTC escrow response',
+					5: 'User details setup',
+					6: 'User details update',
+					7: 'XEM Withdrawal account setup',
+					8: 'BTC Withdrawal account setup'
+				},
+				noOperations: 'No operations performed yet!'
+			}
+		},
+		fiatPanel: {
+			instrument: {
+				title: 'Instrument',
+				tradeInstrument: 'Choose trade instrument',
+				noInstruments: 'No instruments available'
+			},
+			account: {
+				title: 'Fiat account',
+				addAccount: 'Add account',
+				chooseAccount: 'Choose account',
+				noAccounts: 'No accounts for this trade instrument added yet'
+			},
+			transactions: {
+				title: 'Account transactions',
+				balance: 'Balance',
+				availableBalance: 'Available Balance',
+				columns: {
+					time: 'Time',
+					sender: 'Sender',
+					sendAmount: 'Sent',
+					recipient: 'Recipient',
+					receiveAmount: 'Received',
+					narrative: 'Narrative'
+				},
+				sendFiat: 'Send Fiat',
+				noTransfers: 'No transfers performed yet.',
+				noAccount: 'No account selected',
+				noNarrative: 'No narrative'
+			}
+		},
 		settings: {
 			title: 'Opções',
-			settings: [
-				{
-					name: 'Idioma'
-				}
-			],
+			settings: [{
+				name: 'Idioma'
+			}],
 			save: 'Salvar modificações',
 			saveSuccess: 'Modificações salvas'
 		}

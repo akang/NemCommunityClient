@@ -79,7 +79,7 @@ define(['NccModal', 'Utils', 'TransactionType', 'handlebars', 'typeahead'], func
             );
         },
         getExistingMinCosigs: function() {
-            var c = this.get('cosignatories');
+            var c = this.get('cosignatories') || [];
             var existing = c.filter(function(a){return a.deleted === false || a.deleted === true;}).length;
             if (this.get('multisigAccount') && this.get('multisigAccount').isMultisig && this.get('multisigAccount').minCosignatories) {
                 existing = this.get('multisigAccount').minCosignatories;
@@ -179,7 +179,8 @@ define(['NccModal', 'Utils', 'TransactionType', 'handlebars', 'typeahead'], func
         },
         resetDefaultData: function(retrieveAccountData) {
             // get all non-multisig from the wallet
-            var usableAccounts = ncc.get('allAccounts').filter(function(a){ return !a.isMultisig; });
+            var allAccounts = ncc.get('allAccounts') || [];
+            var usableAccounts = allAccounts.filter(function(a){ return !a.isMultisig; });
             // and get multisig of a current account
             var multisigsOfCurrent = [];
             var wallet = ncc.get('wallet');
@@ -189,7 +190,12 @@ define(['NccModal', 'Utils', 'TransactionType', 'handlebars', 'typeahead'], func
                 Utils.updateAccount();
             }
 
-            ncc.get('activeAccount').multisigAccounts.forEach(function(a){
+            var activeAccount = ncc.get('activeAccount');
+            if (!activeAccount || !activeAccount.multisigAccounts) {
+                return;
+            }
+
+            activeAccount.multisigAccounts.forEach(function(a){
                 if (a.address in wallet.allMultisigAccounts) {
                     var acct = wallet.allMultisigAccounts[a.address];
                     var t = {
@@ -325,6 +331,9 @@ define(['NccModal', 'Utils', 'TransactionType', 'handlebars', 'typeahead'], func
                 'cosignatories': (function() {
                     var t;
                     return function(objs) {
+                        if (!objs) {
+                            return;
+                        }
                         // that's bit dumb ;p
                         for (var i = 0; i<objs.length; ++i) {
                             self.set('cosignatories['+i+'].address', Utils.format.address.restore(objs[i].formattedAddress));
@@ -343,7 +352,7 @@ define(['NccModal', 'Utils', 'TransactionType', 'handlebars', 'typeahead'], func
             });
             this.observe({
                 minCosignatories: function() {
-                    var c = this.get('cosignatories');
+                    var c = this.get('cosignatories') || [];
 
                     // this sux, it relies on the fact that observer for cosignatories will be fired before this one :/
                     var existing = self.getExistingMinCosigs();

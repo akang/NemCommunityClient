@@ -14,9 +14,9 @@ $mainContent-topPadding: $statusIndicator-height + $header-height;
 
 $small-screen: $sidebar-width + $mainContent-leftPadding + $mainContent-width;
 
-$nemOrange: #fabe00;
+$nemOrange: #dfa82f;
 $nemGray: #8e8e8e;
-$nemGreen: #34b7af;
+$nemGreen: #41ce7b;
 
 // ================================================================================
 // Z-INDEX STACKING CONTEXT TREE
@@ -52,7 +52,7 @@ $zIndex-sidebar:	10;
 	// .noti-box {
 	// 	@include noti-box($notiBox-size);
 	// 	color: #fff;
-	// 	background-color: #fabe00;
+	// 	background-color: #e6801d;
 	// 	margin-right: 6px;
 	// }
 
@@ -75,7 +75,7 @@ $zIndex-sidebar:	10;
 	// 	margin-left: $notiBox-size / 2;
 	// 	left: - $notification-width / 2;
 	// 	display: none;
-	// 	@include arrow-box(up, 
+	// 	@include arrow-box(up,
 	// 		('color': $bgColor, 'width': 10px, 'height': $arrow-height),
 	// 		('enable': true, 'width': 1px, 'color': $borderColor));
 
@@ -202,13 +202,13 @@ $zIndex-sidebar:	10;
 	height: $avatar-small;
 }
 
-// .noti-box, 
-.walletBox-walletInfo, 
+// .noti-box,
+.walletBox-walletInfo,
 .walletBox-avatar {
 	vertical-align: middle;
 }
 
-.walletBox-walletInfo, 
+.walletBox-walletInfo,
 .walletBox-avatar {
 	margin-right: 10px;
 }
@@ -265,7 +265,7 @@ $account-actions-width: 30px;
 .account--active {
 	background-color: #2e3541;
 
-	.account-info:hover, 
+	.account-info:hover,
 	&.account--selecting .account-info {
 		background-color: #252a34;
 	}
@@ -273,7 +273,7 @@ $account-actions-width: 30px;
 
 .account--others {
 	background-color: #1b1f27;
-	
+
 	&:hover {
 		background-color: #2e3541;
 	}
@@ -328,14 +328,14 @@ $account-actions-width: 30px;
 	font-size: 14px;
 	background-color: #2e3541;
 
-	&:hover, 
+	&:hover,
 	&.active {
 	    color: $nemOrange;
 		background-color: #252a34;
 	}
 
-	&, 
-	&:hover, 
+	&,
+	&:hover,
 	&.active {
 		& > .account-actionsButton--gear {
 			display: initial;
@@ -434,12 +434,12 @@ $account-actions-width: 30px;
 				text-align: center;
 			}
 		}
-		
+
 		.account-info-line,
 		.account-info-line--darken {
 			margin-right: 0px;
 		}
-		
+
 		.account-actionsButton {
 			position: static;
 			width: 100%;
@@ -478,8 +478,8 @@ $account-actions-width: 30px;
 		.sidebar-nav-item {
 			text-align: center;
 
-			&, 
-			&:not(.disabled).active, 
+			&,
+			&:not(.disabled).active,
 			&:not(.disabled):hover {
 				padding-left: 0;
 				padding-right: 0;
@@ -547,7 +547,7 @@ $account-actions-width: 30px;
 
 .sidebar-nav {
 	// $notiBox-size: 1.4em;
-	padding-top: 24px;
+	//padding-top: 24px;
 	padding-right: 18px;
 	font-size: 13px;
 
@@ -563,15 +563,15 @@ $account-actions-width: 30px;
 	// 		color: #252a34;
 	// 	}
 	// 	&.news {
-	// 		background-color: #34b7af;
+	// 		background-color: #27d782;
 	// 		color: #252a34;
 	// 	}
 	// }
 }
 
 .sidebar-nav-item {
-	margin-top: 18px;
-	margin-bottom: 18px;
+	margin-top: 12px;
+	margin-bottom: 12px;
 	padding-left: 40px;
 	padding-top: 2px;
 	padding-bottom: 2px;
@@ -590,17 +590,17 @@ $account-actions-width: 30px;
 		$indicator-width: 6px;
 		$padding-left: 52px;
 
-		&.active, 
+		&.active,
 		&:hover {
 			.sidebar-nav-item-title {
 				color: #ebebeb;
 			}
 		}
-		
+
 		&:hover {
 			padding-left: $padding-left;
 		}
-		
+
 		&.active {
 			padding-left: $padding-left - $indicator-width;
 			border-left: $indicator-width solid #ebebeb;
@@ -617,6 +617,7 @@ $account-actions-width: 30px;
 		font-size: 1.2em;
 		vertical-align: -2px;
 	}
+
 }
 
 // ================================================================================
@@ -678,9 +679,79 @@ $account-actions-width: 30px;
 
 .sendNem-errorIcon,
 .convertMultisig-errorIcon,
-.signMultisig-errorIcon {
+.signMultisig-errorIcon,
+.setUserDetails-errorIcon,
+.withdraw-errorIcon {
 	color: #c03b2d;
 	vertical-align: middle;
+}
+
+
+// ================================================================================
+// PLACE ORDER MODAL
+// ================================================================================
+
+.placeOrderModal {
+	font-size: 13px;
+
+	.modal-body {
+		padding: 0;
+	}
+}
+
+.marketPrice-loader {
+	position: absolute;
+	height: 12px;
+	width: 12px;
+	margin: -22px 1px;
+}
+
+.placeOrder-form {
+	padding: 3px 16px 18px;
+}
+
+.placeOrder-blankMarketPriceIcon {
+	color: #c03b2d;
+}
+
+// ================================================================================
+// SET USER DETAILS MODAL
+// ================================================================================
+
+.setUserDetails {
+	font-size: 13px;
+
+	.modal-body {
+	}
+}
+
+.setUserDetails-step {
+	@include transition(background-color .3s);
+    display: inline-block;
+    padding: 6px 32px;
+    border-radius: 4px;
+    background-color: #8e8e8e;
+    margin: 0px 5px 30px 0px;
+}
+
+.setUserDetails-step--selected {
+    background-color: #41ce7d;
+}
+
+.setUserDetails-agree {
+    color: rgb(0, 121, 191);
+}
+
+.setUserDetails-table {
+	margin-bottom: 24px;
+}
+
+// ================================================================================
+// CREATE FIAT ACCOUNT MODAL
+// ================================================================================
+
+.createFiatAccount-currencyDropdown {
+    margin-bottom: 35px;
 }
 
 // ================================================================================
@@ -703,7 +774,7 @@ $account-actions-width: 30px;
 }
 
 .multisig-addCosignatory {
-	color: #34b7af;
+	color: #5dcd86;
 	font-weight: $fontWeight-bold;
 }
 
@@ -930,7 +1001,7 @@ $sigConfirm-label-width: 130px;
 // TRANSACTION DETAILS MODAL
 // ================================================================================
 
-.txDetailsModal, .accDetailsModal {
+.txDetailsModal, .accDetailsModal, .orderUpdateModal {
 	font-size: 13px;
 	color: #444444;
 
@@ -966,5 +1037,180 @@ $sigConfirm-label-width: 130px;
 	font-weight: $fontWeight-medium;
 	text-align: left;
 	vertical-align: top;
+	word-break: break-word;
 }
 
+// ================================================================================
+// TRANSFER FIAT MODAL
+// ================================================================================
+
+.transferFiatModal {
+	font-size: 13px;
+
+	.modal-body {
+		padding: 0;
+	}
+}
+
+.narrative-textarea {
+	height: 100px;
+}
+
+.transferFiat-form {
+	padding: 3px 16px 18px;
+}
+
+// ================================================================================
+// ORDER UPDATE MODAL
+// ================================================================================
+
+.orderUpdate-orderInfo {
+	border: 1px dashed #d2d2d2;
+	padding: 20px 40px;
+
+	.orderUpdate-infoTable {
+		.table-cell--content {
+			width: 200px;
+		}
+	}
+}
+
+
+.orderUpdate-message {
+	padding: 10px 20px;
+	margin-bottom: 20px;
+	font-size: 14px;
+	font-weight: $fontWeight-medium;
+}
+
+.orderUpdate-subtitle {
+	text-transform: uppercase;
+	font-size: 13px;
+	font-weight: 700;
+	color: #888;
+	margin-top: 20px;
+	margin-bottom: 10px;
+}
+
+// ================================================================================
+// WITHDRAW MODAL
+// ================================================================================
+
+.withdrawModal {
+
+	.modal-body {
+		padding: 15px 20px;
+	}
+
+	.accounts-table {
+		padding: 15px 0px;
+	}
+
+	table {
+		font-size: 13px;
+	}
+}
+
+// ================================================================================
+// VIEW USER DETAILS MODAL
+// ================================================================================
+.viewUserDetails {
+	table {
+		margin-bottom: 20px;
+	}
+}
+
+// ================================================================================
+// TRANSFER FIAT MODAL
+// ================================================================================
+
+.transferFiat-errorIcon {
+	color: #c03b2d;
+}
+
+// ================================================================================
+// KICKSTART MODAL
+// ================================================================================
+.kickstartModal-errorIcon  {
+	color: #c03b2d;
+}
+
+.kickstart-buttons {
+	padding-top: 18px;
+}
+
+// ================================================================================
+// TOTAL BOX
+// ================================================================================
+
+.totalBox {
+	margin-top: 16px;
+	text-align: left;
+}
+
+.totalBox-title {
+    font-size: 18px;
+    color: #736086;
+    font-weight: 800;
+    text-transform: none;
+    margin-bottom: 0;
+    display: inline-block;
+}
+
+.totalBox-value,
+.totalBox-unit {
+    font-size: 23px;
+    vertical-align: middle;
+}
+
+.totalBox-unit {
+	font-weight: 900;
+}
+
+.totalBox-value {
+	font-weight: 300;
+}
+
+.totalBox-balance {
+    display: inline-block;
+    width: 100%;
+}
+
+// ================================================================================
+// PUBLISH TX
+// ================================================================================
+
+.publishTx-title {
+	font-size: 24px;
+	margin-bottom: 20px;
+	display: inline-block;
+	color: #c03b2d;
+}
+
+.publishTx-kickstartButton {
+	@include transition(background-color 0.2s);
+	margin: 24px 0px;
+	background-color: #41ce7d;
+	padding: 8px 20px;
+	font-size: 13px;
+	font-weight: 500;
+	color: white;
+
+	&:hover {
+		background-color: #6ad899;
+	}
+}
+
+.publishTx-fee {
+	margin-bottom: 24px;
+	font-size: 24px;
+	font-weight: 300;
+}
+
+.publishTx-currency {
+	font-weight: 500;
+}
+
+.publishTx-errorIcon {
+	color: #c03b2d;
+}

@@ -669,14 +669,239 @@ translated texts.namespacesmosaics.table.columns.[0]
 	      to: ''
 	based on: texts.transactions.table.columns.[4]
 
------changed texts.dashboard.assets.title
-	from: 'Your Assets'
-	  to: 'Your Mosaics'
-	 was: 'Your Mosaics'
+-----changed texts.wallet.nav.[5]
+	from: 'Asset Exchange'
+	  to: 'Trading'
+	 was: 'Razmjena udjela'
 
-translated texts.namespacesmosaics.balance
-	    from: 'Current Balance'
-	      to: 'Trenutno stanje'
-	based on: texts.transactions.balance
+changed texts.wallet.nav.[6]
+	from: 'News'
+	  to: 'Financial transactions'
+	 was: 'Novosti'
+
+changed texts.wallet.nav.[7]
+	from: 'Applications'
+	  to: 'Fiat panel'
+	 was: 'Aplikacije'
+
+changed texts.wallet.nav.[8]
+	from: 'Accounts'
+	  to: 'Asset Exchange'
+	 was: 'Računi'
+
+changed texts.wallet.nav.[9]
+	from: 'Settings'
+	  to: 'News'
+	 was: 'Postavke'
+
+changed texts.wallet.nav.[10]
+	from: 'Close Program'
+	  to: 'Accounts'
+	 was: 'Zatvori program'
+
+changed texts.wallet.nav.[11]
+	from: 'Namespaces & Mosaics'
+	  to: 'Settings'
+	 was: 'Namespaces & Mosaics'
+
+translated texts.common.amount
+	    from: 'Amount'
+	      to: 'Iznos'
+	based on: texts.transactions.table.columns.[8]
+
+translated texts.common.saveButton
+	    from: 'Save'
+	      to: 'Spremi'
+	based on: texts.modals.settings.save
+
+translated texts.Validity.HOURS
+	    from: 'Due by (hours)'
+	      to: 'Vremensko razdoblje (sati)'
+	based on: texts.common.hoursDue
+
+translated texts.Strategy.3
+	    from: 'Stop'
+	      to: 'Stop'
+	based on: texts.modals.stopRemote.stop
+
+translated texts.modals.placeOrder.cancel
+	    from: 'Cancel'
+	      to: 'Odustani'
+	based on: texts.common.cancelButton
+
+translated texts.modals.placeOrder.strategies.stop
+	    from: 'Stop'
+	      to: 'Stop'
+	based on: texts.modals.stopRemote.stop
+
+translated texts.modals.transferFiat.cancel
+	    from: 'Cancel'
+	      to: 'Odustani'
+	based on: texts.common.cancelButton
+
+translated texts.modals.viewUserDetails.cancel
+	    from: 'Cancel'
+	      to: 'Odustani'
+	based on: texts.common.cancelButton
+
+translated texts.modals.viewUserDetails.confirm
+	    from: 'Confirm'
+	      to: 'Potvrdi'
+	based on: texts.modals.sendNem.txConfirm.confirm
+
+translated texts.modals.setUserDetails.cancel
+	    from: 'Cancel'
+	      to: 'Odustani'
+	based on: texts.common.cancelButton
+
+translated texts.modals.setUserDetails.address
+	    from: 'Address'
+	      to: 'Adresa'
+	based on: texts.common.address
+
+translated texts.modals.setFiatWithdrawalAccount.cancel
+	    from: 'Cancel'
+	      to: 'Odustani'
+	based on: texts.common.cancelButton
+
+translated texts.modals.setXemWithdrawalAccount.cancel
+	    from: 'Cancel'
+	      to: 'Odustani'
+	based on: texts.common.cancelButton
+
+translated texts.modals.confirmWithPassword.confirm
+	    from: 'Confirm'
+	      to: 'Potvrdi'
+	based on: texts.modals.sendNem.txConfirm.confirm
+
+translated texts.modals.confirmWithPassword.password
+	    from: 'Password'
+	      to: 'Lozinka'
+	based on: texts.landing.main.passwordPlh
+
+translated texts.modals.confirmWithPassword.wallet
+	    from: 'Wallet'
+	      to: 'Novčanik'
+	based on: texts.modals.stopRemote.wallet
+
+translated texts.modals.withdraw.cancel
+	    from: 'Cancel'
+	      to: 'Odustani'
+	based on: texts.common.cancelButton
+
+translated texts.modals.orderUpdate.fee
+	    from: 'Fee'
+	      to: 'Naknada'
+	based on: texts.harvestedBlocks.table.columns.[3]
+
+translated texts.modals.orderUpdate.total
+	    from: 'Total'
+	      to: 'Ukupno'
+	based on: texts.modals.sendNem.txConfirm.total
+
+translated texts.modals.orderUpdate.amount
+	    from: 'Amount'
+	      to: 'Iznos'
+	based on: texts.transactions.table.columns.[8]
+
+translated texts.modals.withdrawalAccountTx.cancel
+	    from: 'Cancel'
+	      to: 'Odustani'
+	based on: texts.common.cancelButton
+
+translated texts.modals.addFiatAccount.add
+	    from: 'Add'
+	      to: 'Dodaj'
+	based on: texts.modals.addContact.add
+
+translated texts.modals.kickstart.cancel
+	    from: 'Cancel'
+	      to: 'Odustani'
+	based on: texts.common.cancelButton
+
+translated texts.wallet.nav.[12]
+	    from: 'Close Program'
+	      to: 'Zatvori program'
+	based on: texts.wallet.nav.[10]
+
+translated texts.wallet.nav.[13]
+	    from: 'Namespaces & Mosaics'
+	      to: 'Namespaces & Mosaics'
+	based on: texts.namespacesmosaics.title
+
+translated texts.trading.tradeHistory.amount
+	    from: 'Amount'
+	      to: 'Iznos'
+	based on: texts.transactions.table.columns.[8]
+
+translated texts.trading.tradeHistory.time
+	    from: 'Time'
+	      to: 'Vrijeme'
+	based on: texts.harvestedBlocks.table.columns.[1]
+
+translated texts.trading.pendingOrders.amount
+	    from: 'Amount'
+	      to: 'Iznos'
+	based on: texts.transactions.table.columns.[8]
+
+translated texts.trading.pendingOrders.remove
+	    from: 'Remove'
+	      to: 'Ukloni'
+	based on: texts.addressBook.remove
+
+translated texts.trading.graphChart.steps.oneDay
+	    from: '1 day'
+	      to: '1 dan'
+	based on: texts.common.appStatus.daysBehind.1
+
+translated texts.financialTransactions.escrows.statuses.confirmed
+	    from: 'Confirmed'
+	      to: 'Potvrđene'
+	based on: texts.transactions.filters.confirmed
+
+translated texts.financialTransactions.settings.title
+	    from: 'Settings'
+	      to: 'Postavke'
+	based on: texts.settings.title
+
+translated texts.financialTransactions.tradingOperations.senderOrRecipient
+	    from: 'Sender/Recipient'
+	      to: 'Pošiljatelj/Primatelj'
+	based on: texts.transactions.table.columns.[2]
+
+translated texts.financialTransactions.tradingOperations.message
+	    from: 'Message'
+	      to: 'Poruka'
+	based on: texts.transactions.table.columns.[3]
+
+translated texts.financialTransactions.tradingOperations.confirmations
+	    from: 'Confirmations'
+	      to: 'Potvrde'
+	based on: texts.transactions.table.columns.[6]
+
+translated texts.financialTransactions.tradingOperations.fee
+	    from: 'Fee'
+	      to: 'Naknada'
+	based on: texts.harvestedBlocks.table.columns.[3]
+
+translated texts.financialTransactions.tradingOperations.amount
+	    from: 'Amount'
+	      to: 'Iznos'
+	based on: texts.transactions.table.columns.[8]
+
+translated texts.fiatPanel.transactions.columns.time
+	    from: 'Time'
+	      to: 'Vrijeme'
+	based on: texts.harvestedBlocks.table.columns.[1]
+
+translated texts.fiatPanel.transactions.columns.sender
+	    from: 'Sender'
+	      to: 'Pošiljatelj'
+	based on: texts.modals.transactionDetails.sender
+
+translated texts.fiatPanel.transactions.columns.recipient
+	    from: 'Recipient'
+	      to: 'Primatelj'
+	based on: texts.modals.transactionDetails.recipient
 
 -----

@@ -73,6 +73,7 @@ class Field:
 		indent(fun, lev)
 		fun.e(self.name)
 		fun.d(": ")
+		print self.name
 		self.value.pretty(fun, lev)
 		fun.c(self.name)
 

@@ -634,24 +634,239 @@ translated texts.namespacesmosaics.table.columns.[0]
 	      to: ''
 	based on: texts.transactions.table.columns.[4]
 
------changed texts.dashboard.assets.title
-	from: 'Your Assets'
-	  to: 'Your Mosaics'
-	 was: 'Your Mosaics'
+-----changed texts.wallet.nav.[5]
+	from: 'Asset Exchange'
+	  to: 'Trading'
+	 was: 'Обмен на активи'
 
-translated texts.namespacesmosaics.balance
-	    from: 'Current Balance'
-	      to: 'Текущ баланс'
-	based on: texts.transactions.balance
+changed texts.wallet.nav.[6]
+	from: 'News'
+	  to: 'Financial transactions'
+	 was: 'Новини'
 
------changed texts.dashboard.assets.title
-	from: 'Your Assets'
-	  to: 'Your Mosaics'
-	 was: 'Your Mosaics'
+changed texts.wallet.nav.[7]
+	from: 'Applications'
+	  to: 'Fiat panel'
+	 was: 'Приложения'
 
-translated texts.namespacesmosaics.balance
-	    from: 'Current Balance'
-	      to: 'Текущ баланс'
-	based on: texts.transactions.balance
+changed texts.wallet.nav.[8]
+	from: 'Accounts'
+	  to: 'Asset Exchange'
+	 was: 'Акаунти'
+
+changed texts.wallet.nav.[9]
+	from: 'Settings'
+	  to: 'News'
+	 was: 'Настройки'
+
+changed texts.wallet.nav.[10]
+	from: 'Close Program'
+	  to: 'Accounts'
+	 was: 'Затворете програмата'
+
+changed texts.wallet.nav.[11]
+	from: 'Namespaces & Mosaics'
+	  to: 'Settings'
+	 was: 'Namespaces & Mosaics'
+
+translated texts.common.amount
+	    from: 'Amount'
+	      to: 'Сума'
+	based on: texts.transactions.table.columns.[8]
+
+translated texts.common.saveButton
+	    from: 'Save'
+	      to: 'Запази'
+	based on: texts.modals.settings.save
+
+translated texts.Validity.HOURS
+	    from: 'Due by (hours)'
+	      to: 'Време до края (часове)'
+	based on: texts.common.hoursDue
+
+translated texts.Strategy.3
+	    from: 'Stop'
+	      to: 'Стоп'
+	based on: texts.modals.stopRemote.stop
+
+translated texts.modals.placeOrder.cancel
+	    from: 'Cancel'
+	      to: 'Отмени'
+	based on: texts.common.cancelButton
+
+translated texts.modals.placeOrder.strategies.stop
+	    from: 'Stop'
+	      to: 'Стоп'
+	based on: texts.modals.stopRemote.stop
+
+translated texts.modals.transferFiat.cancel
+	    from: 'Cancel'
+	      to: 'Отмени'
+	based on: texts.common.cancelButton
+
+translated texts.modals.viewUserDetails.cancel
+	    from: 'Cancel'
+	      to: 'Отмени'
+	based on: texts.common.cancelButton
+
+translated texts.modals.viewUserDetails.confirm
+	    from: 'Confirm'
+	      to: 'Потвърди'
+	based on: texts.modals.sendNem.txConfirm.confirm
+
+translated texts.modals.setUserDetails.cancel
+	    from: 'Cancel'
+	      to: 'Отмени'
+	based on: texts.common.cancelButton
+
+translated texts.modals.setUserDetails.address
+	    from: 'Address'
+	      to: 'Адрес'
+	based on: texts.common.address
+
+translated texts.modals.setFiatWithdrawalAccount.cancel
+	    from: 'Cancel'
+	      to: 'Отмени'
+	based on: texts.common.cancelButton
+
+translated texts.modals.setXemWithdrawalAccount.cancel
+	    from: 'Cancel'
+	      to: 'Отмени'
+	based on: texts.common.cancelButton
+
+translated texts.modals.confirmWithPassword.confirm
+	    from: 'Confirm'
+	      to: 'Потвърди'
+	based on: texts.modals.sendNem.txConfirm.confirm
+
+translated texts.modals.confirmWithPassword.password
+	    from: 'Password'
+	      to: 'Парола'
+	based on: texts.landing.main.passwordPlh
+
+translated texts.modals.confirmWithPassword.wallet
+	    from: 'Wallet'
+	      to: 'Портфейл'
+	based on: texts.modals.stopRemote.wallet
+
+translated texts.modals.withdraw.cancel
+	    from: 'Cancel'
+	      to: 'Отмени'
+	based on: texts.common.cancelButton
+
+translated texts.modals.orderUpdate.fee
+	    from: 'Fee'
+	      to: 'Такса'
+	based on: texts.harvestedBlocks.table.columns.[3]
+
+translated texts.modals.orderUpdate.total
+	    from: 'Total'
+	      to: 'Общо'
+	based on: texts.modals.sendNem.txConfirm.total
+
+translated texts.modals.orderUpdate.amount
+	    from: 'Amount'
+	      to: 'Сума'
+	based on: texts.transactions.table.columns.[8]
+
+translated texts.modals.withdrawalAccountTx.cancel
+	    from: 'Cancel'
+	      to: 'Отмени'
+	based on: texts.common.cancelButton
+
+translated texts.modals.addFiatAccount.add
+	    from: 'Add'
+	      to: 'Добави'
+	based on: texts.modals.addContact.add
+
+translated texts.modals.kickstart.cancel
+	    from: 'Cancel'
+	      to: 'Отмени'
+	based on: texts.common.cancelButton
+
+translated texts.wallet.nav.[12]
+	    from: 'Close Program'
+	      to: 'Затворете програмата'
+	based on: texts.wallet.nav.[10]
+
+translated texts.wallet.nav.[13]
+	    from: 'Namespaces & Mosaics'
+	      to: 'Namespaces & Mosaics'
+	based on: texts.namespacesmosaics.title
+
+translated texts.trading.tradeHistory.amount
+	    from: 'Amount'
+	      to: 'Сума'
+	based on: texts.transactions.table.columns.[8]
+
+translated texts.trading.tradeHistory.time
+	    from: 'Time'
+	      to: 'Време'
+	based on: texts.harvestedBlocks.table.columns.[1]
+
+translated texts.trading.pendingOrders.amount
+	    from: 'Amount'
+	      to: 'Сума'
+	based on: texts.transactions.table.columns.[8]
+
+translated texts.trading.pendingOrders.remove
+	    from: 'Remove'
+	      to: 'Премахни'
+	based on: texts.addressBook.remove
+
+translated texts.trading.graphChart.steps.oneDay
+	    from: '1 day'
+	      to: '1 ден'
+	based on: texts.common.appStatus.daysBehind.1
+
+translated texts.financialTransactions.escrows.statuses.confirmed
+	    from: 'Confirmed'
+	      to: 'Потвърдени'
+	based on: texts.transactions.filters.confirmed
+
+translated texts.financialTransactions.settings.title
+	    from: 'Settings'
+	      to: 'Настройки'
+	based on: texts.settings.title
+
+translated texts.financialTransactions.tradingOperations.senderOrRecipient
+	    from: 'Sender/Recipient'
+	      to: 'Изпращач/Получател'
+	based on: texts.transactions.table.columns.[2]
+
+translated texts.financialTransactions.tradingOperations.message
+	    from: 'Message'
+	      to: 'Съобщение'
+	based on: texts.transactions.table.columns.[3]
+
+translated texts.financialTransactions.tradingOperations.confirmations
+	    from: 'Confirmations'
+	      to: 'Потвърждения'
+	based on: texts.transactions.table.columns.[6]
+
+translated texts.financialTransactions.tradingOperations.fee
+	    from: 'Fee'
+	      to: 'Такса'
+	based on: texts.harvestedBlocks.table.columns.[3]
+
+translated texts.financialTransactions.tradingOperations.amount
+	    from: 'Amount'
+	      to: 'Сума'
+	based on: texts.transactions.table.columns.[8]
+
+translated texts.fiatPanel.transactions.columns.time
+	    from: 'Time'
+	      to: 'Време'
+	based on: texts.harvestedBlocks.table.columns.[1]
+
+translated texts.fiatPanel.transactions.columns.sender
+	    from: 'Sender'
+	      to: 'Изпращач'
+	based on: texts.modals.transactionDetails.sender
+
+translated texts.fiatPanel.transactions.columns.recipient
+	    from: 'Recipient'
+	      to: 'Получател'
+	based on: texts.modals.transactionDetails.recipient
 
 -----

@@ -26,36 +26,36 @@
   font-style: normal;
   font-weight: normal;
   speak: none;
- 
+
   display: inline-block;
   text-decoration: inherit;
   width: 1em;
   margin-right: .2em;
   text-align: center;
   /* opacity: .8; */
- 
+
   /* For safety - reset parent styles, that can break glyph codes*/
   font-variant: normal;
   text-transform: none;
- 
+
   /* fix buttons height, for twitter bootstrap */
   line-height: 1em;
- 
+
   /* Animation center compensation - margins should be symmetric */
   /* remove if not needed */
   margin-left: .2em;
- 
+
   /* you can be more comfortable with increased icons size */
   /* font-size: 120%; */
- 
+
   /* Font smoothing. That was taken from TWBS */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
- 
+
   /* Uncomment for 3D effect */
   /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
 }
- 
+
 .icon-home:before { content: '\e800'; } /* '' */
 .icon-mail:before { content: '\e801'; } /* '' */
 .icon-cog-alt:before { content: '\e802'; } /* '' */
@@ -119,3 +119,14 @@
 .icon-globe:before { content: '\e83c'; } /* '' */
 .icon-birthday:before { content: '\e83d'; } /* '' */
 .icon-puzzle:before { content: '\e83e'; } /* '' */
+.icon-basket:before { content: '\e83f'; } /* '' */
+.icon-gauge:before { content: '\e840'; } /* '' */
+.icon-resize-full:before { content: '\e841'; } /* '' */
+.icon-ok:before { content: '\e842'; } /* '' */
+.icon-credit-card:before { content: '\e843'; } /* '' */
+.icon-dollar:before { content: '\e844'; } /* '' */
+.icon-pig:before { content: '\e845'; } /* '' */
+.icon-down-big:before { content: '\e846'; } /* '' */
+.icon-up-big:before { content: '\e847'; } /* '' */
+.icon-bank:before { content: '\e848'; } /* '' */
+

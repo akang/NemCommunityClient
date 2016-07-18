@@ -9,12 +9,12 @@ require.config({
         'filesaver': 'plugins/FileSaver.min',
         'modernizr': 'plugins/modernizr.custom.00846',
         'ractive': 'plugins/ractive',
-         'ractive-events-tap': 'plugins/ractive-events-tap',
+        'ractive-events-tap': 'plugins/ractive-events-tap',
         'tinycarousel': 'plugins/jquery.tinycarousel.min',
         'scroller': 'plugins/jquery.fs.scroller.min',
         'selecter': 'plugins/jquery.fs.selecter.min',
         'stepper': 'plugins/jquery.fs.stepper.min',
-        'gridster': 'plugins/jquery.gridster.min',
+        'gridster': 'plugins/jquery.gridster',
         'maskedinput': 'plugins/jquery.mask.min',
         'dropit': 'plugins/dropit.min',
         'zeroClipboard': 'plugins/ZeroClipboard.min',
@@ -22,7 +22,12 @@ require.config({
         'mustache': 'plugins/mustache.min',
         'draggable': 'plugins/jquery-ui.draggable.min',
         'typeahead': 'plugins/typeahead.jquery-dist',
-        'handlebars': 'plugins/handlebars-v2.0.0-dist'
+        'handlebars': 'plugins/handlebars-v2.0.0-dist',
+        'd3': 'plugins/d3.min',
+        'd3fc': 'plugins/d3fc.min',
+        'Layout': 'plugins/Layout',
+        'SockJS': 'plugins/sockjs',
+        'Stomp': 'plugins/stomp'
     },
     shim: {
         'scroller': { deps: ['jquery'] },
@@ -64,7 +69,8 @@ require.config({
                     });
                 });
             }
-        }
+        },
+        'd3fc': { deps: ['d3', 'Layout'] }
     }
 });
 
@@ -155,9 +161,43 @@ define(['ncc'], function(ncc) {
     ncc.refreshNisStatus();
     setInterval(ncc.refreshNisStatus, 3000);
 
+    ncc.refreshBrokerStatus = function(complete) {
+        var success = false;
+        ncc.getRequest('broker/info',
+            function(data) {
+                ncc.set('brokerStatus', data);
+                success = true;
+            },
+            {
+                complete: function(jqXHR) {
+                    if (jqXHR.status === 0) {
+                        ncc.set('brokerStatus.code', Utils.config.STATUS_STOPPED);
+                    } else if (!success) {
+                        ncc.set('brokerStatus.code', Utils.config.STATUS_STOPPED);
+                    }
+
+                    if (complete) complete();
+                }
+            },
+            true
+        );
+    };
+
+    ncc.refreshBrokerStatus(function iteratee() {
+        setTimeout(ncc.refreshBrokerStatus.bind(ncc, iteratee), 10000);
+    });
+
     ncc.refreshAppStatus = function(complete) {
         ncc.refreshNccStatus(function() {
-            ncc.refreshNisStatus(complete);
+            var resolvedStatuses = 0;
+            var onResolve = function() {
+                resolvedStatuses++;
+                if (resolvedStatuses == 2) {
+                    complete();
+                }
+            }
+            ncc.refreshBrokerStatus(onResolve);
+            ncc.refreshNisStatus(onResolve);
         });
     };
 

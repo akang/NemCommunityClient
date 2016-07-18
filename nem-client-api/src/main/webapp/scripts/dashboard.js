@@ -63,7 +63,7 @@
                 series: btcSeries,
                 commonSeriesSettings: {
                     argumentField: 'month',
-                    color: '#34b7af',
+                    color: '#27d782',
                     width: 1
                 },
                 tooltip: {
@@ -90,17 +90,7 @@
         setupEverytime: function() {
             var local = this.local;
             local.$dashboard = $('.js-dashboard');
-
-            require(['gridster'], function() {
-                local.$dashboard.gridster({
-                    widget_margins: [10, 9],
-                    widget_base_dimensions: [294, 187],
-                    max_cols: 3,
-                    /*draggable: {
-                        handle: 'div.dragger'
-                    }*/
-                }).data('gridster').disable(); //disable tiles drag & drop
-            });
+            Utils.setupGridster(local.$dashboard);
 
             ncc.refreshAccount();
 
@@ -133,9 +123,9 @@
 
             //owned mosaics
             //http://127.0.0.1:7890/account/mosaic/owned?address=TD3RXTHBLK6J3UD2BH2PXSOFLPWZOTR34WCG4HXH
-            var remoteServer = ncc.get('settings.remoteServer.protocol') + "://" + ncc.get('settings.remoteServer.host') + ":" + ncc.get('settings.remoteServer.port');
+            var remoteserver = ncc.get('settings.remoteServer.protocol') + "://" + ncc.get('settings.remoteServer.host') + ":" + ncc.get('settings.remoteServer.port');
             var currAccount = ncc.get('activeAccount.address');
-            var url4 = remoteServer + '/account/mosaic/owned?address=' + currAccount;
+            var url4 = remoteserver + '/account/mosaic/owned?address=' + currAccount;
             var mosaicOwnedOutputs = [];
             $.getJSON(url4, function(data4) {
                 for (var i4 in data4.data) {

@@ -1,6 +1,6 @@
 "use strict";
 
-define(['TransactionType'], function(TransactionType) {
+define(['TransactionType', 'OrderEnums'], function(TransactionType, OrderEnums) {
     var Utils = {
         config: {
             addressCharacters: 40,
@@ -112,6 +112,18 @@ define(['TransactionType'], function(TransactionType) {
         toggleOff: function(instance, id) {
             instance.set('active.' + id, false);
             $(document).off('click.' + id);
+        },
+        setupGridster: function ($element) {
+            require(['gridster'], function() {
+                $element.gridster({
+                    widget_margins: [10, 9],
+                    widget_base_dimensions: [294, 187],
+                    max_cols: 3,
+                    /*draggable: {
+                        handle: 'div.dragger'
+                    }*/
+                }).data('gridster').disable(); //disable tiles drag & drop
+            });
         },
 
         // ADDRESS BOOK
@@ -405,6 +417,10 @@ define(['TransactionType'], function(TransactionType) {
                                 min = Utils.format.minDigits(min, 2);
                                 sec = Utils.format.minDigits(sec, 2);
                                 return month + ' ' + day + ', ' + year + ' ' + hour + ':' + min + ':' + sec;
+                            case 'dd.mm.yyyy':
+                                month = Utils.format.minDigits(month, 2);
+                                day = Utils.format.minDigits(day, 2);
+                                return day + '.' + month + '.' + year;
                         }
                     } else {
                         return date;
@@ -993,8 +1009,12 @@ define(['TransactionType'], function(TransactionType) {
         updateAccount: function() {
             var acct = ncc.get('activeAccount');
             var wallet = ncc.get('wallet');
-            var allAccounts = [wallet.primaryAccount].concat(wallet.otherAccounts);
+            var allAccounts = ncc.get('allAccounts');
             var walletAccount = allAccounts.filter(function (a){ return (a.address == acct.address);})[0];
+
+            if (!walletAccount) {
+                return;
+            }
 
             ncc.postRequest(
                 'account/find',
@@ -1026,12 +1046,211 @@ define(['TransactionType'], function(TransactionType) {
             this.retrieveMosaicDefinitions();
             return wallet;
         },
+        processTradingInfo: function(tradingInfo) {
+            if (tradingInfo.tradingAccountAddress) {
+                tradingInfo.tradingAccount = {
+                    address: tradingInfo.tradingAccountAddress,
+                    formattedAddress: Utils.format.address.format(tradingInfo.tradingAccountAddress)
+                };
+                delete(tradingInfo.tradingAccountAddress);
+            }
+            return tradingInfo;
+        },
+        processFiatAccounts: function(fiatAccounts) {
+            return $.map(fiatAccounts, Utils.processTradingAccounts);
+        },
+        /***
+         *
+         * @param accounts
+         * @param options.processAddress Flag whether to process the escrow address, or leave it as is, true by default
+         * @returns {*}
+         */
+        processTradingAccounts: function(accounts, options) {
+            options = options || {};
+
+            accounts.escrowAccounts = $.map(accounts.escrowAccounts, function(value) {
+                return Utils.processEscrowAccount(value, {
+                    processAddress: options.processAddress
+                });
+            });
+
+            accounts.currentEscrowAccount = Utils.processEscrowAccount(accounts.currentEscrowAccount, { processAddress: options.processAddress } );
+            accounts.withdrawalAccount = Utils.processWithdrawalAccount(
+                accounts.withdrawalAccount, {
+                    processAddress: options.processAddress
+                });
+
+            accounts.tradeInstrument = Utils.processTradeInstrument(accounts.tradeInstrument);
+
+            return accounts;
+        },
+        /**
+         *
+         * @param escrowAccount
+         * @param options.processAddress Flag whether to process the escrow address or leave it as is, default is true
+         * @returns {object} processed escrow account
+         */
+        processEscrowAccount: function(escrowAccount, options) {
+            if (!escrowAccount || !escrowAccount.address) return null;
+            options = options || {};
+
+            if (options.processAddress) {
+                Utils.processTradeAddress(escrowAccount);
+            } else {
+                escrowAccount.formattedAddress = escrowAccount.address;
+            }
+
+            escrowAccount.balanceObj = Utils.format.nem.stringToNem(escrowAccount.balance);
+            escrowAccount.reserveObj = Utils.format.nem.stringToNem(escrowAccount.reserved);
+            escrowAccount.formattedBalance = Utils.format.nem.formatNem(escrowAccount.balanceObj, {
+                fixedDecimalPlaces: true,
+                decimalPlaces: 6,
+                dimUnimportantTrailing: true
+            });
+            escrowAccount.formattedReserve = Utils.format.nem.formatNem(escrowAccount.reserveObj, {
+                fixedDecimalPlaces: true,
+                decimalPlaces: 6,
+                dimUnimportantTrailing: true
+            });
+            escrowAccount.formattedPaymentsExpiration = Utils.format.date
+                .format(escrowAccount.paymentsExpiration, 'M dd, yyyy hh:mm:ss');
+
+            return escrowAccount
+        },
+
+        /**
+         *
+         * @param withdrawalAccount
+         * @param options.processAddress Flag whether to process the escrow address, or leave as is, default is true
+         * @returns {object} processed withdrawal account
+         */
+        processWithdrawalAccount: function(withdrawalAccount, options) {
+            if (!withdrawalAccount) {
+                return null;
+            }
+
+            options = options || {};
+
+            if (options.processAddress) {
+                Utils.processTradeAddress(withdrawalAccount);
+            } else {
+                withdrawalAccount.formattedAddress = withdrawalAccount.address;
+            }
+
+            withdrawalAccount.isBeingProcessed = withdrawalAccount.status === 1;
+
+            return withdrawalAccount;
+        },
+        processTradeAddress: function(tradingAccount) {
+            if (!tradingAccount) {
+                return null;
+            }
+            tradingAccount.formattedAddress =
+                Utils.format.address.format(tradingAccount.address);
+        },
+        processTradeInstrument: function(instrument) {
+            instrument.minStepObj = Utils.format.nem.stringToNem(instrument.minStep);
+            instrument.formattedMinStep = Utils.format.nem.formatNem(instrument.minStepObj);
+            instrument.minAmountObj = Utils.format.nem.stringToNem(instrument.minAmount);
+            instrument.formattedMinAmount = Utils.format.nem.formatNem(instrument.minAmountObj);
+            return instrument;
+        },
+        processTradePair: function(tradePair) {
+            var pair = $.extend({}, tradePair);
+            pair.commissionObj = Utils.format.nem.stringToNem(tradePair.commission);
+            pair.formattedCommission = Utils.format.nem.formatNem(pair.commissionObj);
+            pair.pegCommissionObj = Utils.format.nem.stringToNem(tradePair.pegCommission);
+            pair.formattedPegCommission = Utils.format.nem.formatNem(pair.pegCommissionObj);
+            pair.baseInstrument = Utils.processTradeInstrument(pair.baseInstrument);
+            pair.quoteInstrument = Utils.processTradeInstrument(pair.quoteInstrument);
+            return pair;
+        },
+        isBlank: function(amountString) {
+            return amountString === '0';
+        },
+        processExtendedPair: function(extendedPair) {
+            var pair = Utils.processTradePair(extendedPair);
+            pair.bidObj = Utils.format.nem.stringToNem(extendedPair.bid);
+            pair.blankBid = Utils.isBlank(pair.bid);
+            if (!pair.blankBid) {
+                pair.formattedBid = Utils.format.nem.formatNem(pair.bidObj, {
+                    fixedDecimalPlaces: true,
+                    decimalPlaces: 6
+                });
+            }
+
+            pair.askObj = Utils.format.nem.stringToNem(extendedPair.ask);
+            pair.blankAsk = Utils.isBlank(pair.ask);
+            if (!pair.blankAsk) {
+                pair.formattedAsk = Utils.format.nem.formatNem(pair.askObj, {
+                    fixedDecimalPlaces: true,
+                    decimalPlaces: 6
+                });
+            }
+            return pair;
+        },
+        processDepthQuote: function(depthQuote) {
+            var quote = $.extend({}, depthQuote);
+            quote.amountObj = Utils.format.nem.stringToNem(depthQuote.amount);
+            quote.blankAmount = Utils.isBlank(quote.amount);
+            if (!quote.blankAmount) {
+                quote.formattedAmount = Utils.format.nem.formatNem(quote.amountObj, {
+                    fixedDecimalPlaces: true,
+                    decimalPlaces: 6
+                });
+            }
+
+            quote.priceObj = Utils.format.nem.stringToNem(depthQuote.price);
+            quote.blankPrice = Utils.isBlank(quote.price);
+            if (!quote.blankPrice) {
+                quote.formattedPrice = Utils.format.nem.formatNem(quote.priceObj, {
+                    fixedDecimalPlaces: true,
+                    decimalPlaces:  6
+                });
+            }
+            return quote;
+        },
+        processOrders: function(orders) {
+            return $.map(orders, Utils.processOrder);
+        },
+        processOrder: function(rawOrder) {
+            var order = $.extend({}, rawOrder);
+            order.createdOn = Utils.format.date.format(order.createOn, 'M dd, yyyy hh:mm:ss');
+            order.priceObj = Utils.format.nem.stringToNem(order.price);
+            order.formattedPrice = Utils.format.nem.formatNem(order.priceObj, {
+                fixedDecimalPlaces: true,
+                decimalPlaces: 6,
+                dimUnimportantTrailing: true
+            });
+            order.amountObj = Utils.format.nem.stringToNem(order.amount);
+            order.formattedAmount = Utils.format.nem.formatNem(order.amountObj, {
+                fixedDecimalPlaces: true,
+                decimalPlaces: 6,
+                dimUnimportantTrailing: true
+            });
+            order.feeObj = Utils.format.nem.stringToNem(order.fee);
+            order.formattedFee = Utils.format.nem.formatNem(order.feeObj);
+            order.totalObj = Utils.format.nem.stringToNem(order.total, {
+                dimUnimportantTrailing: true
+            });
+            order.formattedTotal = Utils.format.nem.formatNem(order.totalObj, {
+                dimUnimportantTrailing: true
+            });
+            order.validity = order.cancelInHours === OrderEnums.Validity.GOOD_TILL_CANCELLED
+                ? OrderEnums.Validity.GOOD_TILL_CANCELLED : OrderEnums.Validity.HOURS;
+            return order;
+        },
         processContacts: function(ab) {
             for (var i = 0; i < ab.length; i++) {
                 ab[i].formattedAddress = Utils.format.address.format(ab[i].address);
             }
 
             return ab;
+        },
+        processUserDetails: function(details) {
+            details.formattedDateOfBirth = Utils.format.date.format(details.dateOfBirth, 'M dd, yyyy');
+            details.isBeingProcessed = details.status === 1;
+            return details;
         },
         removeContact: function(ab, address) {
             for (var i = 0; i < ab.length; i++) {
@@ -1041,6 +1260,104 @@ define(['TransactionType'], function(TransactionType) {
             }
 
             return ab;
+        },
+        findEscrowByInstrument: function(instrument) {
+            var escrows = ncc.get('escrowAccounts');
+            return escrows.find(function(item) {
+                return item.tradeInstrument.code === instrument.code && item.isCurrent;
+            });
+        },
+        findFiatAccountsGroup: function(instrument) {
+            if(!instrument) {
+                return false;
+            }
+            if (!ncc.get('trading.fiat')) {
+                return false;
+            }
+            return ncc.get('trading.fiat').find(function(group) {
+                return group.tradeInstrument.code === instrument.code;
+            });
+        },
+        processBankAccount: function(bankAccount) {
+            bankAccount.transfers = $.map(bankAccount.transfers, Utils.processTransfer);
+
+            bankAccount.balanceObj = Utils.format.nem.stringToNem(bankAccount.balance);
+            bankAccount.formattedBalance = Utils.format.nem.formatNem(bankAccount.balanceObj, {
+                dimUnimportantTrailing: true
+            });
+
+            bankAccount.availableBalanceObj = Utils.format.nem.stringToNem(bankAccount.availableBalance);
+            bankAccount.formattedAvailableBalance = Utils.format.nem.formatNem(bankAccount.availableBalanceObj, {
+                dimUnimportantTrailing: true
+            });
+
+            return bankAccount;
+        },
+        processTransfer: function(transfer) {
+            transfer.sendAmountObj = Utils.format.nem.stringToNem(transfer.sendAmount);
+            transfer.formattedSendAmount = Utils.format.nem.formatNem(transfer.sendAmountObj, {
+                dimUnimportantTrailing: true,
+                fixedDecimalPlaces: true
+            });
+
+            transfer.receiveAmountObj = Utils.format.nem.stringToNem(transfer.receiveAmount);
+            transfer.formattedReceiveAmount = Utils.format.nem.formatNem(transfer.receiveAmountObj, {
+                dimUnimportantTrailing: true,
+                fixedDecimalPlaces: true
+            });
+
+            transfer.isIncoming = transfer.direction === 0;
+            transfer.isOutgoing = transfer.direction === 1;
+
+            transfer.formattedTime = Utils.format.date.format(transfer.time, 'M dd, yyyy hh:mm:ss');
+
+            return transfer;
+        },
+        getFiatAccounts: function(instrument) {
+            var bankAccounts = ncc.get('bankAccounts') || [];
+            return bankAccounts.filter(function(bankAccount) {
+                return bankAccount.tradeInstrument.code === instrument.code;
+            });
+        },
+        processKickstartAccount: function(kickstartAccount) {
+            kickstartAccount.rateObj = Utils.format.nem.stringToNem(kickstartAccount.rate);
+            kickstartAccount.formattedRate = Utils.format.nem.formatNem(kickstartAccount.rateObj, {
+                dimUnimportantTrailing: true
+            });
+            return kickstartAccount;
+        },
+        processOrderUpdate: function(orderUpdate) {
+            orderUpdate.order = Utils.processOrder(orderUpdate.order);
+            orderUpdate.reservedAmountObj = Utils.format.nem.stringToNem(orderUpdate.reservedAmount);
+            orderUpdate.formattedReserved = Utils.format.nem.formatNem(orderUpdate.reservedAmountObj, {
+                dimUnimportantTrailing: true
+            });
+            console.log(orderUpdate);
+            return orderUpdate;
+        },
+        processMatch: function(match) {
+            match.order = Utils.processOrder(match.order);
+            match.amountObj = Utils.format.nem.stringToNem(match.amount);
+            match.priceObj = Utils.format.nem.stringToNem(match.price);
+            match.formattedAmount = Utils.format.nem.formatNem(match.amountObj, {
+                dimUnimportantTrailing: true
+            });
+            match.formattedPrice = Utils.format.nem.formatNem(match.priceObj, {
+                dimUnimportantTrailing: true
+            });
+            return match;
+        },
+        processTradeHistoryTx: function(tx) {
+            tx.time = Utils.format.date.format(tx.time, 'M dd, yyyy hh:mm:ss');
+            tx.amountObj = Utils.format.nem.stringToNem(tx.amount);
+            tx.formattedAmount = Utils.format.nem.formatNem(tx.amountObj, {
+                dimUnimportantTrailing: true, fixedDecimalPlaces: true
+            });
+            tx.priceObj = Utils.format.nem.stringToNem(tx.price);
+            tx.formattedPrice = Utils.format.nem.formatNem(tx.priceObj, {
+                dimUnimportantTrailing: true, fixedDecimalPlaces: true
+            });
+            return tx;
         }
     };
     return Utils;

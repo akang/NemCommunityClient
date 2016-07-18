@@ -89,9 +89,6 @@
 							<li class="dropdownMenu-item {{^enableManualBoot}}disabled{{/}} dropdownMenu-item--separator" on-click="bootLocalNode">
 								{{texts.wallet.actions.bootLocalNode}}
 							</li>
-							<li class="dropdownMenu-item" on-click="exportWalletLight">
-								{{texts.wallet.actions.exportWalletLight}}
-							</li>
 							<li class="dropdownMenu-item" on-click="refreshInfo">
 								{{texts.wallet.actions.refreshInfo}}
 							</li>
@@ -171,6 +168,9 @@
 					<li class="dropdownMenu-item" on-click="addAccount">
 						{{texts.wallet.actions.addAccount}}
 					</li>
+					<li class="dropdownMenu-item dropdownMenu-item--separator" on-click="openKickstart()">
+						{{texts.wallet.actions.getXemInExchangeForFiat}}
+					</li>
 				</ul>
 			</div>
 			<div class="account-select scrollable {{^active.accountSelect}}hidden{{/}}" id="accountSelect">
@@ -222,26 +222,34 @@
 				</a></li>
 				<li class="sidebar-nav-item {{#layout.1.name === 'harvested-blocks'}}active{{/}}"><a href="javascript:;" on-click="redirect:'harvested-blocks', {{params}}">
 					<span class="sidebar-nav-item-title icon-food"><span class="fullSidebarOnly">{{texts.wallet.nav.4}}</span></span>
-					<!--/*</span><span class="noti-box transactions">2</span>*/-->
+				</a></li>
+				<li class="sidebar-nav-item {{#layout.1.name === 'trading'}}active{{/}}"><a href="javascript:;" on-click="redirect:'trading', {{params}}">
+					<span class="sidebar-nav-item-title icon-basket"><span class="fullSidebarOnly">{{texts.wallet.nav.5}}</span></span>
+				</a></li>
+				<li class="sidebar-nav-item {{#layout.1.name === 'financial-transactions'}}active{{/}}"><a href="javascript:;" on-click="redirect:'financial-transactions', {{params}}">
+					<span class="sidebar-nav-item-title icon-bank"><span class="fullSidebarOnly">{{texts.wallet.nav.6}}</span></span>
+				</a></li>
+				<li class="sidebar-nav-item {{#layout.1.name === 'fiat-panel'}}active{{/}}"><a href="javascript:;" on-click="redirect:'fiat-panel', {{params}}">
+					<span class="sidebar-nav-item-title icon-dollar"><span class="fullSidebarOnly">{{texts.wallet.nav.7}}</span></span>
 				</a></li>
 				<li class="sidebar-nav-item {{#layout.1.name === 'namespaces-mosaics'}}active{{/}}"><a href="javascript:;" on-click="redirect:'namespaces-mosaics', {{params}}">
-					<span class="sidebar-nav-item-title icon-briefcase"><span class="fullSidebarOnly">{{texts.wallet.nav.11}}</span></span>
+					<span class="sidebar-nav-item-title icon-briefcase"><span class="fullSidebarOnly">{{texts.wallet.nav.13}}</span></span>
 				</a></li>
 				<li class="sidebar-nav-item disabled {{#layout.1.name === 'assetExchange'}}active{{/}}"><a href="javascript:;" on-click="redirect:'assetExchange', {{params}}">
-					<span class="sidebar-nav-item-title icon-briefcase"><span class="fullSidebarOnly">{{texts.wallet.nav.6}}</span></span>
+					<span class="sidebar-nav-item-title icon-briefcase"><span class="fullSidebarOnly">{{texts.wallet.nav.8}}</span></span>
 				</a></li>
 				<li class="sidebar-nav-item disabled {{#layout.1.name === 'news'}}active{{/}}"><a href="javascript:;" on-click="redirect:'news', {{params}}">
-					<span class="sidebar-nav-item-title icon-megaphone"><span class="fullSidebarOnly">{{texts.wallet.nav.7}}</span></span>
+					<span class="sidebar-nav-item-title icon-megaphone"><span class="fullSidebarOnly">{{texts.wallet.nav.9}}</span></span>
 					<!--/*</span><span class="noti-box news">6</span>*/-->
 				</a></li>
 				<li class="sidebar-nav-item disabled {{#layout.1.name === 'accounts'}}active{{/}}"><a href="javascript:;" on-click="redirect:'accounts', {{params}}">
-					<span class="sidebar-nav-item-title icon-user"><span class="fullSidebarOnly">{{texts.wallet.nav.8}}</span></span>
+					<span class="sidebar-nav-item-title icon-user"><span class="fullSidebarOnly">{{texts.wallet.nav.10}}</span></span>
 				</a></li>
 				<li class="sidebar-nav-item {{#layout.1.name === 'settings'}}active{{/}}"><a href="javascript:;" on-click="openModal('settings')">
-					<span class="sidebar-nav-item-title icon-cog-alt"><span class="fullSidebarOnly">{{texts.wallet.nav.9}}</span></span>
+					<span class="sidebar-nav-item-title icon-cog-alt"><span class="fullSidebarOnly">{{texts.wallet.nav.11}}</span></span>
 				</a></li>
 				<li class="sidebar-nav-item"><a href="javascript:;" on-click="shutdown">
-					<span class="sidebar-nav-item-title icon-off"><span class="fullSidebarOnly">{{texts.wallet.nav.10}}</span></span>
+					<span class="sidebar-nav-item-title icon-off"><span class="fullSidebarOnly">{{texts.wallet.nav.12}}</span></span>
 				</a></li>
 			</ul>
 		</nav>
@@ -452,7 +460,54 @@
 				</ul>
 			</div>
 		</div>
-		<div class="form-field">
+		{{#if escrowAddress}}
+        <div class="form-field">
+			<p class="form-label">
+				Recipient choice
+			</p>
+            <div class="form-dropdownbox">
+                <div class="form-input form-input--textbox form-dropdownbox-selection {{#active['sendNem-recipient']}}form-dropdownbox-selection--selecting{{/}}" on-click="toggleOn('sendNem-recipient')">
+					{{#if recipientType === 'escrow'}}
+                    	{{texts.modals.sendNem.escrow}}
+					{{/if}}
+					{{#if recipientType === 'other'}}
+						{{texts.modals.sendNem.other}}
+					{{/if}}
+                </div>
+                <ul class="form-dropdownbox-dropdown {{^active['sendNem-recipient']}}hidden{{/}}">
+                    <li class="form-dropdownbox-item" on-click="set('recipientType', 'escrow')">
+                        {{texts.modals.sendNem.escrow}}
+                    </li>
+                    <li class="form-dropdownbox-item" on-click="set('recipientType', 'other')">
+                        {{texts.modals.sendNem.other}}
+                    </li>
+                </ul>
+            </div>
+		</div>
+		{{/if}}
+        <div class="form-field">
+			<p class="form-label">
+				{{texts.modals.sendNem.recipient}}
+				{{#if recipientError}}
+					<span class="sendNem-errorIcon icon-attention-circled" title="{{texts.modals.sendNem.recipientValidation}}" on-mouseover="registerToolTip"></span>
+				{{/if}}
+			</p>
+            <input class="form-input form-input--textbox js-sendNem-recipient-textbox
+					{{#if recipientType === 'escrow'}} form-input--unimportant {{/if}}
+					{{#if recipientError}} form-input--error {{/if}}"
+					on-keypress="sendFormKeypress"
+					value="{{formattedRecipient}}"
+					disabled="{{recipientType === 'escrow'}}">
+			<p class="form-sublabel">
+				{{#recipientLabel}}
+					{{{fill(true, texts.modals.sendNem.labelDesc, '<strong>' + recipientLabel + '</strong>')}}}
+				{{/}}
+				{{#recipientLabel === ''}}
+					{{texts.modals.sendNem.nullLabelDesc}}
+				{{/}}
+			</p>
+        </div>
+		<!-- <div class="form-field">
 			<p class="form-label">
 				{{texts.modals.sendNem.recipient}}
 				{{#if recipientError}}
@@ -468,7 +523,7 @@
 					{{texts.modals.sendNem.nullLabelDesc}}
 				{{/}}
 			</p>
-		</div>
+		</div> -->
 		<div class="form-field">
 			<p class="form-label">{{texts.modals.sendNem.amount}} <span class="form-help">({{texts.dashboard.transactions.balance}} {{fullBalance}})</span></p>
 			<div class="form-input">
@@ -718,9 +773,195 @@
 		</div>
 	</div>
 </newNamespaceModal>
+<namespaceDetailsModal modalClass="namespaceDetailsModal modal--wide" modalTitle="{{texts.modals.transactionDetails.title}}" closeOnEnter="true" on-registerToolTip="registerToolTip" texts="{{texts}}" blockchainHeight="{{blockchainHeight}}">
+    {{#transaction}}
+		<table>
+			<tr>
+				<td class="table-cell table-cell--label"><strong>{{texts.modals.transactionDetails.type}}</strong></td>
+				<td class="table-cell table-cell--content">
+					{{texts.transactionTypes[.type]}} {{#innerType}}({{texts.transactionTypes[.innerType]}}){{/innerType}}
+				</td>
+			</tr>
+
+            <tr>
+                <td class="table-cell table-cell--label">{{texts.modals.transactionDetails.hash}}</td>
+                <td class="table-cell table-cell--content">{{.hash}}</td>
+            </tr>
+
+            <tr>
+                <td class="table-cell table-cell--label">{{texts.modals.transactionDetails.time}}</td>
+                <td class="table-cell table-cell--content">{{.formattedDate}}</td>
+            </tr>
+
+            <tr>
+                <td class="table-cell table-cell--label">{{texts.modals.transactionDetails.confirmations}}</td>
+                <td class="table-cell table-cell--content">
+                    {{#if .confirmed}}
+                        {{#if blockchainHeight}}
+                            {{blockchainHeight - .blockHeight + 1}}
+                        {{else}}
+                            {{texts.modals.transactionDetails.confirmationsUnknown}}
+                        {{/if}}
+                    {{else}}
+                        {{texts.modals.transactionDetails.pending}}
+                    {{/if}}
+                </td>
+            </tr>
+
+            {{#if (.isMultisig)}}
+                <tr>
+					<td class="table-cell table-cell--label">{{texts.modals.transactionDetails.multisigAccount}}</td>
+					<td class="table-cell table-cell--content">
+						<a class="hyperlink--default" href="javascript:;" on-click="viewAccount(.inner.sender)">
+                            {{#if privateLabels[.inner.sender]}}
+                                {{privateLabels[.inner.sender]}}
+                            {{else}}
+                                {{.multisig.formattedFrom}}
+                            {{/if}}
+                        </a>
+					</td>
+                </tr>
+            {{else}}
+                <tr>
+                    <td class="table-cell table-cell--label">{{texts.modals.transactionDetails.sender}}</td>
+                    <td class="table-cell table-cell--content">
+                        <a class="hyperlink--default" href="javascript:;" on-click="viewAccount(.sender)">
+                            {{#if privateLabels[.sender]}}
+                                {{privateLabels[.sender]}}
+                            {{else}}
+                                {{.formattedSender}}
+                            {{/if}}
+                        </a>
+                    </td>
+                </tr>
+            {{/if}}
+
+			{{#if (.isMultisig)}}
+			<tr>
+				<td class="table-cell table-cell--label">{{texts.modals.transactionDetails.issuer}}</td>
+				<td class="table-cell table-cell--content">
+					<a class="hyperlink--default" href="javascript:;" on-click="viewAccount(.sender)">
+                        {{#if privateLabels[.sender]}}
+                            {{privateLabels[.sender]}}
+                        {{else}}
+                            {{.formattedSender}}
+                        {{/if}}
+                    </a>
+				</td>
+			</tr>
+
+            <tr>
+                <td class="table-cell table-cell--label">
+                    {{texts.modals.transactionDetails.multisigMessage}}
+                </td>
+                <td class="table-cell table-cell--content">
+                    {{.cosignatoriesCount}}
+                </td>
+            </tr>
+
+            <tr>
+                <td class="table-cell table-cell--label">{{texts.common.dueBy}}</td>
+                <td class="table-cell table-cell--content">{{multisig.validMinutes}} {{texts.common.minutes}} <span class="dimmed">({{.multisig.formattedDeadline}})</span></td>
+            </tr>
+            {{/if}}
+
+            {{#if (.isMultisig)}}
+            <tr>
+                <td class="table-cell table-cell--label">{{texts.modals.transactionDetails.innerFee}}</td>
+                <td class="table-cell table-cell--content">{{{.multisig.formattedInnerFee}}} XEM</td>
+            </tr>
+            <tr>
+                <td class="table-cell table-cell--label">{{texts.modals.transactionDetails.multisigFees}}</td>
+                <td class="table-cell table-cell--content">{{{.multisig.formattedTotalMultisigFees}}} XEM</td>
+            </tr>
+            {{else}}
+            <tr>
+                <td class="table-cell table-cell--label">{{texts.common.fee}}</td>
+                <td class="table-cell table-cell--content">{{{.formattedFee}}} XEM</td>
+            </tr>
+            {{/if}}
+
+            <tr>
+                <td colspan="2">
+                    <hr/>
+                </td>
+            </tr>
+
+            {{#if (.type === TransactionType.Transfer || .type === TransactionType.Multisig_Transfer)}}
+            {{>transferTransactionPartial}}
+            {{/if}}
+
+            {{#if (.type === TransactionType.Importance_Transfer || .type === TransactionType.Multisig_Importance_Transfer)}}
+            {{>importanceTransactionPartial}}
+            {{/if}}
+
+            {{#if (.type === TransactionType.Aggregate_Modification || .type === TransactionType.Multisig_Aggregate_Modification)}}
+            {{>aggregateModificationPartial}}
+            {{/if}}
+
+            {{#if (.type === TransactionType.Provision_Namespace || .type === TransactionType.Multisig_Provision_Namespace)}}
+            {{>provisionNamespacePartial}}
+            {{/if}}
+
+            {{#if (.type === TransactionType.Mosaic_Creation || .type === TransactionType.Multisig_Mosaic_Creation)}}
+            {{>mosaicCreationPartial}}
+            {{/if}}
+
+            {{#if (.type === TransactionType.Mosaic_Supply || .type === TransactionType.Multisig_Mosaic_Supply)}}
+            {{>mosaicSupplyPartial}}
+            {{/if}}
+
+            {{#if (.isMultisig)}}
+				<tr><td colspan="2"><hr></td></tr>
+				<tr>
+					<td class="table-cell table-cell--label">{{texts.modals.transactionDetails.issuer}}</td>
+					<td class="table-cell table-cell--content">
+						<a class="hyperlink--default" href="javascript:;" on-click="viewAccount(.issuer)">
+                            {{#if privateLabels[.issuer]}}
+                                {{privateLabels[.issuer]}}
+                            {{else}}
+                                {{.issuer}}
+                            {{/if}}
+                        </a>
+					</td>
+				</tr>
+				<tr><td colspan="2">Signatures present:</td></tr>
+                {{#if .confirmed}}
+                    {{#each .signatures}}
+                        <tr>
+                            <td colspan="2" class="table-cell table-cell--content">
+                                <a class="hyperlink--default" href="javascript:;" on-click="viewAccount(.sender)">
+                                    {{#if privateLabels[.sender]}}
+                                        {{privateLabels[.sender]}}
+                                    {{else}}
+                                        {{.sender}}
+                                    {{/if}}
+                                </a>
+                            </td>
+                        </tr>
+                    {{/each}}
+                {{else}}
+                    {{#each .signaturesData}}
+                    <tr>
+                        <td colspan="2" class="table-cell table-cell--content">
+                            <a class="hyperlink--default {{#if .present}}icon-ok-circled2{{else}}icon-circle-empty{{/if}}" href="javascript:;" on-click="viewAccount(.address)">
+                                {{#if privateLabels[.sender]}}
+                                    {{privateLabels[.sender]}}
+                                {{else}}
+                                    {{.sender}}
+                                {{/if}}
+                            </a>
+                        </td>
+                    </tr>
+                    {{/each}}
+                {{/if}}
+			{{/if}}
+		</table>
+	{{/}}
+</namespaceDetailsModal>
 <newMosaicModal disableEasyClose="true" modalClass="newMosaicModal modal--medium" modalTitle="{{texts.modals.newMosaic.title}}" texts="{{texts}}" fill="{{fill}}" on-registerToolTip="registerToolTip" activeAccount="{{activeAccount}}">
 	<div class="form newMosaic-form">
-		
+
 		<div class="form-field">
 			<p class="form-label">{{texts.modals.newMosaic.name}} </p>
 			<div class="form-input">
@@ -812,7 +1053,7 @@
 			</label>
 			<input class="form-checkbox" type="radio" checked="{{percentage}}" id="radio-levyType" />
 			<label class="form-checkbox-label" for="chk-useLevy">
-               {{texts.modals.newMosaic.percentage}} 
+               {{texts.modals.newMosaic.percentage}}
 			</label>
 		</div>
 		<div class="form-field">
@@ -830,50 +1071,6 @@
 		</div>
 	</div>
 </newMosaicModal>
-<mosaicDetailsModal modalClass="txDetailsModal modal--wide" modalTitle="{{texts.modals.mosaicDetails}}" closeOnEnter="true" on-registerToolTip="registerToolTip" texts="{{texts}}" blockchainHeight="{{blockchainHeight}}">
-    {{#transaction}}
-		<table>
-			<tr>
-				<td class="table-cell table-cell--label">
-					<strong>{{texts.modals.transactionDetails.mosaicName}}</strong>
-				</td>
-				<td class="table-cell table-cell--content">
-					<span class="dimmed">{{.id.namespaceId}} * </span>
-					{{{.id.name}}}
-				</td>
-			</tr>
-
-			<tr>
-				<td class="table-cell table-cell--label">
-					{{texts.modals.transactionDetails.description}}
-				</td>
-				<td></td>
-			</tr>
-			<tr>
-				<td class="table-cell table-cell--content" colspan="2" style="">
-					{{{.description}}}
-				</td>
-			</tr>
-
-			<tr>
-				<td class="table-cell table-cell--label" style="text-align:left">
-					{{texts.modals.transactionDetails.propertiesLabel}}:
-				</td>
-				<td></td>
-			</tr>
-			{{#.properties}}
-			<tr>
-				<td class="table-cell table-cell--label" style="font-weight: normal">
-					{{texts.modals.transactionDetails.properties[.name]}}
-				</td>
-				<td class="table-cell table-cell--content">
-					{{.value}}
-				</td>
-			</tr>
-			{{/}}
-		</table>
-	{{/}}
-</mosaicDetailsModal>
 <activateDelegatedModal disableEasyClose="true" modalClass="activateDelegatedModal modal--medium" modalTitle="{{texts.modals.activateDelegated.title}}" texts="{{texts}}" fill="{{fill}}" on-registerToolTip="registerToolTip" activeAccount="{{activeAccount}}">
     <div class="form activateDelegated-form">
         <div class="form-field">
@@ -1500,6 +1697,67 @@
 		</button>
 	</div>
 </transactionConfirmModal>
+<withdrawModal disableEasyClose="true" modalClass="withdrawModal modal--wide"
+			   texts="{{texts}}" fill="{{fill}}" on-registerToolTip="registerToolTip">
+	<div class="accounts-table">
+		<table>
+			<tr>
+				<td class="table-cell table-cell--label">{{texts.common.escrowAccount}}</td>
+				<td class="table-cell table-cell--content">
+					<a class="hyperlink--default" href="javascript:;" on-click="viewAccount(.escrowAccount.formattedAddress)">
+						{{#if privateLabels[.escrowAccount.address]}}
+							{{privateLabels[.escrowAccount.address]}}
+						{{else}}
+							{{.escrowAccount.formattedAddress}}
+						{{/if}}
+					</a>
+				</td>
+			</tr>
+			<tr>
+				<td class="table-cell table-cell--label">{{texts.common.withdrawalAccount}}</td>
+				<td class="table-cell table-cell--content">
+					{{#if .withdrawalAccount.address}}
+					<a class="hyperlink--default" href="javascript:;" on-click="viewAccount(.withdrawalAccount.formattedAddress)">
+						{{#if privateLabels[.withdrawalAccount.address]}}
+							{{privateLabels[.withdrawalAccount.address]}}
+						{{else}}
+							{{.withdrawalAccount.formattedAddress}}
+						{{/if}}
+					</a>
+					{{else}}
+					<span class="withdraw-errorIcon icon-attention-circled"></span>
+					{{texts.modals.withdraw.noWithdraw}}
+					<a class="hyperlink--default" href="javascript:;" on-click="setupWithdrawalAccount()">
+						{{texts.modals.withdraw.setupWithdraw}}
+					</a>
+					{{/if}}
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div class="form-field">
+		<p class="form-label">
+			{{texts.common.amount}}
+			<span class="form-help">({{texts.modals.withdraw.escrowBalance}} {{{escrowAccount.formattedBalance}}} {{escrowAccount.tradeInstrument.name}})</span>
+		</p>
+		<div class="form-input">
+			<span class="form-input-end unit">{{escrowAccount.tradeInstrument.name}}</span>
+			<div class="restOfWidth">
+				<input class="form-input-inner js-withdraw-amount-textbox" type="text" value="{{formattedAmount}}"
+					   on-keypress="sendFormKeypress" />
+			</div>
+		</div>
+	</div>
+	<div class="modal-buttons buttons">
+		<button type="button" class="modal-button modal-button--secondary" on-click="closeModal()">
+			{{texts.modals.withdraw.cancel}}</button>
+		<button type="button" class="modal-button modal-button--primary" disabled="{{!formValid || processing}}"
+				on-click="withdraw()">
+			{{processing ? texts.modals.withdraw.processing
+			: texts.modals.withdraw.withdraw}}
+		</button>
+	</div>
+</withdrawModal>
 <transactionDetailsModal modalClass="txDetailsModal modal--wide" modalTitle="{{texts.modals.transactionDetails.title}}" closeOnEnter="true" on-registerToolTip="registerToolTip" texts="{{texts}}" blockchainHeight="{{blockchainHeight}}">
     {{#transaction}}
 		<table>
@@ -1835,3 +2093,1166 @@
 		</div>
 	</div>
 </clientInfoModal>
+<placeOrderModal disableEasyClose="true" modalClass="placeOrderModal modal--medium" modalTitle="{{texts.modals.placeOrder.title}}" texts="{{texts}}" fill="{{fill}}" on-registerToolTip="registerToolTip" activeAccount="{{activeAccount}}">
+	<div class="modal-content">
+		<div class="preloader">
+		    <div class="preloader-img loader {{#loading}}loading{{/}}">
+		        <div class="loader-container">
+		            <span class="loader-quarter quarter-1"></span>
+		            <span class="loader-quarter quarter-2"></span>
+		            <span class="loader-quarter quarter-3"></span>
+		            <span class="loader-quarter quarter-4"></span>
+		        </div>
+		    </div>
+		</div>
+
+		{{^loading}}
+		<div class="form placeOrder-form">
+	        <div class="form-field">
+	            <div class="bulletTabs">
+					<button class="bulletTab-control {{#type === types.BUY}}active{{/}}" on-click="set('type', types.BUY)">
+						{{texts.modals.placeOrder.buy}} {{tradePair.baseInstrument.name}}
+					</button>
+	                <button class="bulletTab-control {{#type === types.SELL}}active{{/}}" on-click="set('type', types.SELL)">
+			            {{texts.modals.placeOrder.sell}} {{tradePair.baseInstrument.name}}
+	                </button>
+	            </div>
+	        </div>
+	        {{#tradePair}}
+			<div class="form-field">
+				<p class="form-label">{{texts.modals.placeOrder.strategy}}</p>
+				<div class="form-dropdownbox">
+					<div class="form-input form-input--textbox form-dropdownbox-selection
+							{{#active['placeOrderModal-strategyDropdown']}}form-dropdownbox-selection--selecting{{/}}"
+						 on-click="toggleOn('placeOrderModal-strategyDropdown')">
+						{{texts.Strategy[strategy]}}
+					</div>
+					<ul class="form-dropdownbox-dropdown {{^active['placeOrderModal-strategyDropdown']}}hidden{{/}}">
+						<li class="form-dropdownbox-item" on-click="setStrategy(strategies.LIMIT)">
+							{{texts.Strategy[strategies.LIMIT]}}
+						</li>
+						<li class="form-dropdownbox-item" on-click="setStrategy(strategies.MARKET)">
+							{{texts.Strategy[strategies.MARKET]}}
+						</li>
+						<li class="form-dropdownbox-item
+								{{#blankMarketPrice}}form-dropdownbox-item--unimportant{{/}}"
+								on-click="setStrategy(strategies.PEG)">
+							{{texts.Strategy[strategies.PEG]}}
+							{{#if blankMarketPrice}}
+								<span class="placeOrder-blankMarketPriceIcon icon-attention-circled" title="{{texts.modals.placeOrder.blankMarketPrice}}"
+									  on-mouseover="registerToolTip"></span>
+							{{/if}}
+						</li>
+						<li class="form-dropdownbox-item" on-click="setStrategy(strategies.STOP)">
+							{{texts.Strategy[strategies.STOP]}}
+						</li>
+					</ul>
+				</div>
+			</div>
+	        <div class="form-field">
+	            <p class="form-label">{{texts.common.amount}} {{type === types.SELL ? texts.modals.placeOrder.selling : texts.modals.placeOrder.buying}}
+					{{#if type === types.SELL}}
+						<span class="form-help">({{{escrowAccount.formattedBalance}}} {{escrowAccount.tradeInstrument.name}} in escrow)</span>
+					{{/if}}
+	            </p>
+	            <div class="form-input {{#!form.fields.amount.valid}}form-input--error{{/}}"><span class="form-input-end unit">{{baseInstrument.name}}</span>
+	                <div class="restOfWidth">
+						<input class="form-input-inner" type="text" id="amount" value="{{form.fields.amount.value}}">
+	                </div>
+	            </div>
+				<p class="form-sublabel">
+					{{texts.modals.placeOrder.minStep}}: {{baseInstrument.formattedMinStep}} {{baseInstrument.name}}
+				</p>
+	        </div>
+			{{#if strategy !== strategies.MARKET}}
+	        <div class="form-field form-input-combined">
+	            <p class="form-label">{{texts.common.price}}
+	                <span class="form-help">(1 {{baseInstrument.name}})</span>
+	            </p>
+	            <div class="form-dropdownbox combined-input-left">
+	                <div class="form-input form-input--textbox form-dropdownbox-selection {{#active['placeOrderModal-priceDropdown']}}form-dropdownbox-selection--selecting{{/}}" on-click="toggleOn('placeOrderModal-priceDropdown')">
+	                    {{texts.PriceVariant[priceVariant]}}
+	                </div>
+	                <ul class="form-dropdownbox-dropdown {{^active['placeOrderModal-priceDropdown']}}hidden{{/}}">
+	                    <li class="form-dropdownbox-item {{#blankMarketPrice}}form-dropdownbox-item--unimportant{{/}}"
+								on-click="setPriceVariant(priceVariants.MARKET)">
+	                        {{texts.PriceVariant[priceVariants.MARKET]}}
+							{{#if blankMarketPrice}}
+								<span class="placeOrder-blankMarketPriceIcon icon-attention-circled" title="{{texts.modals.placeOrder.blankMarketPrice}}"
+										on-mouseover="registerToolTip"></span>
+							{{/if}}
+	                    </li>
+	                    <li class="form-dropdownbox-item" on-click="setPriceVariant(priceVariants.CUSTOM)">
+	                        {{texts.PriceVariant[priceVariants.CUSTOM]}}
+	                    </li>
+	                </ul>
+	            </div>
+	            <div class="form-input {{#!form.fields.price.valid}}form-input--error{{/}}
+	            		{{#priceVariant === priceVariants.MARKET}}form-input--unimportant{{/}}
+	            		{{#strategy === strategies.PEG}}form-input--unimportant{{/}}
+	            		combined-input-right">
+	                <span class="form-input-end unit">{{quoteInstrument.name}}</span>
+	                <div class="restOfWidth">
+						{{#if priceVariant === priceVariants.CUSTOM}}
+		                    <input class="form-input-inner" type="text" id="price" value="{{form.fields.price.value}}"
+								{{#strategy === strategies.PEG}}disabled="true"{{/}}>
+						{{else}}
+		                    <input class="form-input-inner" disabled="true" type="text" id="price" value="{{formattedMarketPrice}}">
+						    <div class="marketPrice-loader loader {{^marketPrice}}loading{{/}}">
+						        <div class="loader-container">
+						            <span class="loader-quarter quarter-1"></span>
+						            <span class="loader-quarter quarter-2"></span>
+						            <span class="loader-quarter quarter-3"></span>
+						            <span class="loader-quarter quarter-4"></span>
+						        </div>
+						    </div>
+						{{/if}}
+
+	                </div>
+	            </div>
+	        </div>
+			{{/if}}
+			<div class="form-field form-input-combined">
+				<p class="form-label ">
+					{{texts.modals.placeOrder.validity}}
+				</p>
+				<div class="form-dropdownbox combined-input-left">
+					<div class="form-input form-input--textbox form-dropdownbox-selection {{#active['placeOrderModal-validityDropdown']}}form-dropdownbox-selection--selecting{{/}}" on-click="toggleOn('placeOrderModal-validityDropdown')">
+						{{validity == validities.GOOD_TILL_CANCELLED ? texts.Validity.GOOD_TILL_CANCELLED : texts.Validity.HOURS}}
+					</div>
+					<ul class="form-dropdownbox-dropdown {{^active['placeOrderModal-validityDropdown']}}hidden{{/}}">
+						<li class="form-dropdownbox-item" on-click="setGTCValidity()">
+							{{texts.Validity.GOOD_TILL_CANCELLED}}
+						</li>
+						<li class="form-dropdownbox-item
+								{{#if strategy === strategies.MARKET}}form-dropdownbox-item--unimportant{{/if}}"
+								on-click="setHoursValidity()">
+							{{texts.Validity.HOURS}}
+						</li>
+					</ul>
+				</div>
+				<div class="form-input combined-input-right {{#!form.fields.validity.valid}}form-input--error{{/}}
+							{{#validity === validities.GOOD_TILL_CANCELLED}}form-input--unimportant{{/}}">
+					<span class="form-input-end unit">{{texts.common.hours}}</span>
+					<div class="restOfWidth">
+						<input class="form-input-inner" id="validity"
+							{{#validity === validities.GOOD_TILL_CANCELLED}}disabled="true"{{/}}
+							type="text" value="{{form.fields.validity.value}}">
+					</div>
+				</div>
+			</div>
+
+			{{#if formattedTotal || strategy === strategies.MARKET}}
+                <div class="totalBox">
+                    <h1 class="totalBox-title">
+						{{#if type === types.BUY}}
+							{{texts.modals.placeOrder.youWillSpend}}
+						{{else}}
+							{{texts.modals.placeOrder.youWillGet}}
+						{{/if}}
+					</h1>
+                    <p>
+						{{#if formattedTotal && (strategy === strategies.MARKET || strategy === strategies.STOP)}} <span class="up-to">{{texts.modals.placeOrder.upTo}}</span> {{/if}}
+                        <span class="totalBox-value">
+							{{#if formattedTotal}}
+                            	{{#if strategy === strategies.PEG}}&asymp;{{/if}}
+                            	{{formattedTotal}}
+							{{else}}
+								?
+							{{/if}}
+                        </span>
+						<span class="totalBox-unit">{{quoteInstrument.name}}</span>
+                    </p>
+                    {{#if type === types.BUY && strategy !== strategies.MARKET}}
+                        <span class="totalBox-balance">balance in escrow: {{{escrowAccount.formattedBalance}}} {{escrowAccount.tradeInstrument.name}}</span>
+                    {{/if}}
+                    {{#if formattedFee}}
+                        <span>{{texts.modals.placeOrder.brokersCommission}}: {{formattedFee}}
+                            {{#if type === types.BUY}}
+                                {{baseInstrument.name}}
+                            {{else}}
+                                {{quoteInstrument.name}}
+                            {{/if}}
+
+                            ({{formattedCommission}} %)
+                        </span>
+                    {{/if}}
+                </div>
+			{{/if}}
+	        {{/}}
+
+			<div class="modal-buttons buttons">
+				<button type="button" class="modal-button modal-button--secondary" on-click="closeModal()">{{texts.modals.placeOrder.cancel}}</button>
+				<button type="button" class="modal-button modal-button--primary" on-click="placeOrder" disabled="{{!validated || placing}}">{{placing ? texts.modals.placeOrder.placing : texts.modals.placeOrder.place}}</button>
+			</div>
+		</div>
+		{{/loading}}
+
+	</div>
+</placeOrderModal>
+<transferFiatModal disableEasyClose="true" modalClass="transferFiatModal modal--medium"
+				   texts="{{texts}}"
+				   fill="{{fill}}"
+				   on-registerToolTip="registerToolTip" activeAccount="{{activeAccount}}">
+	<div class="modal-content">
+		<div class="preloader">
+		    <div class="preloader-img loader {{#loading}}loading{{/}}">
+		        <div class="loader-container">
+		            <span class="loader-quarter quarter-1"></span>
+		            <span class="loader-quarter quarter-2"></span>
+		            <span class="loader-quarter quarter-3"></span>
+		            <span class="loader-quarter quarter-4"></span>
+		        </div>
+		    </div>
+		</div>
+		{{^loading}}
+		<div class="form placeOrder-form">
+
+			<div class="form-field">
+				<p class="form-label">
+					{{texts.modals.transferFiat.senderAccount}}
+
+					{{^.accounts.length}}
+						<span class="transferFiat-errorIcon icon-attention-circled"></span>
+					{{/}}
+				</p>
+
+				<div class="form-dropdownbox">
+					{{#if .accounts.length}}
+                        <div class="form-input
+                                    form-input--textbox
+                                    form-dropdownbox-selection
+                                    {{#active['transferFiat-accountsDropdown']}}form-dropdownbox-selection--selecting{{/}}"
+                             on-click="toggleOn('transferFiat-accountsDropdown')">
+                            {{account.address}}
+                        </div>
+					{{/if}}
+
+					{{^.accounts.length}}
+                        <div class="form-input
+                                    form-input--textbox
+                                    form-dropdownbox-selection
+                                    form-input--unimportant">
+                            {{texts.modals.transferFiat.noAccounts}}
+                        </div>
+					{{/}}
+
+					<ul class="form-dropdownbox-dropdown {{^active['transferFiat-accountsDropdown']}}hidden{{/}}">
+						{{#each .accounts}}
+                            <li class="form-dropdownbox-item" on-click="set('account', this)">
+                                <span>{{.address}}</span>
+                            </li>
+						{{/each}}
+					</ul>
+				</div>
+			</div>
+
+			{{#if .deposit}}
+                <div class="form-field form-input-combined">
+                    <p class="form-label">
+                        {{texts.modals.transferFiat.recipientAccount}}
+                    </p>
+                    <div class="form-dropdownbox combined-input-left">
+                        <div class="form-input form-input--textbox form-dropdownbox-selection
+                                {{#active['transferFiat-recipientTypeDropdown']}}form-dropdownbox-selection--selecting{{/}}"
+                                on-click="toggleOn('transferFiat-recipientTypeDropdown')">
+                            {{texts.modals.transferFiat[recipientType]}}
+                        </div>
+                        <ul class="form-dropdownbox-dropdown {{^active['transferFiat-recipientTypeDropdown']}}hidden{{/}}">
+                            <li class="form-dropdownbox-item" on-click="set('recipientType', recipientTypes.escrow)">
+                                {{texts.modals.transferFiat.escrow}}
+                            </li>
+                            <li class="form-dropdownbox-item" on-click="set('recipientType', recipientTypes.other)">
+                                {{texts.modals.transferFiat.other}}
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="form-input combined-input-right
+                            {{#!form.fields.recipient.valid}}form-input--error{{/}}
+                            {{#recipientType === recipientTypes.escrow}}form-input--unimportant{{/}}">
+
+                        {{#if recipientType === recipientTypes.escrow}}
+							{{#if escrowAccount.address}}
+								<input class="form-input-inner" disabled="true" type="text" value="{{escrowAccount.address}}">
+							{{else}}
+                            	<input class="form-input-inner" disabled="true" type="text" value="{{texts.modals.transferFiat.noEscrow}}">
+							{{/if}}
+                        {{else}}
+                            <input class="form-input-inner" id="recipient" type="text" value="{{form.fields.recipient.value}}">
+                        {{/if}}
+                    </div>
+                </div>
+			{{else}}
+                <div class="form-field">
+                    <p class="form-label">
+                        {{texts.modals.transferFiat.recipientAccount}}
+                    </p>
+                    <input type="text" id="recipient" class="form-input form-input--textbox
+                            {{^form.fields.recipient.valid}}form-input--error{{/}}"
+						   value="{{form.fields.recipient.value}}" />
+                </div>
+			{{/if}}
+
+			<div class="form-field">
+				<p class="form-label">
+					{{texts.modals.transferFiat.receiveInstrument}}
+				</p>
+				<div class="form-dropdownbox combined-input-left">
+					<div class="form-input form-input--textbox form-dropdownbox-selection
+							{{#active['transferFiat-receiveInstrumentDropdown']}}form-dropdownbox-selection--selecting{{/}}"
+						 on-click="toggleOn('transferFiat-receiveInstrumentDropdown')">
+						{{.receiveInstrument.name}}
+					</div>
+					<ul class="form-dropdownbox-dropdown {{^active['transferFiat-receiveInstrumentDropdown']}}hidden{{/}}">
+						{{#each .instruments}}
+						<li class="form-dropdownbox-item" on-click="set('receiveInstrument', this)">
+							{{.name}}
+						</li>
+						{{/each}}
+					</ul>
+				</div>
+			</div>
+
+	        <div class="form-field">
+	            <p class="form-label">
+					{{texts.common.amount}}
+					<span class="form-help">
+						{{#.account}}
+							({{texts.modals.transferFiat.balance}}:
+							{{{account.formattedBalance}}} {{account.tradeInstrument.name}})
+						{{/}}
+					</span>
+				</p>
+	            <div class="form-input {{#!form.fields.amount.valid}}form-input--error{{/}} combined-input-right">
+	                <span class="form-input-end unit">
+	                    {{receiveInstrument.name}}
+	                </span>
+	                <div class="restOfWidth">
+	                    <input class="form-input-inner" id="amount" type="text" value="{{form.fields.amount.value}}">
+	                </div>
+	            </div>
+	        </div>
+
+			{{^.deposit}}
+                <div class="form-field">
+                    <p class="form-label">{{texts.modals.transferFiat.narrative}}</p>
+                    <textarea class="form-input form-input--textarea narrative-textarea"
+                              value="{{narrative}}" maxlength="256"></textarea>
+                </div>
+			{{/}}
+
+			<div class="modal-buttons buttons">
+				<button type="button" class="modal-button modal-button--secondary" on-click="closeModal()">{{texts.modals.transferFiat.cancel}}</button>
+				{{#if.deposit}}
+                    <button type="button" class="modal-button modal-button--primary" on-click="deposit()" disabled="{{!validated || depositing}}">
+                        {{depositing ? texts.modals.transferFiat.depositing : texts.modals.transferFiat.deposit}}
+                    </button>
+				{{else}}
+                    <button type="button" class="modal-button modal-button--primary" on-click="transfer()" disabled="{{!validated || transferring}}">
+                        {{transferring ? texts.modals.transferFiat.transferring : texts.modals.transferFiat.transfer}}
+                    </button>
+				{{/if}}
+			</div>
+
+		</div>
+		{{/}}
+	</div>
+</transferFiatModal>
+<setUserDetailsModal disableEasyClose="true" modalClass="setUserDetails modal--medium" texts="{{texts}}"
+					 fill="{{fill}}" on-registerToolTip="registerToolTip" activeAccount="{{activeAccount}}">
+	<div class="modal-content">
+		<div class="preloader">
+		    <div class="preloader-img loader {{#loading}}loading{{/}}">
+		        <div class="loader-container"> <span class="loader-quarter quarter-1"></span>
+		            <span class="loader-quarter quarter-2"></span>
+		            <span class="loader-quarter quarter-3"></span>
+		            <span class="loader-quarter quarter-4"></span>
+		        </div>
+		    </div>
+		</div>
+        <div class="createXem-stepButtons">
+            {{#stepIds:num}}
+                <span class="setUserDetails-step {{# stepIndex === num }}setUserDetails-step--selected{{/}}"></span>
+            {{/}}
+        </div>
+		{{^loading}}
+        <div class="form">
+            {{#if step.id === steps.DETAILS_FORM.id}}
+                <p class="form-textbox">{{texts.modals.setUserDetails.steps[1].prompt}}</p>
+                {{#each form.fields:num}}
+                    <div class="form-field">
+                        <p class="form-label">
+                            {{texts.modals.setUserDetails[.name]}}
+                        </p>
+                        <input type="{{.type}}" id="{{.name}}" class="form-input form-input--textbox
+                                {{#isImmutable(.name)}}form-input--unimportant{{/}} {{#!form.fields[num].valid}}form-input--error{{/}}"
+                                readonly="{{isImmutable(.name)}}"
+                                value="{{.value}}" on-keyup="inputKeyup" />
+                    </div>
+                {{/each}}
+                <div class="form-field">
+                    <p class="form-label">
+                        {{texts.modals.setUserDetails.country}}
+                    </p>
+                    <div class="form-dropdownbox">
+                        <div class="form-input form-input--textbox form-dropdownbox-selection {{#active['setUserDetails-country']}}form-dropdownbox-selection--selecting{{/}}" on-click="toggleOn('setUserDetails-country')">
+                            {{#if country}}
+                                {{country.name}}
+                            {{else}}
+                                <span>{{texts.modals.setUserDetails.selectCountry}}</span>
+                            {{/if}}
+                        </div>
+                        <ul class="form-dropdownbox-dropdown {{^active['setUserDetails-country']}}hidden{{/}}">
+                            {{#countries}}
+                                <li class="form-dropdownbox-item" on-click="set('country', this)">
+                                    {{.name}}
+                                </li>
+                            {{/countries}}
+                        </ul>
+                    </div>
+                </div>
+            {{/if}}
+			{{#if step.id === steps.DETAILS_FEE.id}}
+
+            	{{#if insufficientBalance }}
+                    <span class="publishTx-title">
+                        <span class="publishTx-errorIcon icon-attention-circled"></span>
+                        {{texts.modals.publishTx.insufficientBalance}}
+                    </span>
+                    <div class="form-textbox">
+                        {{texts.modals.publishTx.insufficientBalanceMessage}}
+					</div>
+                    <div class="publishTx-fee">
+                        {{formattedFee}} <span class="publishTx-currency">XEM</span>
+                    </div>
+                    <div class="form-textbox">
+                        <p>{{texts.modals.publishTx.kickstartOptionMessage}}</p>
+                        <button type="button" class="publishTx-kickstartButton" on-click="openKickstart()">
+                            {{texts.modals.publishTx.exchangeFiatForXem}}
+                        </button>
+                    </div>
+				{{else}}
+                    <div class="form-textbox">
+                    	{{texts.modals.publishTx.message}}
+					</div>
+                    <div class="publishTx-fee">
+                        {{formattedFee}} <span class="publishTx-currency">XEM</span>
+                    </div>
+				{{/if}}
+
+            {{/if}}
+
+            {{#if step.id === steps.IMMUTABLE_DETAILS.id}}
+                <p class="form-textbox">{{texts.modals.setUserDetails.steps[step.id].prompt}}</p>
+                <div class="form-field">
+					<table class="setUserDetails-table">
+						{{#each immutableFields}}
+                            <tr>
+                                <td class="table-cell table-cell--label">{{texts.modals.setUserDetails[this]}}</td>
+                                <td class="table-cell table-cell--content">{{fieldsToCheck[this]}}</td>
+                            </tr>
+						{{/each}}
+                    </table>
+                </div>
+                <div class="form-field">
+                    <input type="checkbox" class="form-checkbox" id="setUserDetailsModal-chkAutoBoot" checked="{{chkTermsOfUsage}}" />
+                    <label class="form-label form-checkbox-label" for="setUserDetailsModal-chkAutoBoot">
+                        {{texts.modals.setUserDetails.steps[step.id].agreePrompt}}
+                        <a href="#" class="setUserDetails-agree">
+                            {{texts.modals.setUserDetails.steps[step.id].agreeLink}}
+                        </a>
+                    </label>
+                </div>
+            {{/if}}
+            {{#if step.id === steps.DETAILS_CONFIRMATION.id}}
+                <div class="form-textbox">
+                    {{texts.modals.setUserDetails.steps[step.id].prompt}}
+                </div>
+                <table class="setUserDetails-table">
+                    {{#each form.fields}}
+                    <tr>
+                        <td class="table-cell table-cell--label">{{texts.modals.setUserDetails[.name]}}</td>
+                        <td class="table-cell table-cell--content">{{.value}}</td>
+                    </tr>
+                    {{/each}}
+                    <tr>
+                        <td class="table-cell table-cell--label">{{texts.modals.setUserDetails.country}}</td>
+                        <td class="table-cell table-cell--content">{{country.name}}</td>
+                    </tr>
+                </table>
+            {{/if}}
+            <div class="modal-buttons buttons">
+                <button type="button" class="modal-button modal-button--secondary" on-click="closeModal()">{{texts.modals.setUserDetails.cancel}}</button>
+                {{#if stepIndex !== 0}}
+                    <button type="button" class="modal-button modal-button--secondary" on-click="subtract('stepIndex')">{{texts.modals.setUserDetails.back}}</button>
+                {{/if}}
+                {{#if stepIndex !== stepIds.length - 1}}
+                    <button type="button" class="modal-button modal-button--primary" on-click="submitStep()" disabled="{{!validated || processing}}">
+                        {{processing ? texts.modals.setUserDetails.processing : texts.modals.setUserDetails.next}}
+                    </button>
+                {{/if}}
+                {{#if stepIndex === stepIds.length - 1}}
+                    {{#if type === 'setup'}}
+                        <button type="button" class="modal-button modal-button--primary" on-click="submitUserDetails()" disabled="{{!validated || submitting}}">
+                            {{submitting ? texts.modals.setUserDetails.submitting : texts.modals.setUserDetails.finish}}
+                        </button>
+                    {{else}}
+                        <button type="button" class="modal-button modal-button--primary" on-click="updateUserDetails()" disabled="{{!validated || updating}}">
+                            {{updating ? texts.modals.setUserDetails.updating : texts.modals.setUserDetails.update}}
+                        </button>
+                    {{/if}}
+                {{/if}}
+            </div>
+        </div>
+        {{/}}
+	</div>
+</setUserDetailsModal>
+
+<viewUserDetailsModal disableEasyClose="true" modalClass="viewUserDetails modal--medium" modalTitle="{{texts.modals.viewUserDetails.title}}"
+		texts="{{texts}}" fill="{{fill}}" on-registerToolTip="registerToolTip" activeAccount="{{activeAccount}}">
+	<div class="modal-content">
+		<div class="preloader">
+		    <div class="preloader-img loader {{#loading}}loading{{/}}">
+		        <div class="loader-container">
+		            <span class="loader-quarter quarter-1"></span>
+		            <span class="loader-quarter quarter-2"></span>
+		            <span class="loader-quarter quarter-3"></span>
+		            <span class="loader-quarter quarter-4"></span>
+		        </div>
+		    </div>
+		</div>
+		{{^loading}}
+            <div class="form-textbox">
+                {{.message}}
+            </div>
+            {{#with userDetails}}
+            <table>
+                <tr>
+                    <td class="table-cell table-cell--label">{{texts.modals.setUserDetails.firstName}}</td>
+                    <td class="table-cell table-cell--content">{{.firstName}}</td>
+                </tr>
+				<tr>
+					<td class="table-cell table-cell--label">{{texts.modals.setUserDetails.lastName}}</td>
+					<td class="table-cell table-cell--content">{{.lastName}}</td>
+				</tr>
+				<tr>
+					<td class="table-cell table-cell--label">{{texts.modals.setUserDetails.id}}</td>
+					<td class="table-cell table-cell--content">{{.id}}</td>
+				</tr>
+				<tr>
+					<td class="table-cell table-cell--label">{{texts.modals.setUserDetails.dateOfBirth}}</td>
+					<td class="table-cell table-cell--content">{{.formattedDateOfBirth}}</td>
+				</tr>
+				<tr>
+					<td class="table-cell table-cell--label">{{texts.modals.setUserDetails.email}}</td>
+					<td class="table-cell table-cell--content">{{.email}}</td>
+				</tr>
+				<tr>
+					<td class="table-cell table-cell--label">{{texts.modals.setUserDetails.country}}</td>
+					<td class="table-cell table-cell--content">{{.country.name}}</td>
+				</tr>
+				<tr>
+					<td class="table-cell table-cell--label">{{texts.modals.setUserDetails.address}}</td>
+					<td class="table-cell table-cell--content">{{.address}}</td>
+				</tr>
+				<tr>
+					<td class="table-cell table-cell--label">{{texts.modals.setUserDetails.passport}}</td>
+					<td class="table-cell table-cell--content">{{.passport}}</td>
+				</tr>
+				<tr>
+					<td class="table-cell table-cell--label">{{texts.modals.setUserDetails.contactNumber}}</td>
+					<td class="table-cell table-cell--content">{{.contactNumber}}</td>
+				</tr>
+            </table>
+			{{/with}}
+            <div class="modal-buttons buttons">
+                <button type="button" class="modal-button modal-button--secondary" on-click="closeModal()">{{texts.modals.viewUserDetails.cancel}}</button>
+                <button type="button" class="modal-button modal-button--primary" on-click="editUserDetails">{{texts.modals.viewUserDetails.editDetails}}</button>
+				{{#if .isConfirm}}
+					<button type="button" class="modal-button modal-button--primary" on-click="confirm" >{{texts.modals.viewUserDetails.confirm}}</button>
+				{{/if}}
+            </div>
+		{{/}}
+	</div>
+</viewUserDetailsModal>
+
+<setXemWithdrawalAccountModal disableEasyClose="true" modalClass="setXemWithdrawalAccountModal modal--medium"
+		modalTitle="{{texts.modals.setXemWithdrawalAccount.title}}" texts="{{texts}}" fill="{{fill}}"
+		on-registerToolTip="registerToolTip">
+	<div class="modal-content">
+		<div class="preloader">
+		    <div class="preloader-img loader {{#loading}}loading{{/}}">
+		        <div class="loader-container">
+		            <span class="loader-quarter quarter-1"></span>
+		            <span class="loader-quarter quarter-2"></span>
+		            <span class="loader-quarter quarter-3"></span>
+		            <span class="loader-quarter quarter-4"></span>
+		        </div>
+		    </div>
+		</div>
+		{{^loading}}
+	    <div class="form">
+			<div class="form-textbox">
+				{{texts.modals.setXemWithdrawalAccount.message}}
+			</div>
+            <div class="form-field">
+                <p class="form-label">
+                    {{texts.common.withdrawalAccount}}
+                </p>
+                <div class="form-dropdownbox">
+                    <div class="form-input form-input--textbox form-dropdownbox-selection
+                    		{{#active['setXemWithdrawalAccount-withdrawalAccount']}}form-dropdownbox-selection--selecting{{/}}"
+                    		on-click="toggleOn('setXemWithdrawalAccount-withdrawalAccount')">
+                        {{#if withdrawalAccount}}
+							{{#if privateLabels[withdrawalAccount.address]}}
+								{{privateLabels[withdrawalAccount.address]}}
+							{{else}}
+								{{withdrawalAccount.formattedAddress}}
+							{{/if}}
+                        {{else}}
+                            <span>{{texts.common.pleaseSelect}}</span>
+                        {{/if}}
+                    </div>
+                    <ul class="form-dropdownbox-dropdown {{^active['setXemWithdrawalAccount-withdrawalAccount']}}hidden{{/}}">
+                        {{#xemAccounts}}
+                            <li class="form-dropdownbox-item" on-click="set('withdrawalAccount', this)">
+								{{#if privateLabels[address]}}
+									{{privateLabels[address]}}
+								{{else}}
+									{{.formattedAddress}}
+								{{/if}}
+                            </li>
+                        {{/}}
+                    </ul>
+                </div>
+            </div>
+			<div class="modal-buttons buttons">
+				<button type="button" class="modal-button modal-button--secondary" on-click="closeModal()">{{texts.modals.setXemWithdrawalAccount.cancel}}</button>
+				<button type="button" class="modal-button modal-button--primary" disabled="{{!valid || finishing}}" on-click="setXemWithdrawalAccount()">
+					{{finishing ? texts.modals.setXemWithdrawalAccount.finishing : texts.modals.setXemWithdrawalAccount.finish}}</button>
+			</div>
+	    </div>
+		{{/}}
+	</div>
+</setXemWithdrawalAccountModal>
+
+<setBtcWithdrawalAccountModal disableEasyClose="true" modalClass="setBtcWithdrawalAccountModal modal--medium"
+							  modalTitle="{{texts.modals.setBtcWithdrawalAccount.title}}" texts="{{texts}}" fill="{{fill}}"
+							  on-registerToolTip="registerToolTip">
+	<div class="modal-content">
+		<div class="form">
+			<div class="form-textbox">
+				{{texts.modals.setBtcWithdrawalAccount.message}}
+			</div>
+			<div class="form-field">
+				<p class="form-label">
+					{{texts.modals.setBtcWithdrawalAccount.address}}
+				</p>
+				<div class="form-input">
+					<input class="form-input-inner" type="text" value="{{withdrawalAddress}}">
+				</div>
+			</div>
+			<div class="modal-buttons buttons">
+				<button type="button" class="modal-button modal-button--secondary" on-click="closeModal()">{{texts.modals.setXemWithdrawalAccount.cancel}}</button>
+				<button type="button" class="modal-button modal-button--primary" disabled="{{!valid || finishing}}" on-click="setBtcWithdrawalAccount()">
+					{{settingUp ? texts.modals.setBtcWithdrawalAccount.settingUp : texts.modals.setBtcWithdrawalAccount.setup}}</button>
+			</div>
+		</div>
+	</div>
+</setBtcWithdrawalAccountModal>
+
+<setFiatWithdrawalAccountModal disableEasyClose="true" modalClass="setFiatWithdrawalAccountModal modal--medium"
+		modalTitle="{{texts.modals.setFiatWithdrawalAccount.title}}" texts="{{texts}}" fill="{{fill}}"
+		on-registerToolTip="registerToolTip">
+
+	<div class="modal-content">
+
+		<div class="preloader">
+			<div class="preloader-img loader {{#loading}}loading{{/}}">
+				<div class="loader-container">
+					<span class="loader-quarter quarter-1"></span>
+					<span class="loader-quarter quarter-2"></span>
+					<span class="loader-quarter quarter-3"></span>
+					<span class="loader-quarter quarter-4"></span>
+				</div>
+			</div>
+		</div>
+
+		{{^loading}}
+		<div class="form">
+			<div class="form-textbox">
+				{{texts.modals.setFiatWithdrawalAccount.message}}
+			</div>
+
+			<div class="form-field">
+				<p class="form-label">{{texts.modals.setFiatWithdrawalAccount.tradeInstrument}}</p>
+				<div class="form-input form-input--unimportant">
+					<input class="form-input-inner" readonly="true" type="text" value="{{tradeInstrument.name}}">
+				</div>
+			</div>
+
+			<div class="form-field">
+				<p class="form-label">{{texts.common.withdrawalAccount}}</p>
+				<div class="form-input">
+					<input class="form-input-inner" type="text" id="withdrawalAccount" value="{{withdrawalAddress}}">
+				</div>
+			</div>
+
+			<div class="modal-buttons buttons">
+				<button type="button" class="modal-button modal-button--secondary" on-click="closeModal()">
+					{{texts.modals.setFiatWithdrawalAccount.cancel}}</button>
+				<button type="button" class="modal-button modal-button--primary"
+						disabled="{{!valid || finishing}}" on-click="submit()">
+					{{finishing ? texts.modals.setFiatWithdrawalAccount.finishing : texts.modals.setFiatWithdrawalAccount.finish}}</button>
+			</div>
+		</div>
+		{{/}}
+
+	</div>
+</setFiatWithdrawalAccountModal>
+
+<withdrawalAccountTxModal disableEasyClose="true" modalClass="withdrawalAccountTx modal--medium"
+							   modalTitle="{{texts.modals.withdrawalAccountTx.title}}" texts="{{texts}}" fill="{{fill}}">
+
+	<div class="modal-content">
+
+		<div class="preloader">
+			<div class="preloader-img loader {{#loading}}loading{{/}}">
+				<div class="loader-container">
+					<span class="loader-quarter quarter-1"></span>
+					<span class="loader-quarter quarter-2"></span>
+					<span class="loader-quarter quarter-3"></span>
+					<span class="loader-quarter quarter-4"></span>
+				</div>
+			</div>
+		</div>
+
+		{{^loading}}
+
+            {{#if insufficientBalance }}
+                <span class="publishTx-title">
+                    <span class="publishTx-errorIcon icon-attention-circled"></span>
+                    {{texts.modals.publishTx.insufficientBalance}}
+                </span>
+                <div class="form-textbox">
+                    {{texts.modals.publishTx.insufficientBalanceMessage}}
+                </div>
+                <div class="publishTx-fee">
+                    {{formattedFee}} <span class="publishTx-currency">XEM</span>
+                </div>
+                <div class="form-textbox">
+                    <p>{{texts.modals.publishTx.kickstartOptionMessage}}</p>
+                    <button type="button" class="publishTx-kickstartButton" on-click="openKickstart()">
+                        {{texts.modals.publishTx.exchangeFiatForXem}}
+                    </button>
+                </div>
+            {{else}}
+                <div class="form-textbox">
+                    {{texts.modals.publishTx.message}}
+                </div>
+                <div class="publishTx-fee">
+                    {{formattedFee}} <span class="publishTx-currency">XEM</span>
+                </div>
+            {{/if}}
+
+            <div class="modal-buttons buttons">
+                <button type="button" class="modal-button modal-button--secondary" on-click="closeModal()">
+                    {{texts.modals.withdrawalAccountTx.cancel}}
+                </button>
+                <button type="button" class="modal-button modal-button--primary" disabled="{{!valid}}" on-click="submit()">
+                    {{texts.modals.withdrawalAccountTx.ok}}
+                </button>
+            </div>
+
+		{{/}}
+
+	</div>
+</withdrawalAccountTxModal>
+
+<selectTradingAccountModal disableEasyClose="true" modalClass="selectTradingAccountModal modal--medium"
+		modalTitle="{{texts.modals.selectTradingAccount.title}}" texts="{{texts}}" fill="{{fill}}"
+		on-registerToolTip="registerToolTip" privateLabels="{{privateLabels}}">
+	<div class="form">
+	    <div class="form-textbox">
+	        {{texts.modals.selectTradingAccount.message}}
+        </div>
+		<div class="form-field">
+			<p class="form-label">{{texts.modals.selectTradingAccount.tradingAccount}}</p>
+            <div class="form-dropdownbox">
+                <div class="form-input form-input--textbox form-dropdownbox-selection
+						{{#active['selectTradingAccountModal-accounts']}}form-dropdownbox-selection--selecting{{/}}"
+						 on-click="toggleOn('selectTradingAccountModal-accounts')">
+					{{#if tradingAccount.address}}
+						{{#if privateLabels[tradingAccount.address]}}
+							{{privateLabels[tradingAccount.address]}}
+						{{else}}
+							{{tradingAccount.formattedAddress}}
+						{{/if}}
+					{{else}}
+						{{texts.modals.selectTradingAccount.selectAccount}}
+					{{/if}}
+                </div>
+                <ul class="form-dropdownbox-dropdown {{^active['selectTradingAccountModal-accounts']}}hidden{{/}}">
+                    {{#allAccounts}}
+                    <li class="form-dropdownbox-item" on-click="set('tradingAccount', this)">
+						{{#if privateLabels[.address]}}
+							{{privateLabels[.address]}}
+						{{else}}
+							{{.formattedAddress}}
+						{{/if}}
+                    </li>
+                    {{/}}
+                </ul>
+            </div>
+		</div>
+		<div class="modal-buttons buttons">
+			<button type="button" class="modal-button modal-button--primary" disabled="{{!validated || submitting}}"
+					on-click="submitSelect()">
+				{{submitting ? texts.modals.selectTradingAccount.submitting
+					: texts.modals.selectTradingAccount.submit}}
+			</button>
+		</div>
+	</div>
+</selectTradingAccountModal>
+
+<orderUpdateModal modalClass="orderUpdateModal modal--wide" modalTitle="{{texts.modals.orderUpdate.title}}" texts="{{texts}}">
+
+	<!--on-registerToolTip="registerToolTip">-->
+	<p class="orderUpdate-message">
+		{{texts.faults[orderUpdate.messageCode]}}
+	</p>
+
+	<p class="orderUpdate-subtitle">{{texts.modals.orderUpdate.orderInfo}}</p>
+
+	{{#with order}}
+	<div class="orderUpdate-orderInfo">
+        <table class="orderUpdate-infoTable">
+            <tr>
+                <td class="table-cell table-cell--label">
+                    {{.type === types.BUY ? texts.modals.orderUpdate.buying : texts.modals.orderUpdate.selling}}
+                </td>
+                <td class="table-cell table-cell--content">
+                    {{{.formattedAmount}}} {{.tradePair.baseInstrument.name}}
+                </td>
+                <td class="table-cell table-cell--label">
+                    {{texts.modals.orderUpdate.eachFor}}
+                </td>
+                <td class="table-cell table-cell--content">
+                    {{{.formattedPrice}}} {{.tradePair.quoteInstrument.name}}
+                </td>
+            </tr>
+            <tr>
+                <td class="table-cell table-cell--label">
+                    {{texts.modals.orderUpdate.fee}}
+                </td>
+                <td class="table-cell table-cell--content">
+                    {{{.formattedFee}}} {{.tradePair.quoteInstrument.name}}
+                </td>
+            </tr>
+            <tr>
+                <td class="table-cell table-cell--label">
+                    {{texts.common.dueBy}}
+                </td>
+                <td class="table-cell table-cell--content">
+                    {{.validity === validities.GOOD_TILL_CANCELLED ? texts.Validity.GOOD_TILL_CANCELLED : .cancelInHours + ' ' + texts.common.hours}}
+                </td>
+            </tr>
+            <tr>
+                <td class="table-cell table-cell--label">
+                    {{texts.modals.orderUpdate.strategy}}
+                </td>
+                <td class="table-cell table-cell--content">
+                    {{texts.Strategy[.strategy]}}
+                </td>
+            </tr>
+            <tr>
+                <td class="table-cell table-cell--label">
+                    <span class="txConfirm-totalLabel">{{texts.modals.orderUpdate.reservedAmount}}</span>
+                </td>
+                <td class="table-cell table-cell--content">
+                    <span class="txConfirm-total">{{orderUpdate.formattedReserved}} {{.tradePair.quoteInstrument.name}}</span>
+                </td>
+            </tr>
+        </table>
+	</div>
+	{{/with}}
+	<div class="txConfirm-actions">
+		<button type="button" class="modal-button modal-button--primary" on-click="closeModal()">{{texts.modals.orderUpdate.ok}}</button>
+	</div>
+</orderUpdateModal>
+
+<matchModal modalClass="orderUpdateModal modal--wide" modalTitle="{{texts.modals.orderUpdate.title}}" texts="{{texts}}">
+
+	<p class="orderUpdate-message">
+		{{texts.modals.orderUpdate.matchOccurred}}
+	</p>
+
+	<p class="orderUpdate-subtitle">{{texts.modals.orderUpdate.matchInfo}}</p>
+
+	<div class="orderUpdate-orderInfo">
+        <table class="orderUpdate-infoTable">
+            <tr>
+                <td class="table-cell table-cell--label">
+                    {{texts.modals.orderUpdate.price}}
+                </td>
+                <td class="table-cell table-cell--content">
+                    {{{match.formattedPrice}}} <span>({{match.order.tradePair.baseInstrument.name}})</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="table-cell table-cell--label">
+                    {{texts.modals.orderUpdate.amount}}
+                </td>
+                <td class="table-cell table-cell--content">
+                    {{{match.formattedAmount}}} <span>({{match.order.tradePair.quoteInstrument.name}})</span>
+                </td>
+            </tr>
+        </table>
+	</div>
+
+	<p class="orderUpdate-subtitle">{{texts.modals.orderUpdate.orderInfo}}</p>
+
+	{{#with match.order}}
+	<div class="orderUpdate-orderInfo">
+		<table class="orderUpdate-infoTable">
+			<tr>
+				<td class="table-cell table-cell--label">
+					{{.type === types.BUY ? texts.modals.orderUpdate.buying : texts.modals.orderUpdate.selling}}
+				</td>
+				<td class="table-cell table-cell--content">
+					{{{.formattedAmount}}} <span>({{.tradePair.baseInstrument.name}})</span>
+				</td>
+				<td class="table-cell table-cell--label">
+					{{texts.modals.orderUpdate.eachFor}}
+				</td>
+				<td class="table-cell table-cell--content">
+					{{{.formattedPrice}}} <span>({{.tradePair.quoteInstrument.name}})</span>
+				</td>
+			</tr>
+			<tr>
+				<td class="table-cell table-cell--label">
+					{{texts.modals.orderUpdate.fee}}
+				</td>
+				<td class="table-cell table-cell--content">
+					{{{.formattedFee}}} {{.tradePair.quoteInstrument.name}}
+				</td>
+			</tr>
+			<tr>
+				<td class="table-cell table-cell--label">
+					{{texts.common.dueBy}}
+				</td>
+				<td class="table-cell table-cell--content">
+					{{.validity === validities.GOOD_TILL_CANCELLED ? texts.Validity.GOOD_TILL_CANCELLED : .cancelInHours + ' ' + texts.common.hours}}
+				</td>
+			</tr>
+			<tr>
+				<td class="table-cell table-cell--label">
+					{{texts.modals.orderUpdate.strategy}}
+				</td>
+				<td class="table-cell table-cell--content">
+					{{texts.Strategy[.strategy]}}
+				</td>
+			</tr>
+			<tr>
+				<td class="table-cell table-cell--label">
+					<span class="txConfirm-totalLabel">{{texts.modals.orderUpdate.total}}</span>
+				</td>
+				<td class="table-cell table-cell--content">
+					<span class="txConfirm-total">{{.formattedTotal}} {{.tradePair.quoteInstrument.name}}</span>
+				</td>
+			</tr>
+		</table>
+	</div>
+	{{/with}}
+	<div class="txConfirm-actions">
+		<button type="button" class="modal-button modal-button--primary" on-click="closeModal()">{{texts.modals.orderUpdate.ok}}</button>
+	</div>
+</matchModal>
+
+<kickstartModal disableEasyClose="true" modalClass="kickstartModal modal--medium"
+				modalTitle="{{texts.modals.kickstart.title}}"
+				texts="{{texts}}" allAccounts="{{allAccounts}}" fill="{{fill}}"
+				bankAccounts="{{bankAccounts}}"
+				privateLabels="{{privateLabels}}"
+				on-registerToolTip="registerToolTip">
+	<div class="modal-content">
+		<div class="preloader">
+			<div class="preloader-img loader {{#loading}}loading{{/}}">
+				<div class="loader-container">
+					<span class="loader-quarter quarter-1"></span>
+					<span class="loader-quarter quarter-2"></span>
+					<span class="loader-quarter quarter-3"></span>
+					<span class="loader-quarter quarter-4"></span>
+				</div>
+			</div>
+		</div>
+
+		{{^loading}}
+		<div class="form kickstart-form">
+
+			<div class="form-textbox">
+				{{texts.modals.kickstart.message}}
+			</div>
+
+			<div class="form-field">
+				<p class="form-label">
+					{{texts.modals.kickstart.senderAccount}}
+
+					{{^.bankAccounts.length}}
+						<span class="kickstartModal-errorIcon icon-attention-circled"></span>
+					{{/}}
+				</p>
+
+				<div class="form-dropdownbox">
+					{{#if .bankAccounts.length}}
+					<div class="form-input
+                                    form-input--textbox
+                                    form-dropdownbox-selection
+                                    {{#active['kickstartModal-senderAccountsDropdown']}}form-dropdownbox-selection--selecting{{/}}"
+						 on-click="toggleOn('kickstartModal-senderAccountsDropdown')">
+						{{senderAccount.address || texts.common.pleaseSelect}}
+					</div>
+					{{/if}}
+
+					{{^.bankAccounts.length}}
+					<div class="form-input
+                                    form-input--textbox
+                                    form-dropdownbox-selection
+                                    form-input--unimportant">
+						{{texts.modals.kickstart.noAccounts}}
+					</div>
+					{{/}}
+
+					<ul class="form-dropdownbox-dropdown {{^active['kickstartModal-senderAccountsDropdown']}}hidden{{/}}">
+						{{#each .bankAccounts}}
+						<li class="form-dropdownbox-item" on-click="set('senderAccount', this)">
+							<span>{{.address}}</span>
+						</li>
+						{{/each}}
+					</ul>
+				</div>
+			</div>
+
+            <div class="form-field">
+                <p class="form-label">
+                    {{texts.modals.kickstart.recipientAccount}}
+                </p>
+
+                <div class="form-dropdownbox">
+                    <div class="form-input
+                                form-input--textbox
+                                form-dropdownbox-selection
+                                {{#active['kickstartModal-recipientsDropdown']}}form-dropdownbox-selection--selecting{{/}}"
+                         on-click="toggleOn('kickstartModal-recipientsDropdown')">
+						{{#if recipientAccount.address}}
+							{{#if privateLabels[recipientAccount.address]}}
+								{{privateLabels[recipientAccount.address]}}
+							{{else}}
+								{{recipientAccount.formattedAddress}}
+							{{/if}}
+						{{else}}
+							{{texts.common.pleaseSelect}}
+						{{/if}}
+                    </div>
+
+                    <ul class="form-dropdownbox-dropdown {{^active['kickstartModal-recipientsDropdown']}}hidden{{/}}">
+                        {{#each .allAccounts}}
+                        <li class="form-dropdownbox-item" on-click="set('recipientAccount', this)">
+                            <span>
+								{{#if privateLabels[.address]}}
+									{{privateLabels[.address]}}
+								{{else}}
+									{{.formattedAddress}}
+								{{/if}}
+							</span>
+                        </li>
+                        {{/each}}
+                    </ul>
+                </div>
+            </div>
+
+			<div class="form-field form-input-combined">
+				<p class="form-label">
+					{{texts.modals.kickstart.kickstartAccount}}
+
+					{{#if !.instrumentKickstartAccounts.length && senderAccount}}
+					<span class="kickstartModal-errorIcon icon-attention-circled" on-mouseover="registerToolTip"
+						  title="{{texts.modals.kickstart.noAccountsForInstrument}}"></span>
+					{{/if}}
+				</p>
+				<div class="form-input combined-input-left form-input--unimportant">
+					{{#if senderAccount}}
+                        <input class="form-input-inner" disabled="true" type="text"
+                               value="{{senderAccount.tradeInstrument.name}}">
+					{{else}}
+                        <input class="form-input-inner" disabled="true" type="text"
+                               value="{{texts.modals.kickstart.selectSender}}">
+					{{/if}}
+				</div>
+				<div class="form-dropdownbox combined-input-right">
+					{{#if!.instrumentKickstartAccounts.length}}
+                        <div class="form-input form-input--textbox form-dropdownbox-selection
+                                    form-input--unimportant">
+                            {{texts.modals.kickstart.noAccountsFound}}
+                        </div>
+					{{else}}
+                        <div class="form-input form-input--textbox form-dropdownbox-selection
+                                {{#active['kickstartModal-kickstartAccountDropdown']}}form-dropdownbox-selection--selecting{{/}}"
+                             on-click="toggleOn('kickstartModal-kickstartAccountDropdown')">
+                            {{.kickstartAccount.address || texts.common.pleaseSelect}}
+                        </div>
+					{{/if}}
+					<ul class="form-dropdownbox-dropdown {{^active['kickstartModal-kickstartAccountDropdown']}}hidden{{/}}">
+						{{#each .instrumentKickstartAccounts}}
+                            <li class="form-dropdownbox-item" on-click="set('kickstartAccount', this)">
+                                {{.address}}
+                            </li>
+						{{/each}}
+					</ul>
+				</div>
+			</div>
+
+			<div class="form-field">
+				<p class="form-label">
+					{{texts.common.amount}}
+					<span class="form-help">
+						{{#if senderAccount}}
+                            ({{texts.modals.kickstart.balance}}:
+                            {{{senderAccount.formattedBalance}}} {{senderAccount.tradeInstrument.name}})
+						{{/if}}
+					</span>
+				</p>
+				<div class="form-input {{#!form.fields.amount.valid}}form-input--error{{/}} combined-input-right">
+	                <span class="form-input-end unit">
+	                    {{senderAccount.tradeInstrument.name}}
+	                </span>
+					<div class="restOfWidth">
+						<input class="form-input-inner" id="amount" type="text" value="{{form.fields.amount.value}}">
+					</div>
+				</div>
+			</div>
+
+			{{#if .kickstartAccount}}
+			<div class="totalBox">
+				<h1 class="totalBox-title">{{texts.modals.kickstart.willGet}}</h1>
+				<p>
+	                <span class="totalBox-value">
+                        {{.formattedTotal}}
+					</span>
+					<span class="totalBox-unit">XEM</span>
+				</p>
+				<span>{{texts.modals.kickstart.rate}}: 1 XEM = {{.kickstartAccount.formattedRate}} {{.kickstartAccount.tradeInstrument.name}}</span>
+			</div>
+			{{/if}}
+
+			<div class="modal-buttons buttons kickstart-buttons">
+				<button type="button" class="modal-button modal-button--secondary" on-click="closeModal()">{{texts.modals.kickstart.cancel}}</button>
+				<button type="button" class="modal-button modal-button--primary" on-click="transfer()" disabled="{{!validated || transferring}}">
+					{{transferring ? texts.modals.kickstart.transferring : texts.modals.kickstart.transfer}}
+				</button>
+			</div>
+
+		</div>
+		{{/}}
+	</div>
+</kickstartModal>

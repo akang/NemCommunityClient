@@ -52,7 +52,7 @@
 							</tr>
 						</thead>
 						<tbody>
-							{{#each transactions.filtered}}
+							{{#each tr txList-col--quoteansactions.filtered}}
 								<tr class="txList-row">
                                     {{#if (.type === TransactionType.Transfer || .type === TransactionType.Multisig_Transfer)}}
                                     {{>transferTransactionLinePartial}}

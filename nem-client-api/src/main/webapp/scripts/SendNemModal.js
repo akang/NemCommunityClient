@@ -88,6 +88,9 @@ define(['NccModal', 'Utils', 'TransactionType', 'handlebars', 'typeahead'], func
             this.set('useMinimumFee', true);
             this.set('signatories', [{}]);
 
+			this.set('escrowAddress', '');
+			this.set('recipientType', '');
+
             this.set('privateLabels', ncc.get('privateLabels'));
             this.set('multisigAccounts', ncc.get('activeAccount').multisigAccounts);
             this.set('fullBalance', Utils.format.nem.formatNemAmount(ncc.get('activeAccount').balance, {keepTrailingZeroes:true}));
@@ -110,8 +113,8 @@ define(['NccModal', 'Utils', 'TransactionType', 'handlebars', 'typeahead'], func
                 hoursDue: this.get('hoursDue')
             };
             var self = this;
-            
-            ncc.postRequest('wallet/account/transaction/validate', requestData, 
+
+            ncc.postRequest('wallet/account/transaction/validate', requestData,
                 function(data) {
                     self.set('minimumFee', data.fee);
                     self.set('multisigFee', data.multisigFee);
@@ -176,7 +179,6 @@ define(['NccModal', 'Utils', 'TransactionType', 'handlebars', 'typeahead'], func
             var self = this;
 
             this.resetDefaultData();
-            
             this.observe({
                 encryptionPossible: function(encryptionPossible) {
                     if (!encryptionPossible) {
@@ -233,10 +235,18 @@ define(['NccModal', 'Utils', 'TransactionType', 'handlebars', 'typeahead'], func
                         this.set('encryptionPossible', false);
                     }
                 }
-            }, 
+            },
             {
                 init: false
             });
+
+			this.observe('recipientType', function(newValue) {
+				if (newValue === 'escrow') {
+					this.set('formattedRecipient', this.get('escrowAddress'));
+				} else {
+					this.set('formattedRecipient', '');
+				}
+			});
 
             this.on({
                 sendFormKeypress: function(e) {

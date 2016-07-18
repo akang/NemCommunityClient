@@ -663,4 +663,239 @@ translated texts.namespacesmosaics.table.columns.[0]
 	      to: ''
 	based on: texts.transactions.table.columns.[4]
 
+-----changed texts.wallet.nav.[5]
+	from: 'Asset Exchange'
+	  to: 'Trading'
+	 was: '資產交换'
+
+changed texts.wallet.nav.[6]
+	from: 'News'
+	  to: 'Financial transactions'
+	 was: '新聞'
+
+changed texts.wallet.nav.[7]
+	from: 'Applications'
+	  to: 'Fiat panel'
+	 was: '應用'
+
+changed texts.wallet.nav.[8]
+	from: 'Accounts'
+	  to: 'Asset Exchange'
+	 was: '賬戶'
+
+changed texts.wallet.nav.[9]
+	from: 'Settings'
+	  to: 'News'
+	 was: '設置'
+
+changed texts.wallet.nav.[10]
+	from: 'Close Program'
+	  to: 'Accounts'
+	 was: '關閉程序'
+
+changed texts.wallet.nav.[11]
+	from: 'Namespaces & Mosaics'
+	  to: 'Settings'
+	 was: 'Namespaces & Mosaics'
+
+translated texts.common.amount
+	    from: 'Amount'
+	      to: '金額'
+	based on: texts.transactions.table.columns.[8]
+
+translated texts.common.saveButton
+	    from: 'Save'
+	      to: 'Save'
+	based on: texts.modals.settings.save
+
+translated texts.Validity.HOURS
+	    from: 'Due by (hours)'
+	      to: 'Due by (hours)'
+	based on: texts.common.hoursDue
+
+translated texts.Strategy.3
+	    from: 'Stop'
+	      to: 'Stop'
+	based on: texts.modals.stopRemote.stop
+
+translated texts.modals.placeOrder.cancel
+	    from: 'Cancel'
+	      to: 'Cancel'
+	based on: texts.common.cancelButton
+
+translated texts.modals.placeOrder.strategies.stop
+	    from: 'Stop'
+	      to: 'Stop'
+	based on: texts.modals.stopRemote.stop
+
+translated texts.modals.transferFiat.cancel
+	    from: 'Cancel'
+	      to: 'Cancel'
+	based on: texts.common.cancelButton
+
+translated texts.modals.viewUserDetails.cancel
+	    from: 'Cancel'
+	      to: 'Cancel'
+	based on: texts.common.cancelButton
+
+translated texts.modals.viewUserDetails.confirm
+	    from: 'Confirm'
+	      to: 'Confirm'
+	based on: texts.modals.sendNem.txConfirm.confirm
+
+translated texts.modals.setUserDetails.cancel
+	    from: 'Cancel'
+	      to: 'Cancel'
+	based on: texts.common.cancelButton
+
+translated texts.modals.setUserDetails.address
+	    from: 'Address'
+	      to: 'Address'
+	based on: texts.common.address
+
+translated texts.modals.setFiatWithdrawalAccount.cancel
+	    from: 'Cancel'
+	      to: 'Cancel'
+	based on: texts.common.cancelButton
+
+translated texts.modals.setXemWithdrawalAccount.cancel
+	    from: 'Cancel'
+	      to: 'Cancel'
+	based on: texts.common.cancelButton
+
+translated texts.modals.confirmWithPassword.confirm
+	    from: 'Confirm'
+	      to: 'Confirm'
+	based on: texts.modals.sendNem.txConfirm.confirm
+
+translated texts.modals.confirmWithPassword.password
+	    from: 'Password'
+	      to: '密碼'
+	based on: texts.landing.main.passwordPlh
+
+translated texts.modals.confirmWithPassword.wallet
+	    from: 'Wallet'
+	      to: 'Wallet'
+	based on: texts.modals.stopRemote.wallet
+
+translated texts.modals.withdraw.cancel
+	    from: 'Cancel'
+	      to: 'Cancel'
+	based on: texts.common.cancelButton
+
+translated texts.modals.orderUpdate.fee
+	    from: 'Fee'
+	      to: '費'
+	based on: texts.harvestedBlocks.table.columns.[3]
+
+translated texts.modals.orderUpdate.total
+	    from: 'Total'
+	      to: 'Total'
+	based on: texts.modals.sendNem.txConfirm.total
+
+translated texts.modals.orderUpdate.amount
+	    from: 'Amount'
+	      to: '金額'
+	based on: texts.transactions.table.columns.[8]
+
+translated texts.modals.withdrawalAccountTx.cancel
+	    from: 'Cancel'
+	      to: 'Cancel'
+	based on: texts.common.cancelButton
+
+translated texts.modals.addFiatAccount.add
+	    from: 'Add'
+	      to: '添加'
+	based on: texts.modals.addContact.add
+
+translated texts.modals.kickstart.cancel
+	    from: 'Cancel'
+	      to: 'Cancel'
+	based on: texts.common.cancelButton
+
+translated texts.wallet.nav.[12]
+	    from: 'Close Program'
+	      to: '關閉程序'
+	based on: texts.wallet.nav.[10]
+
+translated texts.wallet.nav.[13]
+	    from: 'Namespaces & Mosaics'
+	      to: 'Namespaces & Mosaics'
+	based on: texts.namespacesmosaics.title
+
+translated texts.trading.tradeHistory.amount
+	    from: 'Amount'
+	      to: '金額'
+	based on: texts.transactions.table.columns.[8]
+
+translated texts.trading.tradeHistory.time
+	    from: 'Time'
+	      to: '時間'
+	based on: texts.harvestedBlocks.table.columns.[1]
+
+translated texts.trading.pendingOrders.amount
+	    from: 'Amount'
+	      to: '金額'
+	based on: texts.transactions.table.columns.[8]
+
+translated texts.trading.pendingOrders.remove
+	    from: 'Remove'
+	      to: '删除'
+	based on: texts.addressBook.remove
+
+translated texts.trading.graphChart.steps.oneDay
+	    from: '1 day'
+	      to: '1 day'
+	based on: texts.common.appStatus.daysBehind.1
+
+translated texts.financialTransactions.escrows.statuses.confirmed
+	    from: 'Confirmed'
+	      to: 'Confirmed'
+	based on: texts.transactions.filters.confirmed
+
+translated texts.financialTransactions.settings.title
+	    from: 'Settings'
+	      to: '設定'
+	based on: texts.settings.title
+
+translated texts.financialTransactions.tradingOperations.senderOrRecipient
+	    from: 'Sender/Recipient'
+	      to: '發送人/接收人'
+	based on: texts.transactions.table.columns.[2]
+
+translated texts.financialTransactions.tradingOperations.message
+	    from: 'Message'
+	      to: '留言'
+	based on: texts.transactions.table.columns.[3]
+
+translated texts.financialTransactions.tradingOperations.confirmations
+	    from: 'Confirmations'
+	      to: '確認'
+	based on: texts.transactions.table.columns.[6]
+
+translated texts.financialTransactions.tradingOperations.fee
+	    from: 'Fee'
+	      to: '費'
+	based on: texts.harvestedBlocks.table.columns.[3]
+
+translated texts.financialTransactions.tradingOperations.amount
+	    from: 'Amount'
+	      to: '金額'
+	based on: texts.transactions.table.columns.[8]
+
+translated texts.fiatPanel.transactions.columns.time
+	    from: 'Time'
+	      to: '時間'
+	based on: texts.harvestedBlocks.table.columns.[1]
+
+translated texts.fiatPanel.transactions.columns.sender
+	    from: 'Sender'
+	      to: '發件人'
+	based on: texts.modals.transactionDetails.sender
+
+translated texts.fiatPanel.transactions.columns.recipient
+	    from: 'Recipient'
+	      to: '收件人'
+	based on: texts.modals.transactionDetails.recipient
+
 -----

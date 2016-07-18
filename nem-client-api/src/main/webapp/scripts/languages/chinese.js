@@ -32,6 +32,28 @@ define({
 			131: '地址簿名与目录重名。',
 			132: '地址簿插件文件错误。',
 			133: '此地址簿无法删除。',
+			141: 'The trading storage file does not exist.',
+			142: 'Trading storage has not been created.',
+			143: 'Trading storage file is corrupt. Please recover your trading storage from a backup.',
+			144: 'The provided password for the trading storage is not correct.',
+			145: 'No password was provided for the trading storage.',
+			149: 'Another trading storage with the same name exists already. Please choose an other trading storage name.',
+			151: 'The trading storage name is a directory.',
+			152: 'The extension of the trading storage file is incorrect.',
+			153: 'The trading storage could not be deleted.',
+			154: 'Can\'t add BTC escrow address.',
+			155: 'Can\'t add XEM escrow public key.',
+			156: 'Trading storage already contains this bank account.',
+			157: 'Trading storage does not contain any Fiat account with this address',
+			161: 'The broker storage file does not exist.',
+			162: 'Broker storage has not been created.',
+			163: 'Broker storage file is corrupt. Please recover your trading storage from a backup.',
+			164: 'The provided password for the broker storage is not correct.',
+			165: 'No password was provided for the broker storage.',
+			169: 'Another broker storage with the same name exists already. Please choose an other broker storage name.',
+			171: 'The broker storage name is a directory.',
+			172: 'The extension of the broker storage file is incorrect.',
+			173: 'The broker storage could not be deleted.',
 			202: '该公钥不存在。',
 			203: '账户无法转换，可能存在未激活的共同签署人账号。需要完成一笔交互以激活账户。',
 			305: 'NEM基础设施服务 (NIS)不可用。\n\n请尝试重启NEM软件。\n\n如果您在使用远程NIS，请确认NIS端口开放，连接未受局域网限制。',
@@ -49,6 +71,9 @@ define({
 			1000: '您所提供的密钥公钥与私钥不对应。',
 			1001: '您所提供的公钥和地址不对应。',
 			1002: '网络中无法找到改地址。',
+			1110: 'Specified broker storage is not open',
+			1111: 'Specified trading storage is not open',
+			1112: 'Wallet containing your trading account is not open',
 			1203: '所提供的截止日期过早。必须输入1天以内的日期作为截止日期。',
 			1204: '所提供的截止日期过晚。必须输入1天以内的日期作为截止日期。',
 			1205: '您的账户余额不足，无法发起该交互。',
@@ -68,7 +93,79 @@ define({
 			1274: '多重签名账号不可发起交互。',
 			1275: '多重签名账户变更被拒绝。一个待加入账号已是共同签署人。',
 			1321: '该帐户未知。一个帐户需要至少完成一个交易（作为发件人或收件人）才能被网络公知。',
-
+			2101: 'Broker is not available.',
+			2102: 'Unknown broker error. ',
+			2103: 'Can\'t send request to broker.',
+			2200: "SUCCESS",
+			2201: "Processing",
+			2202: "Internal error.",
+			2203: "Is broker connected?",
+			2204: "Broker is connected",
+			2303: "Not enough coins..",
+			2304: "Not enough coins to pay fee.",
+			2305: "Failed to find lockbox.",
+			2306: "Escrow account does not exist.",
+			2307: "Withdraw account does not exist.",
+			2308: "Failed to create withdraw request.",
+			2309: "Escrow account is invalid for this order!",
+			2310: "Withdraw account is invalid for this order!",
+			2311: "Invalid trade pair!",
+			2312: "Invalid field: ",
+			2313: "Canceling order.",
+			2314: "Order volume is too small!",
+			2315: "Matching engine is not available",
+			2316: "Such withdraw account already exist.",
+			2401: "INSUFFICIENT BALANCE",
+			2402: "INVALID PEG ORDER",
+			2403: "INVALID CANCEL ORDER",
+			2404: "ORDER CANCELLED",
+			2405: "NO SUCH ORDER TO UPDATE",
+			2406: "INVALID MARKET ORDER",
+			2407: "INVALID ORDER",
+			2408: "Order does not exist!",
+			2409: "Order does not belong to your broker!",
+			2411: "Invalid response from matching engine!",
+			2412: "Order with such id already exists!",
+			2413: "Instrument is not suported",
+			2500: "Request is invalid.",
+			2501: "Escrow account in not set up.",
+			2502: "Request must be signed!",
+			2511: "Signer is invalid.",
+			2512: "Signature format is invalid.",
+			2513: "Invalid request body.",
+			2514: "Bad signature",
+			2600: "Type of operator options request is invalid.",
+			2601: "Failed to get operator's options.",
+			2602: "Failed to update operator's options.",
+			2603: "User does not own this account.",
+			2604: "Trade instument does not exist.",
+			2610: "Type of trade pair request is invalid.",
+			2611: "Trade pair does not exist",
+			2612: "Failed to delete trade pair.",
+			2613: "Trade pair with such products already exists",
+			2614: "Failed to save trade pair",
+			2615: "Failed to update trade pair",
+			2616: "Failed to get trade pair.",
+			2617: "Failed to get trade pairs.",
+			2650: "Port is already occupied.",
+			2660: "User does not exist.",
+			2661: "User does not exist.",
+			2662: "Broker does not exist.",
+			2670: "Failed to get trade instruments.",
+			2675: "Failed to get trading history.",
+			2680: "Failed to get pending orders.",
+			2685: "Failed to save userDetails.",
+			2686: "Failed to get userDetails.",
+			2687: "Failed to update userDetails.",
+			2700: "Failed to get account.",
+			2709: "Too small withdraw amount",
+			2801: 'Unknown instrument came from the Bank API.',
+			2802: 'Could not connect to the Bank API.',
+			2803: 'Could not authenticate to the Bank API.',
+			2804: 'Invalid Bank API URL.',
+			2805: 'Error getting bank account details.',
+			2806: 'Transfer error.',
+			2851: 'Invalid BTC private key.'
 		},
 		common: {
 			success: '成功',
@@ -91,6 +188,8 @@ define({
 					1: '一天',
 					many: '{{1}} 天'
 				},
+				brokerUnavailable: 'The broker engine is not reachable',
+				tradeSocketStopped: 'Trading updates unavailable.',
 				synchronized: 'NIS已完成同步!',
 				noRemoteNisAvailable: '在相应地址未发现NIS网络，互联网已断开？'
 			},
@@ -111,24 +210,32 @@ define({
 			hours: '小时数',
 			hoursDue: '到期小时数',
 			hoursDueExplanation: '如果交互未在截止时间之前完成，它会被拒绝。',
+			amount: '金额',
+			price: 'Price',
+			escrowAccount: 'Escrow account',
+			withdrawalAccount: 'Withdrawal account',
+			escrowAddress: 'Escrow address',
+			notAuthorized: 'You should first setup User details.',
+			pleaseSelect: 'Please select',
 			closeButton: '关闭',
+			saveButton: '保存',
 			cancelButton: '取消',
 			sendButton: '发送',
 			account: '帐户',
 			thisAccount: '本账户',
 			warning: '警告',
-			newBuild: '新版本',
-			newBuildNumber: '新版本{{1}} 已发布可下载， 点击 <a class="hyperlink--default", href="http://blog.nem.io">blog.nem.io</a> 查看。',
+			newBuild: 'NEW BUILD',
+			newBuildNumber: 'There is new build {{1}} available for download. Check <a class="hyperlink--default", href="http://blog.nem.io">blog.nem.io</a> for details',
 
 		},
 		transactionTypes: {
 			20: '传输交互',
 			21: '重要性传输',
 			22: '多重签名账户变更',
-			23: '部署命名空间',
-			24: '马赛克创建',
-			25: '马赛克提供',
-			40: '多重签名',
+			23: 'PROVISION NAMESPACE',
+			24: 'MOSAIC CREATION',
+			25: 'MOSAIC SUPPLY',
+			40: 'MULTISIG SIGNATURE',
 			50: '多重签名交互',
 			51: '多重签名交互',
 			52: '多重签名交互',
@@ -137,6 +244,24 @@ define({
 			55: '多重签名交互',
 
 		},
+		Validity: {
+			GOOD_TILL_CANCELLED: 'Good till cancelled',
+			HOURS: '到期小时数'
+		},
+		TradeOperationType: {
+			1: 'Buy',
+			2: 'Sell'
+		},
+		PriceVariant: {
+			1: 'Market',
+			2: 'Custom'
+		},
+		Strategy: {
+			1: 'Limit',
+			2: 'Market',
+			3: '停止',
+			4: 'Peg'
+		},
 		transactionDirections: {
 			pending: '等待中交互',
 			outgoing: '发送交互',
@@ -144,9 +269,9 @@ define({
 			self: '自我交互',
 			importance: '重要性交互',
 			modification: '多重签名账户协同变更',
-			provision: '部署命名空间',
-			mosaicCreation: '马赛克创建',
-			mosaicSupply: '马赛克提供'
+			provision: 'Provision Namespace',
+			mosaicCreation: 'Mosaic Creation',
+			mosaicSupply: 'Mosaic Supply'
 		},
 		modals: {
 			error: {
@@ -190,10 +315,10 @@ define({
 				saveSuccess: '设置保存成功'
 			},
 			signToken: {
-				title: "用账户签署一个串码",
-				label: "串码 (地址, 字符串, 任何东西)",
-				signature: "签署码",
-				sign: "签署"
+				title: "Sign a token using account",
+				label: "Token (url, string, anything)",
+				signature: "Signed token",
+				sign: "Sign"
 			},
 			multisig: {
 				title: '转换为多重签名账号',
@@ -205,15 +330,14 @@ define({
 				convert: '转换',
 				txConfirm: {
 					title: '确认转换至多重签名账户',
-					total: '总额',
-
+					total: '总额'
 				},
 				warning: '多重签名账户本身不可以作为共同签署人。这样做会把账户彻底锁死无法发出交互。估计您<b>不会</b>想要这么做。',
-				minCosignatoriesDefaultLabel: '使用默认签署人数量',
-				minCosignatoriesRelativeLabel: '关联变更',
-				minCosignatoriesLabel: '最少共签人数量',
-				minCosignatoriesZero: '使用零将会需要 所有共签人签名',
-				minCosignatoriesOverflow: '指定人数大于所有共签人数'
+				minCosignatoriesDefaultLabel: 'Use default cosignatories number',
+				minCosignatoriesRelativeLabel: 'relative change',
+				minCosignatoriesLabel: 'Minimum number of cosignatories',
+				minCosignatoriesZero: 'Using zero would cause all cosignatories to be required',
+				minCosignatoriesOverflow: 'Specified number is larger than number of cosignatories'
 			},
 			signMultisig: {
 				title: '签署多重签名交互',
@@ -244,12 +368,14 @@ define({
 				labelDesc: '此账户标记为 {{1}}',
 				nullLabelDesc: '此帐户没有标记',
 				amount: '金额',
+				escrow: 'Escrow',
+				other: 'Other',
 				recipient: '收件人账号',
 				recipientValidation: '账户地址长度必须为40个字符（含符号）',
 				message: '信息',
 				encrypt: '加密',
 				sending: '正在发送...',
-				successMessage: '您的交互已经成功发送! <br><br>交互hash: {{1}}',
+				successMessage: 'Your transaction has been sent successfully! <br><br>Transaction hash: {{1}}',
 				txConfirm: {
 					title: '确认交易',
 					amount: '金额',
@@ -271,7 +397,8 @@ define({
 				},
 				loadingWarning: {
 					title: '正在加载数据库'
-				}
+				},
+
 			},
 			clientInfo: {
 				title: '客户端信息',
@@ -285,7 +412,6 @@ define({
 				notConnected: '未连接 NEM 云',
 				loading: '加载中...'
 			},
-			mosaicDetails: 'Mosaic Details',
 			transactionDetails: {
 				title: '交易详情',
 				id: 'ID',
@@ -313,21 +439,21 @@ define({
 				innerFee: '内部费用',
 				multisigFees: '多重签名费用',
 				cosignatory: '共同签署人',
-				namespace: '命名空间',
-				rentalFee: '租金费用',
-				mosaicName: '马赛克名称',
-				mosaicQuantity: '马赛克数量',
-				mosaicLevy: '马赛克税金',
-				description: '描述',
-				propertiesLabel: '属性',
+				namespace: 'Namespace',
+				rentalFee: 'Rental fee',
+				mosaicName: 'Mosaic Name',
+				mosaicQuantity: 'Mosaic quantity',
+				mosaicLevy: 'Mosaic levy',
+				description: 'Description',
+				propertiesLabel: 'Properties',
 				properties: {
-					divisibility: '可分性',
+					divisibility: 'Divisibility',
 					initialSupply: 'Initial supply',
 					supplyMutable: 'Is supply mutable',
-					transferable: '可传输性'
+					transferable: 'Is transferable'
 				},
-				supplyType: '供给类型',
-				supplyAmount: '供给量',
+				supplyType: 'Supply type',
+				supplyAmount: 'Supply amount',
 
 			},
 			accountDetails: {
@@ -413,10 +539,6 @@ define({
 				passwordNotMatchTitle: '糟!',
 				passwordNotMatchMessage: '您输入的密码不正确，请务必正确输入您的密码'
 			},
-			exportWalletLight: {
-				title: 'Export for lightwallet',
-				export: 'Export'
-			},
 			changeAccountLabel: {
 				title: '更改帐户标识',
 				label: '帐户标识',
@@ -445,15 +567,15 @@ define({
 				wallet: '钱包',
 				activate: '激活',
 				warningText: '激活会花费6小时的时间 (360块)。激活操作并不会开启收获。',
-				delegatedAccount: '委托账户公钥',
-				builtIn: '钱包内建',
+				delegatedAccount: 'Delegated account public key',
+				builtIn: 'built into the wallet',
 
 			},
 			deactivateDelegated: {
 				title: '取消激活委托收获',
 				wallet: '钱包',
 				deactivate: '停止激活',
-				warningText: '解除激活会花费约6小时的时间 (360块)。'
+				warningText: '解除激活会花费6小时的时间 (360块)。'
 			},
 			startRemote: {
 				title: '开启委托收获',
@@ -479,6 +601,259 @@ define({
 			removeContact: {
 				title: '删除联系人',
 				remove: '删除'
+			},
+			placeOrder: {
+				title: 'Place order',
+				cancel: '取消',
+				sell: 'Sell',
+				buy: 'Buy',
+				place: 'Place order',
+				placing: 'Placing',
+				hours: 'Hours',
+				youWillSpend: 'You will spend',
+				youWillGet: 'You will get',
+				brokersCommission: "broker's commission",
+				validity: 'Validity',
+				strategy: 'Strategy',
+				buying: 'buying',
+				selling: 'selling',
+				upTo: 'up to',
+				validities: {
+					GTC: 'Good Till Cancelled',
+
+				},
+				priceVariants: {
+					market: 'Market price',
+					custom: 'Custom price'
+				},
+				placeSuccess: 'Order successfully placed',
+				strategies: {
+					limit: 'Limit',
+					market: 'Market',
+					stop: '停止',
+					peg: 'Peg'
+				},
+				blankMarketPrice: 'Can\'t find a suitable market price',
+				minStep: 'Minimal step'
+			},
+			removeOrder: {
+				title: 'Remove order',
+				message: 'Are you sure you want to remove this order?',
+				removeSuccess: 'Order successfully removed'
+			},
+			transferFiat: {
+				transferFiat: 'Transfer Fiat',
+				depositFiat: 'Deposit Fiat',
+				tradeInstrument: 'Trade instrument',
+				cancel: '取消',
+				transfer: 'Transfer',
+				transferring: 'Transferring',
+				deposit: 'Deposit',
+				depositing: 'Depositing',
+				escrow: 'Escrow',
+				other: 'Other',
+				transferSuccess: 'Money transferred successfully!',
+				depositSuccess: 'Money deposited successfully!',
+				noInstruments: 'No instruments available',
+				noEscrow: 'No escrow account',
+				noAccounts: 'No bank accounts found',
+				senderAccount: 'Sender account',
+				recipientAccount: 'Recipient account',
+				receiveInstrument: 'Receive instrument',
+				balance: 'balance',
+				narrative: 'Narrative'
+			},
+			viewUserDetails: {
+				title: 'User Details',
+				message: 'Your personal details',
+				cancel: '取消',
+				editDetails: 'Edit details',
+				confirm: '确认'
+			},
+			setUserDetails: {
+				setup: {
+					title: 'Setup User Details',
+					success: 'User details setup successfully'
+				},
+				edit: {
+					title: 'Edit User Details',
+					success: 'User details updated successfully'
+				},
+				id: 'User id',
+				next: 'Next',
+				cancel: '取消',
+				back: 'Back',
+				finish: 'Finish',
+				submitting: 'Submitting',
+				processing: 'Processing',
+				update: 'Update',
+				updating: 'Updating',
+				firstName: 'First name',
+				lastName: 'Last name',
+				dateOfBirth: 'Date of birth',
+				country: 'Country',
+				selectCountry: 'Select country',
+				passport: 'Passport',
+				address: '地址',
+				contactNumber: 'Contact number',
+				email: 'Email address',
+				steps: {
+					1: {
+						prompt: 'Please enter your personal data'
+					},
+					3: {
+						prompt: 'You will not be able to change these fields later',
+						agreePrompt: 'I agree with ',
+						agreeLink: 'terms of usage'
+					},
+					4: {
+						prompt: 'Please check all the details and return if you want to change them'
+					}
+				}
+			},
+			noDetails: {
+				title: 'setup user details',
+				message: 'You need to first setup user details, would you like to do it right now?',
+				setup: 'Setup'
+			},
+			setFiatWithdrawalAccount: {
+				selectTradeInstrument: 'Select currency',
+				title: 'Set Fiat Withdrawal Account',
+				detailsMessage: 'The new Fiat withdrawal account will be associated with your current user details, you can update them before establishing the new withdrawal account.',
+				message: 'You are almost there, now you should type in the address of the Fiat account that will be used as a withdrawal account and attach it to a currency.',
+				createSuccess: 'Fiat Withdrawal account created successfully',
+				tradeInstrument: 'Trade instrument',
+				cancel: '取消',
+				finish: 'Finish',
+				finishing: 'Finishing',
+
+			},
+			setXemWithdrawalAccount: {
+				title: 'Create XEM Withdrawal Account',
+				detailsMessage: 'The new XEM withdrawal account will be associated with your current user details, you can update them before establishing the new withdrawal account.',
+				message: 'You are almost there, now you should type in the address of the account that will be used as a withdraw account.',
+				createSuccess: 'XEM Withdrawal account created successfully',
+				cancel: '取消',
+				finish: 'Finish',
+				finishing: 'Finishing',
+
+			},
+			setBtcWithdrawalAccount: {
+				title: 'Setup BTC Withdrawal Account',
+				message: 'Type in the address of your Bitcoin account to be used as the withdrawal account',
+				detailsMessage: 'The new BTC withdrawal account will be associated with your current user details, you can update them before establishing the new withdrawal account.',
+				address: 'Bitcoin address',
+				setup: 'Setup',
+				settingUp: 'Setting up',
+				setupSuccess: 'BTC withdrawal account setup successfully'
+			},
+			requestBtcEscrowAccount: {
+				title: "Request BTC escrow",
+				message: "Do you want to request a BTC escrow account from the broker?",
+				requestSuccess: 'Your BTC escrow request was sent to your broker'
+			},
+			confirmWithPassword: {
+				title: 'Confirm action',
+				confirm: '确认',
+				message: 'In order to complete this action you should confirm your password.',
+				password: '密码',
+				wallet: '钱包'
+			},
+			tradePairNotAvailable: {
+				title: 'Not available',
+				message: 'This trade pair is not available, please go and setup the trade instruments that it is compound of. Do you want to do it ?'
+			},
+			selectTradingAccount: {
+				title: 'Select trading account',
+				message: 'Please select the account that will be used as the main account in trading operations',
+				tradingAccount: 'Trading account',
+				submit: 'Submit',
+				submitting: 'Submitting',
+				selectAccount: 'Select account'
+			},
+			brokerNotBooted: {
+				title: 'Broker not booted',
+				message: 'Broker is not available. Please boot it prior to continuing.'
+			},
+			withdraw: {
+				xem: {
+					title: 'Withdraw XEM'
+				},
+				btc: {
+					title: 'Withdraw BTC'
+				},
+				fiat: {
+					title: 'Withdraw Fiat'
+				},
+				escrowBalance: 'balance in escrow',
+				withdraw: 'Withdraw',
+				processing: 'Processing',
+				withdrawSuccess: 'Money withdrawn sucessfully!',
+				cancel: '取消',
+				setupWithdraw: 'setup',
+				noWithdraw: 'not set yet:'
+			},
+			orderUpdate: {
+				title: 'Order Update',
+				buying: 'Buying',
+				selling: 'Selling',
+				eachFor: 'Each for',
+				fee: '费用',
+				strategy: 'Strategy',
+				total: '总价',
+				ok: 'OK',
+				orderDetails: 'Order details',
+				price: 'Price',
+				amount: '金额',
+				matchOccurred: 'New match occurred!',
+				orderInfo: 'Order info',
+				matchInfo: 'Match info',
+				reservedAmount: 'Reserved amount'
+			},
+			publishTx: {
+				message: 'In order to complete the operation, you will need to send a transaction. It will cost you:',
+				insufficientBalance: 'Insufficient balance',
+				insufficientBalanceMessage: 'You don\'t have enough XEM on your active account to perform the operation. You need to have at least:',
+				kickstartOptionMessage: "You can make a transfer to a broker's kickstart account and get XEM coins in exchange for the Fiat money.",
+				exchangeFiatForXem: 'Exchange Fiat for XEM'
+			},
+			withdrawalAccountTx: {
+				title: 'Withdrawal account transaction',
+				ok: 'OK',
+				cancel: '取消'
+			},
+			addFiatAccount: {
+				title: 'Add Fiat account',
+				message: 'Enter the data about the new Fiat account',
+				tradeInstrument: 'Trade instrument',
+				accountNumber: 'Account number',
+				btcPrivateKey: 'BTC private key',
+				correspondingKey: 'corresponding BitId key',
+				add: '新增',
+				successMessage: 'Fiat account added successfully',
+				detailsMessage: 'The new Fiat account will be associated with your current user details, you can update them before establishing the new withdrawal account.'
+			},
+			kickstart: {
+				title: 'Kickstart',
+				message: "You can get XEMs in exchange for the Fiat money. Broker will transfer your XEM coins to the selected recipient account. The transfer commission will be payed with the XEMs taken from exchange.",
+				senderAccount: 'Sender account',
+				noAccounts: 'No accounts available',
+				recipientAccount: 'Recipient account',
+				kickstartAccount: "Broker's kickstart account",
+				noAccountsFound: 'No accounts found',
+				noAccountsForInstrument: 'No kickstart receive accounts were registered for this instrument',
+				balance: 'Balance',
+				transfer: 'Transfer',
+				transferring: 'Transferring',
+				cancel: '取消',
+				willGet: 'You will get',
+				rate: 'Rate',
+				selectSender: 'Select sender',
+				transferSuccess: 'Money transferred successfully'
+			},
+			noBankAccounts: {
+				title: 'No Bank accounts',
+				message: 'Please setup at least one Fiat account first.'
 			}
 		},
 		landing: {
@@ -504,61 +879,51 @@ define({
 				copyright: '由<em>Cas Cornelissen</em>摄制'
 			},
 			carousel: {
-				items: [
-					{
-						title: 'NCC 加密你的钱包',
-						description: '为避免XEM被盗，加密是<em>安全</em>的有效保证 &amp;。'
-					},
-					{
-						title: '远程NEM基础设施服务',
-						description: '使用一个远程NIS服务，您可以避免从零开始同步块链。',
+				items: [{
+					title: 'NCC 加密你的钱包',
+					description: '为避免XEM被盗，加密是<em>安全</em>的有效保证 &amp;。'
+				}, {
+					title: '远程NEM基础设施服务',
+					description: '使用一个远程NIS服务，您可以避免从零开始同步块链。',
 
-					},
-					{
-						title: '委托收获',
-						description: '使用委托收获，您可以在远程节点上执行收获!',
+				}, {
+					title: '委托收获',
+					description: '使用委托收获，您可以在远程节点上执行收获!',
 
-					},
-					{
-						title: '多重签名交互',
-						description: '使用块链内置的多重签名交互保障您的XEM和资产安全。',
+				}, {
+					title: '多重签名交互',
+					description: '使用块链内置的多重签名交互保障您的XEM和资产安全。',
 
-					},
-					{
-						title: '多语言支持',
-						description: 'NEM用户界面支持多语言，请查看“设置"。'
-					},
-					{
-						title: '有任何问题或反馈？',
-						description: '<a href="http://forum.ournem.com">forum.ournem.com</a> | #ournem on freenode.org | Telegram',
+				}, {
+					title: '多语言支持',
+					description: 'NEM用户界面支持多语言，请查看“设置"。'
+				}, {
+					title: '有任何问题或反馈？',
+					description: '<a href="http://forum.ournem.com">forum.ournem.com</a> | #ournem on freenode.org | Telegram',
 
-					}
-				]
+				}]
 			},
 			about: {
-				sections: [
-					{
-						title: 'NCC是如何工作的?',
-						paragraphs: [
-							'<strong>NCC</strong> 让您使用XEM时就如使用一个传统的钱包一样。',
-							'<strong>NCC</strong>打开使用前需要您连接到<strong>NIS</strong> 服务器。 您可以本地同时安装<strong>NCC</strong>服务和<strong>NIS</strong>服务。',
-							'也可以访问一个远程<strong>NIS</strong>。'
-						],
-						listItems: [
-							'拥有多个钱包',
-							'在一个钱包里定义多个帐户'
-						]
-					},
-					{
-						title: '什么是&#42;NIS?',
-						paragraphs: [
-							'负责保持<strong>NEM</strong>云存活.',
-							'网络中存在越多的<strong>NIS</strong>节点，NEM的安全性就越高,',
-							'<strong>NIS</strong> 是 <strong>NEM</strong> 云的接入点。'
-						],
-						legend: '<strong>&#42;NIS</strong> 是 <strong>NEM基础架构服务</strong>的缩写'
-					}
-				]
+				sections: [{
+					title: 'NCC是如何工作的?',
+					paragraphs: [
+						'<strong>NCC</strong> 让您使用XEM时就如使用一个传统的钱包一样。',
+						'<strong>NCC</strong>打开使用前需要您连接到<strong>NIS</strong> 服务器。 您可以本地同时安装<strong>NCC</strong>服务和<strong>NIS</strong>服务。',
+						'也可以访问一个远程<strong>NIS</strong>。'
+					],
+					listItems: [
+						'拥有多个钱包',
+						'在一个钱包里定义多个帐户'
+					]
+				}, {
+					title: '什么是&#42;NIS?',
+					paragraphs: [
+						'负责保持<strong>NEM</strong>云存活.',
+						'网络中存在越多的<strong>NIS</strong>节点，NEM的安全性就越高,',
+						'<strong>NIS</strong> 是 <strong>NEM</strong> 云的接入点。'
+					],
+					legend: '<strong>&#42;NIS</strong> 是 <strong>NEM基础架构服务</strong>的缩写'
+				}]
 			},
 			footer: {
 				copyright: '&copy; 版权所有 2015. NEM 社区客户端。'
@@ -580,12 +945,12 @@ define({
 				changeWalletPassword: '修改钱包密码',
 				mergeWallets: '合并钱包',
 				exportWallet: '输出钱包',
-				exportWalletLight: 'Export for Lightwallet',
 				createAccount: '创建新帐号',
 				createRealAccountData: '创建真实账户信息',
 				verifyRealAccountData: '确认真实账户信息',
 				showPrivateKey: '显示账户私钥',
 				showRemotePrivateKey: '显示远程账户私钥',
+				getXemInExchangeForFiat: 'Get XEM in exchange for Fiat',
 				viewDetails: '查看账户细节',
 				addAccount: '添加一个现有帐户',
 				changeAccountLabel: '更改帐户标识',
@@ -596,7 +961,8 @@ define({
 				closeProgram: '关闭程序',
 				copyClipboard: '复制地址至剪贴板',
 				copyDisabled: '复制地址需要flash支持',
-				convertMultisig: '转换其他账户到多重签名'
+				convertMultisig: '转换其他账户到多重签名',
+				bootBroker: 'Boot broker'
 			},
 			nav: [
 				'仪表板',
@@ -604,19 +970,21 @@ define({
 				'联系人',
 				'交易',
 				'收获的区块',
-				'资产交换',
-				'新闻',
-				'应用',
-				'帐户',
-				'设置',
-				'关闭程序',
-				'命名空间和马赛克'
+				'Trading',
+				'Financial transactions',
+				'Fiat panel',
+				'Asset Exchange',
+				'News',
+				'Accounts',
+				'Settings',
+				'Accounts',
+				'Namespaces & Mosaics'
 			],
 			bootNodeWarning: '启用本地节点后，才能充分使用NCC的功能。'
 		},
 		dashboard: {
 			assets: {
-				title: '你的资产'
+				title: 'Your Mosaics'
 			},
 			importance: {
 				title: '重要性',
@@ -635,7 +1003,7 @@ define({
 					startRemoteHarvesting: '开启委托收获',
 					remotelyHarvesting: '远程收获',
 					stopRemoteHarvesting: '停止委托收获',
-					multisigInfo: '对一个账户激活或反激活委托收货需在一个共同签署人账户执行。',
+					multisigInfo: 'Activation or deactivation of a delegated harvesting for a multisig account must be done from one of cosignatory accounts',
 
 				}
 			},
@@ -648,7 +1016,7 @@ define({
 				accountCosignatories: '多重签名账户',
 				accountCosignatoriesView: '查看共同签署人',
 				vestedBalance: '账户当前余额',
-				syncStatus: '(现区块{{1}}{{#2}} : 估计{{3}}落后{{/2}})',
+				syncStatus: '(现区块{{1}}{{#2}} : 估计{{3}}落后{{/2}}天)',
 				notSynced: 'NIS可能尚未完成同步。',
 				unknown: '未知',
 				columns: [
@@ -713,22 +1081,22 @@ define({
 			}
 		},
 		namespacesmosaics: {
-			title: '命名空间和马赛克',
-			newNamespace: '新建命名空间',
-			newMosaic: '新建马赛克',
+			title: 'Namespaces & Mosaics',
+			newNamespace: 'New Namespace',
+			newMosaic: 'New Mosaic',
 			balance: '目前余额',
 			filters: {
-				displayAll: '显示全部',
-				displayMineonly: '只显示本账户所属',
-				filterNamespace: '筛选命名空间:',
-				filterMosaic: '筛选马赛克:'
+				displayAll: 'Display all',
+				displayMineonly: 'Display mine only',
+				filterNamespace: 'Filter Namespace:',
+				filterMosaic: 'Filter Mosaic:'
 			},
 			table: {
 				columns: [
-                    'Owner',
-					'命名空间和马赛克',
-					'创建',
-					'过期时间 (est.)'
+					'',
+					'Namespace & Mosaic',
+					'Creation',
+					'Expiration (est.)'
 				],
 				loading: 'Loading Namespaces & Mosaics...',
 				subNamespace: 'sub-namespace'
@@ -775,13 +1143,212 @@ define({
 			edit: '编辑',
 			remove: '删除'
 		},
+		trading: {
+			buy: 'Buy',
+			sell: 'Sell',
+			trading: {
+				title: 'Trading',
+				placeOrder: 'Place order',
+				baseInstrument: 'Base currency',
+				quoteInstrument: 'Quote currency'
+			},
+			allTradePairs: {
+				title: 'Market trade pairs',
+				base: 'Base',
+				quote: 'Quote',
+				bid: 'Bid',
+				ask: 'Ask',
+				noPairs: 'No trade pairs available'
+			},
+			depthQuotes: {
+				title: 'Market Depth Quotes',
+				buy: 'Buy',
+				sell: 'Sell',
+				price: 'Price',
+				noQuotes: 'No quotes available'
+			},
+			tradeOptions: {
+				title: 'Options',
+				showPanel: 'Show panel',
+				panelDropdown: {
+					tradeHistory: 'Trade History',
+					escrowBalances: 'Escrow Balances',
+					pendingOrders: 'Pending Orders'
+				}
+			},
+			tradeHistory: {
+				title: 'Trade History',
+				amount: '金额',
+				price: 'Price',
+				time: '时间',
+				noHistory: 'No transaction using this trade pair yet'
+			},
+			escrowBalances: {
+				title: 'Escrow Balances',
+				tradeInstrument: 'Currency',
+				balance: 'Balance',
+				noBalances: 'You haven\'t established any escrow balances yet.',
+				reserve: 'Reserve'
+			},
+			pendingOrders: {
+				title: 'Pending Orders',
+				base: 'Base',
+				quote: 'Quote',
+				amount: '金额',
+				price: 'Price',
+				perOne: 'per 1',
+				createdOn: 'Created on',
+				type: 'Type',
+				noOrders: 'You haven\'t placed any orders yet.',
+				strategy: 'Strategy',
+				remove: '删除'
+			},
+			graphChart: {
+				title: 'Graph Chart',
+				step: 'Step',
+				steps: {
+					fifteenMinutes: '15 minutes',
+					oneHour: '1 hour',
+					oneDay: '一天'
+				},
+				OHLC: 'OHLC',
+				volume: 'Volume'
+			}
+		},
+		financialTransactions: {
+			deposit: 'Deposit',
+			depositXem: 'Deposit XEM',
+			depositFiat: 'Deposit Fiat',
+			withdraw: 'Withdraw',
+			escrowAddress: 'Escrow address',
+			escrows: {
+				title: 'Escrow accounts',
+				filters: {
+					all: 'All',
+					xem: 'XEM',
+					fiat: 'Fiat',
+					btc: 'BTC'
+				},
+				statuses: {
+					requested: 'Requested',
+					confirmed: '已确认交易',
+					established: 'Established',
+					invalid: 'Invalid'
+				},
+				noEscrows: 'No escrow accounts yet',
+				tradeInstrument: 'Currency',
+				balance: 'Balance',
+				reserve: 'Reserve',
+				expiry: 'Payments expire',
+				current: 'Current for this currency'
+			},
+			settings: {
+				title: '设置',
+				status: 'Status',
+				userDetails: 'User details',
+				xem: 'XEM',
+				fiat: 'Fiat',
+				btc: 'BTC',
+				notSetup: 'Not set yet',
+				notAvailableYet: 'Not available yet',
+				withdrawalAccount: 'Withdrawal account number',
+				requestWithdrawalAccount: 'Request account',
+				setupEscrowWarning: 'Please request an escrow',
+				setWithdrawalWarning: 'Please set withdrawal account',
+				processing: 'Processing',
+				accountNumber: 'Account number',
+				userDetailsSettings: {
+					header: 'Your profile details',
+					showMoreDetails: 'Show more details',
+					editDetails: 'Edit user details',
+					firstName: 'First name',
+					lastName: 'Last name',
+					dateOfBirth: 'Date of birth',
+					noUserDetails: 'You haven\'t setup user details yet!',
+					pendingUserDetails: 'Your submitted user details are being processed',
+					setupUserDetails: 'Setup user details'
+				},
+				xemSettings: {
+					accountHeader: 'XEM account numbers',
+					requestNewEscrow: 'Request new XEM escrow account',
+					setWithdrawal: 'Set new XEM withdrawal account',
+					selectTradingAccount: 'Change trading account'
+				},
+				fiatSettings: {
+					tradeInstrument: 'Trade instrument',
+					accountHeader: 'Fiat account numbers',
+					requestNewEscrow: 'Request new Fiat escrow account',
+					setWithdrawal: 'Set withdrawal account',
+					noInstruments: 'No instruments available',
+					bankAccount: 'Bank account'
+				},
+				btcSettings: {
+					accountHeader: 'BTC account numbers',
+					requestNewEscrow: 'Request new BTC escrow account',
+					setupWithdrawal: 'Setup new BTC withdrawal account',
+					generateAuthKey: 'Generate a BTC key for auth.',
+					withdrawBtc: 'Withdraw BTC'
+				}
+			},
+			tradingOperations: {
+				title: 'Trading operations',
+				type: 'Type',
+				operation: 'Operation',
+				date: 'Date',
+				senderOrRecipient: '发送人/接收人',
+				message: '留言',
+				confirmations: '确认',
+				fee: '费用',
+				amount: '金额',
+				filters: {
+					0: 'All',
+					1: 'Deposit',
+					2: 'Withdraw',
+					3: 'BTC escrow request',
+					4: 'BTC escrow response',
+					5: 'User details setup',
+					6: 'User details update',
+					7: 'XEM Withdrawal account setup',
+					8: 'BTC Withdrawal account setup'
+				},
+				noOperations: 'No operations performed yet!'
+			}
+		},
+		fiatPanel: {
+			instrument: {
+				title: 'Instrument',
+				tradeInstrument: 'Choose trade instrument',
+				noInstruments: 'No instruments available'
+			},
+			account: {
+				title: 'Fiat account',
+				addAccount: 'Add account',
+				chooseAccount: 'Choose account',
+				noAccounts: 'No accounts for this trade instrument added yet'
+			},
+			transactions: {
+				title: 'Account transactions',
+				balance: 'Balance',
+				availableBalance: 'Available Balance',
+				columns: {
+					time: '时间',
+					sender: '发件人',
+					sendAmount: 'Sent',
+					recipient: '收件人',
+					receiveAmount: 'Received',
+					narrative: 'Narrative'
+				},
+				sendFiat: 'Send Fiat',
+				noTransfers: 'No transfers performed yet.',
+				noAccount: 'No account selected',
+				noNarrative: 'No narrative'
+			}
+		},
 		settings: {
 			title: '设置',
-			settings: [
-				{
-					name: '语言'
-				}
-			],
+			settings: [{
+				name: '语言'
+			}],
 			save: '保存更改',
 			saveSuccess: '设置已保存成功'
 		}
