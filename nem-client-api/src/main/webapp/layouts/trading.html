@@ -1,0 +1,556 @@
+<main class="trading-main">
+    <div class="container gridster">
+        <ul class="trading js-trading">
+            {{#with tradingPage}}
+            <li class="tile gs-w tile--buySell" data-row="1" data-col="1" data-sizex="1" data-sizey="1">
+                <article>
+                    <h1 class="tile-title">{{texts.trading.trading.title}}</h1>
+                    <button type="button" class="transactionsTile-sendNemButton
+                            icon-paper-plane-empty" disabled="{{!tradePair}}" on-click="showPlaceOrder">
+                        {{texts.trading.trading.placeOrder}}
+                    </button>
+                    <div class="form-field ">
+                        <p class="form-label ">
+                            <span class="half-width">{{texts.trading.trading.baseInstrument}}</span>
+                            <span class="half-width">{{texts.trading.trading.quoteInstrument}}</span>
+                        </p>
+                        <div class="form-dropdownbox">
+                            <div class="form-input form-input--textbox form-dropdownbox-selection {{#active['buySellTile-tradePairDropdown']}}form-dropdownbox-selection--selecting{{/}}" on-click="toggleOn('buySellTile-tradePairDropdown')">
+                                {{#with tradePair}}
+                                <span class="form-dropdownbox-base">{{baseInstrument.name}}</span>
+                                <span class="form-dropdownbox-quote">{{quoteInstrument.name}}</span>
+                                {{/with}}
+                            </div>
+                            <ul class="form-dropdownbox-dropdown {{^active['buySellTile-tradePairDropdown']}}hidden{{/}}">
+                                {{#each tradePairs}}
+                                <li class="form-dropdownbox-item" on-click="selectTradePair:{{this}}">
+                                    <span class="form-dropdownbox-base">{{baseInstrument.name}}</span>
+                                    <span class="form-dropdownbox-quote">{{quoteInstrument.name}}</span>
+                                </li>
+                                {{/each}}
+                            </ul>
+                        </div>
+                    </div>
+                </article>
+            </li>
+            <li class="tile gs-w tile--tradeOptions" data-row="2" data-col="1" data-sizex="1" data-sizey="1">
+                <article>
+                    <h1 class="tile-title">{{texts.trading.tradeOptions.title}}</h1>
+                    <div class="form-field ">
+                        <p class="form-label">
+                            {{texts.trading.tradeOptions.showPanel}}
+                        </p>
+                        <div class="form-dropdownbox">
+                            <div class="form-input form-input--textbox form-dropdownbox-selection {{#active['tradeOptionsTile-showPanelDropdown']}}form-dropdownbox-selection--selecting{{/}}" on-click="toggleOn('tradeOptionsTile-showPanelDropdown')">
+                                {{texts.trading.tradeOptions.panelDropdown[activePanel]}}
+                            </div>
+                            <ul class="form-dropdownbox-dropdown {{^active['tradeOptionsTile-showPanelDropdown']}}hidden{{/}}">
+                                {{#each panels}}
+                                <li class="form-dropdownbox-item" on-click="set('tradingPage.activePanel', this)">
+                                    {{texts.trading.tradeOptions.panelDropdown[this]}}
+                                </li>
+                                {{/each}}
+                            </ul>
+                        </div>
+                    </div>
+                </article>
+            </li>
+            <li class="tile gs-w tile--tradePairs tile--fullHeight" data-row="1" data-col="2" data-sizex="1" data-sizey="2">
+                <article>
+                    <h1 class="tile-title">{{texts.trading.allTradePairs.title}}</h1>
+                    <div class="preloader">
+                        <div class="preloader-img loader {{#loading.tradePairs}}loading{{/}}">
+                            <div class="loader-container">
+                                <span class="loader-quarter quarter-1"></span>
+                                <span class="loader-quarter quarter-2"></span>
+                                <span class="loader-quarter quarter-3"></span>
+                                <span class="loader-quarter quarter-4"></span>
+                            </div>
+                        </div>
+                    </div>
+                    {{#with tradePairsPager}}
+                    <div class="tileContainer {{^loading.tradePairs}}visible{{/}}">
+                        <div class="tradingTable-container">
+                            <table class="txList tradingTable tradingTable-colorful">
+                                <thead>
+                                    <tr class="txList-row">
+                                        <th class="txList-header">{{texts.trading.allTradePairs.base}}
+                                        </th>
+                                        <th class="txList-header">{{texts.trading.allTradePairs.quote}}
+                                        </th>
+                                        <th class="txList-header">{{texts.trading.allTradePairs.bid}}
+                                        </th>
+                                        <th class="txList-header">{{texts.trading.allTradePairs.ask}}
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {{#each page}}
+                                    <tr class="txList-row-pair">
+                                        <td class="txList-cell">
+                                            {{baseInstrument.name}}
+                                        </td>
+                                        <td class="txList-cell">
+                                            {{quoteInstrument.name}}
+                                        </td>
+                                        {{#if formattedBid}}
+                                            <td class="txList-cell txList-col--bid" title="{{formattedBid}}"
+                                                    on-mouseover="registerToolTip">
+                                                {{formattedBid}}
+                                            </td>
+                                        {{else}}
+                                            <td class="txList-cell txList-col--bid">
+                                                &mdash;
+                                            </td>
+                                        {{/if}}
+
+                                        {{#if formattedAsk}}
+                                            <td class="txList-cell txList-col--ask" title="{{formattedAsk}}"
+                                                    on-mouseover="registerToolTip">
+                                                {{formattedAsk}}
+                                            </td>
+                                        {{else}}
+                                            <td class="txList-cell txList-col--ask">
+                                                &mdash;
+                                            </td>
+                                        {{/if}}
+                                    </tr>
+                                    {{/each}}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="txList-pages .txList-pages--colorful">
+                            {{#if totalLength === 0}}
+                                <div class="tradingTable-noData">
+                                    {{texts.trading.allTradePairs.noPairs}}
+                                </div>
+                            {{/if}}
+
+                            {{#if totalPages}}
+                            <a href="javascript:;">
+                                Showing
+                                <span class="txList-seeAll-arrow icon-left-dir"
+                                    on-click="previousPage('tradingPage.tradePairsPager')"></span>
+                                    {{navString}}
+                                <span class="txList-seeAll-arrow icon-right-dir"
+                                    on-click="nextPage('tradingPage.tradePairsPager')"></span>
+                            </a>
+                            {{/if}}
+                        </div>
+                    </div>
+                    {{/with}}
+                </article>
+            </li>
+            <li class="tile gs-w tile--depth tile--fullHeight" data-row="1" data-col="3" data-sizex="1" data-sizey="2">
+                <article>
+                    <h1 class="tile-title">{{texts.trading.depthQuotes.title}}</h1>
+                    <div class="preloader">
+                        <div class="preloader-img loader {{^tradePair}}loading{{/}}">
+                            <div class="loader-container">
+                                <span class="loader-quarter quarter-1"></span>
+                                <span class="loader-quarter quarter-2"></span>
+                                <span class="loader-quarter quarter-3"></span>
+                                <span class="loader-quarter quarter-4"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tileContainer {{#tradePair}}visible{{/}}">
+                        <table class="txList tradingTable tradingTable-grow tradingTable-colorful">
+                            <thead>
+                                <tr class="txList-row">
+                                    {{#with tradePair}}
+                                        <th class="txList-header">{{texts.trading.depthQuotes.buy}}
+                                            <span class="dimmed">({{baseInstrument.name}})</span>
+                                        </th>
+                                        <th class="txList-header">{{texts.trading.depthQuotes.price}}
+                                            <span class="dimmed">({{quoteInstrument.name}})</span>
+                                        </th>
+                                        <th class="txList-header">{{texts.trading.depthQuotes.sell}}
+                                            <span class="dimmed">({{baseInstrument.name}})</span>
+                                        </th>
+                                    {{/with}}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each sellQuotes}}
+                                <tr class="txList-row-sell">
+                                    <td class="txList-cell">
+                                    </td>
+                                    {{#if formattedPrice}}
+                                        <td class="txList-cell txList-col--quote" title="{{formattedPrice}}"
+                                                on-mouseover="registerToolTip">
+                                            {{formattedPrice}}
+                                        </td>
+                                    {{else}}
+                                        <td class="txList-cell txList-col--quote centered">
+                                            &mdash;
+                                        </td>
+                                    {{/if}}
+
+                                    {{#if formattedAmount}}
+                                        <td class="txList-cell txList-col--quote" title="{{formattedAmount}}"
+                                                on-mouseover="registerToolTip">
+                                            {{formattedAmount}}
+                                        </td>
+                                    {{else}}
+                                        <td class="txList-cell txList-col--quote centered">
+                                            &mdash;
+                                        </td>
+                                    {{/if}}
+                                </tr>
+                                {{/each}}
+                                {{#each buyQuotes}}
+                                <tr class="txList-row-buy">
+                                    {{#if formattedAmount}}
+                                        <td class="txList-cell txList-col--quote" title="{{formattedAmount}}"
+                                                on-mouseover="registerToolTip">
+                                            {{formattedAmount}}
+                                        </td>
+                                    {{else}}
+                                        <td class="txList-cell txList-col--quote centered">
+                                            &mdash;
+                                        </td>
+                                    {{/if}}
+
+                                    {{#if formattedPrice}}
+                                        <td class="txList-cell txList-col--quote" title="{{formattedPrice}}"
+                                                on-mouseover="registerToolTip">
+                                            {{formattedPrice}}
+                                        </td>
+                                    {{else}}
+                                        <td class="txList-cell txList-col--quote centered">
+                                            &mdash;
+                                        </td>
+                                    {{/if}}
+
+                                    <td class="txList-cell">
+                                    </td>
+                                </tr>
+                                {{/each}}
+                            </tbody>
+                        </table>
+                        {{#if !sellQuotes && !buyQuotes}}
+                            <div class="tradingTable-noData">{{texts.trading.depthQuotes.noQuotes}}</div>
+                        {{/if}}
+                    </div>
+                </article>
+            </li>
+            {{#if activePanel === 'tradeHistory'}}
+            <li class="tile gs-w tile--multiTile tile--fullHeight" data-row="3" data-col="1" data-sizex="3" data-sizey="2">
+                <article>
+                    <h1 class="tile-title">{{texts.trading.tradeHistory.title}}</h1>
+                    <div class="preloader">
+                        <div class="preloader-img loader {{#loading.tradeHistory}}loading{{/}}">
+                            <div class="loader-container">
+                                <span class="loader-quarter quarter-1"></span>
+                                <span class="loader-quarter quarter-2"></span>
+                                <span class="loader-quarter quarter-3"></span>
+                                <span class="loader-quarter quarter-4"></span>
+                            </div>
+                        </div>
+                    </div>
+                    {{#with historyPager}}
+                    <div class="tileContainer visible">
+                        <div class="tradingTable-container">
+                            <table class="txList tradingTable tradingTable-colorful">
+                                <thead>
+                                    <tr class="txList-row">
+                                        <th class="txList-header txList-col--time">
+                                            {{texts.trading.tradeHistory.time}}
+                                        </th>
+                                        <th class="txList-header txList-col--amount">
+                                            <span>{{texts.trading.tradeHistory.amount}}</span>
+                                            {{#if tradePair}}
+                                                <span class="dimmed">({{tradePair.baseInstrument.name}})</span>
+                                            {{/if}}
+                                        </th>
+                                        <th class="txList-header txList-col--price">
+                                            <span>{{texts.trading.tradeHistory.price}}</span>
+                                            {{#if tradePair}}
+                                                <span class="dimmed">({{tradePair.quoteInstrument.name}})</span>
+                                            {{/if}}
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {{#each page}}
+                                    <tr class="txList-row-value">
+                                        <td class="txList-cell txList-col--time">
+                                            {{time}}
+                                        </td>
+                                        <td class="txList-cell txList-col--amount">
+                                            {{{formattedAmount}}}
+                                        </td>
+                                        <td class="txList-cell txList-col--price">
+                                            {{{formattedPrice}}}
+                                        </td>
+                                    </tr>
+                                    {{/each}}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="txList-pages txList-pages--colorful">
+                            {{#if totalLength === 0}}
+                                <div class="tradingTable-noData">{{texts.trading.tradeHistory.noHistory}}</div>
+                            {{/if}}
+
+                            {{#if totalPages}}
+                            <a href="javascript:;">
+                                Showing
+                                <span class="txList-seeAll-arrow icon-left-dir"
+                                    on-click="previousPage('tradingPage.historyPager')"></span>
+                                    {{navString}}
+                                <span class="txList-seeAll-arrow icon-right-dir"
+                                    on-click="nextPage('tradingPage.historyPager')"></span>
+                            </a>
+                            {{/if}}
+                        </div>
+                    </div>
+                    {{/with}}
+                </article>
+            </li>
+            {{/if}}
+            {{#if activePanel === 'escrowBalances'}}
+            <li class="tile gs-w tile--multiTile tile--fullHeight" data-row="3" data-col="1" data-sizex="3" data-sizey="2">
+                <article>
+                    <h1 class="tile-title">{{texts.trading.escrowBalances.title}}</h1>
+                    <div class="preloader">
+                        <div class="preloader-img loader {{^escrowAccounts}}loading{{/}}">
+                            <div class="loader-container">
+                                <span class="loader-quarter quarter-1"></span>
+                                <span class="loader-quarter quarter-2"></span>
+                                <span class="loader-quarter quarter-3"></span>
+                                <span class="loader-quarter quarter-4"></span>
+                            </div>
+                        </div>
+                    </div>
+                    {{#with escrowsPager}}
+                    <div class="tileContainer {{#if escrowAccounts}}visible{{/if}}">
+                        <div class="tradingTable-container">
+                            <table class="txList tradingTable tradingTable-colorful">
+                                <thead>
+                                    <tr class="txList-row">
+                                        <th class="txList-header">
+                                            <span>{{texts.trading.escrowBalances.tradeInstrument}}</span>
+                                        </th>
+                                        <th class="txList-header">
+                                            <span>{{texts.trading.escrowBalances.balance}}</span>
+                                        </th>
+                                        <th class="txList-header">
+                                            <span>{{texts.trading.escrowBalances.reserve}}</span>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {{#each page}}
+                                    <tr class="txList-row-value">
+                                        <td class="txList-cell">
+                                            {{tradeInstrument.name}}
+                                        </td>
+                                        <td class="txList-cell">
+                                            {{{formattedBalance}}}
+                                        </td>
+                                        <td class="txList-cell">
+                                            {{{formattedReserve}}}
+                                        </td>
+                                    </tr>
+                                    {{/each}}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="txList-pages txList-pages--colorful">
+                            {{#if totalLength === 0}}
+                                <div class="tradingTable-noData">{{texts.trading.escrowBalances.noBalances}}</div>
+                            {{/if}}
+
+                            {{#if totalPages}}
+                            <a href="javascript:;">
+                                Showing
+                                <span class="txList-seeAll-arrow icon-left-dir"
+                                    on-click="previousPage('tradingPage.escrowsPager')"></span>
+                                    {{navString}}
+                                <span class="txList-seeAll-arrow icon-right-dir"
+                                    on-click="nextPage('tradingPage.escrowsPager')"></span>
+                            </a>
+                            {{/if}}
+                        </div>
+                    </div>
+                    {{/with}}
+                </article>
+            </li>
+            {{/if}}
+
+            {{#if activePanel === 'pendingOrders'}}
+            <li class="tile gs-w tile--multiTile tile--fullHeight" data-row="3" data-col="1" data-sizex="3" data-sizey="2">
+                <article>
+                    <h1 class="tile-title">{{texts.trading.pendingOrders.title}}</h1>
+                    <div class="preloader">
+                        <div class="preloader-img loader {{#loading.pendingOrders}}loading{{/}}">
+                            <div class="loader-container">
+                                <span class="loader-quarter quarter-1"></span>
+                                <span class="loader-quarter quarter-2"></span>
+                                <span class="loader-quarter quarter-3"></span>
+                                <span class="loader-quarter quarter-4"></span>
+                            </div>
+                        </div>
+                    </div>
+                    {{#with ordersPager}}
+                    <div class="tileContainer {{^loading.pendingOrders}}visible{{/}}">
+                        <div class="tradingTable-container">
+                            <table class="txList tradingTable tradingTable-colorful">
+                                <thead>
+                                    <tr class="txList-row">
+                                        <th class="txList-header txList-col--type"></th>
+                                        <th class="txList-header txList-col--time">
+                                            {{texts.trading.pendingOrders.createdOn}}
+                                        </th>
+                                        <th class="txList-header">
+                                            <span>{{texts.trading.pendingOrders.base}}</span>
+                                        </th>
+                                        <th class="txList-header">
+                                            <span>{{texts.trading.pendingOrders.quote}}</span>
+                                        </th>
+                                        <th class="txList-header">
+                                            <span>{{texts.trading.pendingOrders.strategy}}</span>
+                                        </th>
+                                        <th class="txList-header txList-col--amount">
+                                            <span>{{texts.trading.pendingOrders.amount}}</span>
+                                        </th>
+                                        <th class="txList-header txList-col--price">
+                                            <span>{{texts.trading.pendingOrders.price}}</span>
+                                            <span class="dimmed">({{texts.trading.pendingOrders.perOne}})</span>
+                                        </th>
+                                        <th class="txList-header"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {{#each page}}
+                                    <tr class="txList-row-value">
+                                        {{#if type==='sell'}}
+                                            <td class="txList-cell txList-col--type" title="{{texts.trading.sell}}" on-mouseover="registerToolTip">
+                                                <span class="icon-up-big txList-col--type--sell"></span>
+                                            </td>
+                                        {{else}}
+                                            <td class="txList-cell txList-col--type" title="{{texts.trading.buy}}" on-mouseover="registerToolTip">
+                                                <span class="icon-down-big txList-col--type--buy"></span>
+                                            </td>
+                                        {{/if}}
+                                        <td class="txList-cell">
+                                            {{createdOn}}
+                                        </td>
+                                        <td class="txList-cell">
+                                            {{tradePair.baseInstrument.name}}
+                                        </td>
+                                        <td class="txList-cell">
+                                            {{tradePair.quoteInstrument.name}}
+                                        </td>
+                                        <td class="txList-cell">
+                                            {{texts.Strategy[.strategy]}}
+                                        </td>
+                                        <td class="txList-cell txList-col--amount">
+                                            {{{formattedAmount}}} {{.tradePair.baseInstrument.name}}
+                                        </td>
+                                        <td class="txList-cell txList-col--price">
+                                            {{{formattedPrice}}} {{.tradePair.quoteInstrument.name}}
+                                        </td>
+                                        <td class="txList-cell txList-col--manage">
+                                            <div class="consecutiveButtons">
+                                                <button class="consecutiveButtons-button consecutiveButtons-button--remove" on-click="removeOrder:{{this}}" type="button">
+                                                    {{texts.trading.pendingOrders.remove}}
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {{/each}}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="txList-pages txList-pages--colorful">
+                            {{#if totalLength === 0 && userDetails.submitted}}
+                                <div class="tradingTable-noData">{{texts.trading.pendingOrders.noOrders}}</div>
+                            {{/if}}
+                            {{^userDetails.submitted}}
+                                <div class="tradingTable-noData">{{texts.common.notAuthorized}}</div>
+                            {{/}}
+
+                            {{#if totalPages}}
+                            <a href="javascript:;">
+                                Showing
+                                <span class="txList-seeAll-arrow icon-left-dir"
+                                    on-click="previousPage('tradingPage.ordersPager')"></span>
+                                    {{navString}}
+                                <span class="txList-seeAll-arrow icon-right-dir"
+                                    on-click="nextPage('tradingPage.ordersPager')"></span>
+                            </a>
+                            {{/if}}
+                        </div>
+                    </div>
+                    {{/with}}
+                </article>
+            </li>
+            {{/if}}
+
+            <li class="tile tile--chart gs-w" data-row="4" data-col="1" data-sizex="3" data-sizey="3">
+                <article>
+                    <h1 class="tile-title">{{texts.trading.graphChart.title}}</h1>
+                    <div class="preloader">
+                        <div class="preloader-img loader {{#loading.chartData}}loading{{/}}">
+                            <div class="loader-container">
+                                <span class="loader-quarter quarter-1"></span>
+                                <span class="loader-quarter quarter-2"></span>
+                                <span class="loader-quarter quarter-3"></span>
+                                <span class="loader-quarter quarter-4"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-field form-field--step">
+                        <p class="form-label ">
+                            {{texts.trading.graphChart.step}}
+                        </p>
+                        <div class="form-dropdownbox">
+                            <div class="form-input form-input--textbox form-dropdownbox-selection
+                                        {{#active['chartTile-stepDropdown']}}form-dropdownbox-selection--selecting{{/}}"
+                                 on-click="toggleOn('chartTile-stepDropdown')">
+                                <span class="form-dropdownbox-base">{{texts.trading.graphChart.steps[.step]}}</span>
+                            </div>
+                            <ul class="form-dropdownbox-dropdown {{^active['chartTile-stepDropdown']}}hidden{{/}}">
+                                {{#each steps}}
+                                <li class="form-dropdownbox-item" on-click="setChartStep:{{this}}">
+                                    {{texts.trading.graphChart.steps[this]}}
+                                </li>
+                                {{/each}}
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="tileChart-container {{^loading.chartData}}visible{{/}}">
+                        <table id="chart">
+                            <tr class="main-row">
+                                <td>
+                                    <svg class="main"></svg>
+                                </td>
+                                <td class="cell-description">
+                                    <span>{{texts.trading.graphChart.OHLC}}</span>
+                                </td>
+                            </tr>
+                            <tr class="volume-row">
+                                <td>
+                                    <svg class="volume"></svg>
+                                </td>
+                                <td class="cell-description">
+                                    <span>{{texts.trading.graphChart.volume}}</span>
+                                </td>
+                            </tr>
+                            <tr class="navigator-row">
+                                <td>
+                                    <svg class="navigator"></svg>
+                                </td>
+                                <td></td>
+                            </tr>
+                        </table>
+                    </div>
+                </article>
+            </li>
+            {{/with}}
+        </ul>
+    </div>
+</main>

@@ -1,0 +1,142 @@
+@import 'compass';
+@import '../config';
+@import '../mixins';
+@import 'wallet-pages';
+
+$lightAmount: 5%;
+$tradingPairs-color: #074661;
+$marketBuy-color: #e6801d;
+$marketSell-color: #27d782;
+$multiTile-color: #7c6890;
+
+.trading-main .container {
+    padding-bottom: 25px;
+}
+
+.tile--buySell {
+    .form-label {
+        display: inline-block;
+        width: 100%;
+    }
+    .half-width {
+        width: 45%;
+        float: left;
+        &:nth-of-type(even) {
+            margin-left: 10%;
+        }
+    }
+    .buySellTile-totalBox {
+        position: absolute;
+        bottom: 20px;
+        h1 {
+            font-size: 18px;
+            color: #736086;
+            font-weight: 800;
+            text-transform: none;
+            margin-bottom: 0;
+        }
+        .totalBoxValue,
+        .totalBoxCurrency {
+            font-size: 23px;
+            font-weight: 300;
+            vertical-align: middle;
+        }
+        .totalBoxCurrency {
+            font-weight: 900;
+        }
+    }
+    .buySellTile-tabsField {
+        display: inline-block;
+    }
+    .buySellTile-priceField {
+        display: inline-block;
+    }
+    .buySellTile-placeOrder {
+        position: absolute;
+        right: 20px;
+        bottom: 20px;
+    }
+}
+.tile--tradePairs {
+    .txList tbody {
+        background-color: lighten($tradingPairs-color, $lightAmount);
+    }
+    .txList-row-pair {
+        &:nth-child(odd) {
+            background-color: $tradingPairs-color;
+        }
+    }
+    .txList-pages {
+        background-color: lighten($tradingPairs-color, $lightAmount);
+    }
+}
+.tile.tile--tradeOptions {
+    z-index: 0;
+}
+.tile--depth {
+    z-index: 0 !important;
+    .txList-row-sell {
+        background-color: $marketSell-color;
+        &:nth-child(even) {
+            background-color: lighten($marketSell-color, $lightAmount);
+        }
+    }
+    .txList-row-buy {
+        background-color: $marketBuy-color;
+        &:nth-child(odd) {
+            background-color: lighten($marketBuy-color, $lightAmount);
+        }
+    }
+}
+.tile--multiTile {
+    .txList tbody {
+        background-color: lighten($multiTile-color, $lightAmount);
+    }
+    .txList-row-value {
+        &:nth-child(odd) {
+            background-color: $multiTile-color;
+        }
+		&:hover {
+			.consecutiveButtons {
+				opacity: 1;
+			}
+		}
+    }
+    .txList-pages {
+        background-color: lighten($multiTile-color, $lightAmount);
+    }
+}
+.tile--chart {
+    .tileChart-container {
+        @include transparent;
+        @include transition(opacity, 1s ease-out);
+        padding: 20px 0px 0px 40px;
+
+        &.visible {
+            opacity: 1;
+        }
+    }
+
+    .form-field--step {
+        margin-left: 40px;
+        width: 200px;
+    }
+}
+
+.tile.tile--chart {
+    height: 625px;
+}
+
+.txList-col--type--operationType {
+    padding: 8px 5px;
+    font-weight: 900;
+    text-transform: uppercase;
+}
+.txList-col--type--buy {
+    @extend .txList-col--type--operationType;
+    color: $marketBuy-color;
+}
+.txList-col--type--sell {
+    @extend .txList-col--type--operationType;
+    color: $marketSell-color;
+}

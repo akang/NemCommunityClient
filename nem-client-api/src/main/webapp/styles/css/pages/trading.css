@@ -1,0 +1,124 @@
+.trading-main .container {
+  padding-bottom: 25px;
+}
+
+.tile--buySell .form-label {
+  display: inline-block;
+  width: 100%;
+}
+.tile--buySell .half-width {
+  width: 45%;
+  float: left;
+}
+.tile--buySell .half-width:nth-of-type(even) {
+  margin-left: 10%;
+}
+.tile--buySell .buySellTile-totalBox {
+  position: absolute;
+  bottom: 20px;
+}
+.tile--buySell .buySellTile-totalBox h1 {
+  font-size: 18px;
+  color: #736086;
+  font-weight: 800;
+  text-transform: none;
+  margin-bottom: 0;
+}
+.tile--buySell .buySellTile-totalBox .totalBoxValue,
+.tile--buySell .buySellTile-totalBox .totalBoxCurrency {
+  font-size: 23px;
+  font-weight: 300;
+  vertical-align: middle;
+}
+.tile--buySell .buySellTile-totalBox .totalBoxCurrency {
+  font-weight: 900;
+}
+.tile--buySell .buySellTile-tabsField {
+  display: inline-block;
+}
+.tile--buySell .buySellTile-priceField {
+  display: inline-block;
+}
+.tile--buySell .buySellTile-placeOrder {
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+}
+
+.tile--tradePairs .txList tbody {
+  background-color: #095779;
+}
+.tile--tradePairs .txList-row-pair:nth-child(odd) {
+  background-color: #074661;
+}
+.tile--tradePairs .txList-pages {
+  background-color: #095779;
+}
+
+.tile.tile--tradeOptions {
+  z-index: 0;
+}
+
+.tile--depth {
+  z-index: 0 !important;
+}
+.tile--depth .txList-row-sell {
+  background-color: #27d782;
+}
+.tile--depth .txList-row-sell:nth-child(even) {
+  background-color: #3cdc8e;
+}
+.tile--depth .txList-row-buy {
+  background-color: #e6801d;
+}
+.tile--depth .txList-row-buy:nth-child(odd) {
+  background-color: #e98d34;
+}
+
+.tile--multiTile .txList tbody {
+  background-color: #89769c;
+}
+.tile--multiTile .txList-row-value:nth-child(odd) {
+  background-color: #7c6890;
+}
+.tile--multiTile .txList-row-value:hover .consecutiveButtons {
+  opacity: 1;
+}
+.tile--multiTile .txList-pages {
+  background-color: #89769c;
+}
+
+.tile--chart .tileChart-container {
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
+  opacity: 0;
+  -moz-transition: opacity, ease-out 1s;
+  -o-transition: opacity, ease-out 1s;
+  -webkit-transition: opacity, ease-out 1s;
+  transition: opacity, ease-out 1s;
+  padding: 20px 0px 0px 40px;
+}
+.tile--chart .tileChart-container.visible {
+  opacity: 1;
+}
+.tile--chart .form-field--step {
+  margin-left: 40px;
+  width: 200px;
+}
+
+.tile.tile--chart {
+  height: 625px;
+}
+
+.txList-col--type--operationType, .txList-col--type--buy, .txList-col--type--sell {
+  padding: 8px 5px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.txList-col--type--buy {
+  color: #e6801d;
+}
+
+.txList-col--type--sell {
+  color: #27d782;
+}

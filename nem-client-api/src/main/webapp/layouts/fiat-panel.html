@@ -1,0 +1,201 @@
+<main class="fiatPanel-main">
+    <div class="container gridster">
+        <ul class="fiatPanel js-fiatPanel">
+
+            <li class="tile tile--instrument" data-row="1" data-col="1" data-sizex="1" data-sizey="1">
+                <article>
+                    <h1 class="tile-title">{{texts.fiatPanel.instrument.title}}</h1>
+                    <div class="form-field ">
+                        <p class="form-label ">
+                            {{texts.fiatPanel.instrument.tradeInstrument}}
+
+                        </p>
+                        <div class="form-dropdownbox">
+                            {{#if trading.instruments.fiat.length}}
+                                <div class="form-input form-input--textbox form-dropdownbox-selection
+                                        {{#active['instrumentTile-instrumentsDropdown']}}form-dropdownbox-selection--selecting{{/}}"
+                                     on-click="toggleOn('instrumentTile-instrumentsDropdown')">
+                                    {{fiatPage.instrument.name}}
+                                </div>
+                            {{else}}
+                                <div class="form-input form-input--textbox form-input--unimportant form-dropdownbox-selection">
+                                    {{texts.fiatPanel.instrument.noInstruments}}
+                                </div>
+                            {{/if}}
+
+                            <ul class="form-dropdownbox-dropdown {{^active['instrumentTile-instrumentsDropdown']}}hidden{{/}}">
+                                {{#each trading.instruments.fiat}}
+                                    <li class="form-dropdownbox-item" on-click="set('fiatPage.instrument', this)">
+                                        {{.name}}
+                                    </li>
+                                {{/each}}
+                            </ul>
+                        </div>
+                    </div>
+                </article>
+            </li>
+
+            <li class="tile tile--account" data-row="1" data-col="3" data-sizex="2" data-sizey="1">
+                <article>
+                    <h1 class="tile-title">{{texts.fiatPanel.account.title}}</h1>
+                    <button type="button" disabled="{{!fiatPage.instrument}}" class="transactionsTile-sendNemButton icon-plus-circled"
+                            on-click="addFiatAccount(fiatPage.instrument)">
+                        {{texts.fiatPanel.account.addAccount}}
+                    </button>
+                    <div class="form-field ">
+                        <p class="form-label ">
+                            {{texts.fiatPanel.account.chooseAccount}}
+                            {{#if !fiatPage.account}}
+                                <span class="fiatPanel-errorIcon icon-attention-circled"
+                                      title="{{texts.fiatPanel.account.noAccounts}}" on-mouseover="registerToolTip"></span>
+                            {{/if}}
+                        </p>
+                        <div class="form-dropdownbox accountTile-dropdownbox">
+                            {{#if fiatPage.filteredAccounts.length}}
+                                <div class="form-input form-input--textbox form-dropdownbox-selection
+                                            {{#active['accountTile-accountsDropdown']}}form-dropdownbox-selection--selecting{{/}}"
+                                     on-click="toggleOn('accountTile-accountsDropdown')">
+                                    {{fiatPage.account.address}}
+                                </div>
+                            {{else}}
+                                <div class="form-input form-input--textbox form-input--unimportant form-dropdownbox-selection">
+                                    {{texts.fiatPanel.account.noAccounts}}
+                                </div>
+                            {{/if}}
+
+                            <ul class="form-dropdownbox-dropdown {{^active['accountTile-accountsDropdown']}}hidden{{/}}">
+                                {{#each fiatPage.filteredAccounts}}
+                                    <li class="form-dropdownbox-item" on-click="set('fiatPage.account', this)">
+                                        {{.address}}
+                                    </li>
+                                {{/each}}
+                            </ul>
+                        </div>
+                    </div>
+                </article>
+            </li>
+
+            <li class="tile tile--transactions tile--fullHeight" data-row="2" data-col="1" data-sizex="3" data-sizey="2">
+                <article>
+                    <h1 class="tile-title">{{texts.fiatPanel.transactions.title}}</h1>
+                    <button type="button" class="transactionsTile-sendNemButton icon-paper-plane-empty"
+                            disabled="{{!bankAccounts.length}}" on-click="openTransferFiat()">
+                        {{texts.fiatPanel.transactions.sendFiat}}
+                    </button>
+
+                    {{#with fiatPage.transfersPager}}
+                    <div class="tileContainer visible">
+                        <div class="transactionsTile-overviewContainer">
+                            <div class="transactionsTile-overview">
+                                {{#if fiatPage.account}}
+                                    <h1 class="transactionsTile-balanceLabel">{{texts.fiatPanel.transactions.balance}}</h1>
+                                    <p>
+                                        <span class="transactionsTile-balance">
+                                            {{fiatPage.account.formattedBalance}}
+                                            <span class="unit">{{fiatPage.instrument.name}}</span>
+                                        </span>
+                                    </p>
+                                    <p>
+                                        <span>{{texts.fiatPanel.transactions.availableBalance}} {{fiatPage.account.formattedAvailableBalance}}</span>
+                                    </p>
+                                {{else}}
+                                    <h2 class="transactionsTile-noAccount">{{texts.fiatPanel.transactions.noAccount}}</h2>
+                                {{/if}}
+                            </div>
+                        </div>
+                        <div class="tradingTable-container">
+                            <table class="txList tradingTable">
+                                <tr>
+                                    <th class="txList-header"></th>
+                                    <th class="txList-header txList-col--date">{{texts.fiatPanel.transactions.columns.time}}</th>
+                                    <th class="txList-header txList-col--sender">{{texts.fiatPanel.transactions.columns.sender}}</th>
+                                    <th class="txList-header">{{texts.fiatPanel.transactions.columns.sendAmount}}</th>
+                                    <th class="txList-header txList-col--recipient">{{texts.fiatPanel.transactions.columns.recipient}}</th>
+                                    <th class="txList-header">{{texts.fiatPanel.transactions.columns.receiveAmount}}</th>
+                                    <th class="txList-header txList-col--message">{{texts.fiatPanel.transactions.columns.narrative}}</th>
+                                </tr>
+
+                                {{#each page:i}}
+                                <tr>
+
+                                    {{#.isOutgoing}}
+                                        <td class="txList-cell txList-col--type txList-col--type--outgoing icon-minus-circled"
+                                            title="{{texts.transactionDirections.outgoing}}" on-mouseover="registerToolTip"></td>
+                                    {{/}}
+
+                                    {{#.isIncoming}}
+                                        <td class="txList-cell txList-col--type txList-col--type--incoming icon-plus-circled"
+                                            title="{{texts.transactionDirections.incoming}}" on-mouseover="registerToolTip"></td>
+                                    {{/}}
+
+                                    <td class="txList-cell txList-col--date">{{.formattedTime}}</td>
+
+                                    <td class="txList-cell txList-col--sender" title="{{.senderAddress}}"
+                                        on-mouseover="registerToolTip">
+                                        <a class="hyperlink--default" href="javascript:;">
+                                            {{.senderAddress}}
+                                        </a>
+                                    </td>
+
+                                    <td class="txList-cell">
+                                        -
+                                        {{{.formattedSendAmount}}} {{.sendInstrument.name}}
+                                    </td>
+
+                                    <td class="txList-cell txList-col--recipient" title="{{.recipientAddress}}"
+                                        on-mouseover="registerToolTip">
+                                        <a class="hyperlink--default" href="javascript:;">
+                                            {{.recipientAddress}}
+                                        </a>
+                                    </td>
+
+                                    <td class="txList-cell">
+                                        +
+                                        {{{.formattedReceiveAmount}}} {{.receiveInstrument.name}}
+                                    </td>
+
+                                    {{#if .narrative}}
+                                        <td class="txList-cell txList-col--message-short" title="{{.narrative}}"
+                                            on-mouseover="registerToolTip">
+                                            {{.narrative}}
+                                        </td>
+                                    {{else}}
+                                        <td class="txList-cell txList-col--message-short" title="{{.narrative}}"
+                                            on-mouseover="registerToolTip">
+                                            <span class="dimmed">
+                                                {{texts.fiatPanel.transactions.noNarrative}}
+                                            </span>
+                                        </td>
+                                    {{/if}}
+
+
+                                </tr>
+                                {{/each}}
+
+                            </table>
+                        </div>
+                        <div class="txList-pages">
+                            {{#if .totalLength === 0}}
+                                <p class="txList-noRecords transactionsPage-leftMost transactionsPage-rightMost">
+                                    {{texts.fiatPanel.transactions.noTransfers}}
+                                </p>
+                            {{/if}}
+
+                            {{#if totalPages > 0}}
+                                <a href="javascript:;">
+                                    Showing
+                                        <span class="txList-seeAll-arrow icon-left-dir"
+                                              on-click="previousPage('fiatPage.transfersPager')"></span>
+                                    {{navString}}
+                                        <span class="txList-seeAll-arrow icon-right-dir"
+                                              on-click="nextPage('fiatPage.transfersPager')"></span>
+                                </a>
+                            {{/if}}
+                        </div>
+                    </div>
+                    {{/with}}
+                </article>
+            </li>
+        </ul>
+    </div>
+</main>

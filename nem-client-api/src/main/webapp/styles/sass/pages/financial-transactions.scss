@@ -1,0 +1,162 @@
+@import 'compass';
+@import '../config';
+@import '../mixins';
+@import 'wallet-pages';
+$fiatPanel-color: #074661;
+$xemPanel-color: #074661;
+$lightAmount: 5%;
+
+.transferButton {
+    $bgColor: #41ce7d;
+    margin-left: 10px;
+    height: 27px;
+    background-color: $bgColor;
+    color: #fff;
+    font-size: 13px;
+    font-weight: $fontWeight-medium;
+    position: relative;
+    z-index: 1000;
+
+    &:before {
+        margin-right: 5px;
+        font-size: 16px;
+        vertical-align: -2px;
+    }
+
+    &:hover {
+        background-color: lighten($bgColor, 10%);
+    }
+
+    &:disabled {
+        background-color: #888;
+        pointer-events: none;
+    }
+}
+
+/* Escrows panel */
+.tile--escrows {
+    .tradingTable tbody {
+        background-color: lighten($fiatPanel-color, $lightAmount);
+    }
+
+    .txList-row-currency {
+        &:nth-child(odd) {
+            background-color: $fiatPanel-color;
+        }
+    }
+
+    .txList-pages {
+        background-color: lighten($fiatPanel-color, $lightAmount);
+    }
+
+    .status-icon:before {
+        margin-right: 12px;
+    }
+
+    .status-icon--established {
+      @extend .status-icon;
+      color: #41ce7d;
+    }
+
+    .status-icon--confirmed {
+      @extend .status-icon;
+      color: #41ce7d;
+    }
+
+    .status-icon--invalid {
+      @extend .status-icon;
+      color: #ea6153;
+
+      &:before {
+        font-size: 1.3em;
+        margin-right: 6px;
+        margin-left: 2px;
+      }
+    }
+
+    .status-icon--requested {
+      @extend .status-icon;
+      color: #f1c40f;
+    }
+
+    .escrowsTile-menu {
+        display: inline-block;
+        float: right;
+        margin-top: 15px;
+        margin-right: 20px;
+        position: relative;
+        z-index: 20;
+        text-align: right;
+    }
+
+    .escrowsTile-menu-button {
+        float: right;
+    }
+
+    .escrowsTile-menu-dropdown {
+        margin-top: 25px;
+
+        .dropdownMenu-item {
+            text-align: left;
+        }
+    }
+
+    .escrowsTile-menu-title {
+        font-weight: 500;
+    }
+}
+
+
+.tile--settings {
+    article {
+        position: absolute;
+        display: table;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        top: 0;
+    }
+
+    .settingsTile-accountNotRequested {
+        text-align: center;
+        color: white;
+    }
+
+    .noData-button {
+        @include transition(background-color 0.2s);
+        margin-top: 12px;
+        background-color: #41ce7d;
+        padding: 8px 20px;
+        font-size: 13px;
+        font-weight: 500;
+
+        &:hover {
+            background-color: #6ad899;
+        }
+    }
+
+    .noData-text {
+        font-size: 15px;
+    }
+
+}
+
+.tile--operations {
+    .operationsTile-controls-container {
+        display: table-row;
+        height: 0;
+    }
+
+    .operationsTile-controls {
+        padding: 0px 20px 20px;
+        border-bottom: 1px solid #ebebeb;
+        margin-bottom: 15px;
+    }
+    .operations-dropdown {
+        width: 250px;
+    }
+
+    .txList-noRecords {
+        padding-left: 37px;
+    }
+}

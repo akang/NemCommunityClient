@@ -1,0 +1,759 @@
+<main class="financial-transactions-main">
+    <div class="container gridster">
+        <ul class="financialTransactions js-financialTransactions">
+            {{#finTxsPage}}
+            <li class="tile gs-w tile--escrows tile--fullHeight" data-row="1" data-col="1" data-sizex="2" data-sizey="2">
+                <article>
+                    <h1 class="tile-title">{{texts.financialTransactions.escrows.title}}</h1>
+
+                    <div class="preloader">
+                        <div class="preloader-img loader {{#if !userDetails || (userDetails.submitted && !escrowAccounts)}}loading{{/if}}">
+                            <div class="loader-container">
+                                <span class="loader-quarter quarter-1"></span>
+                                <span class="loader-quarter quarter-2"></span>
+                                <span class="loader-quarter quarter-3"></span>
+                                <span class="loader-quarter quarter-4"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="escrowsTile-menu">
+                        <a href="javascript:;" class="escrowsTile-menu-button" on-click="toggleOn('escrowsOptions')">
+                            <span class="escrowsTile-menu-title">{{texts.financialTransactions.deposit}}</span>
+                            <span class="icon-down-open"></span>
+                        </a>
+                        <ul class="escrowsTile-menu-dropdown dropdownMenu {{^active.escrowsOptions}}hidden{{/}}" id="escrowsOptions">
+                            <li class="dropdownMenu-item" on-click="openTransferXem()">
+                                {{texts.financialTransactions.depositXem}}
+                            </li>
+                            <li class="dropdownMenu-item" on-click="openDepositFiat()">
+                                {{texts.financialTransactions.depositFiat}}
+                            </li>
+                        </ul>
+                    </div>
+
+                    {{#with escrowsPager}}
+                    <div class="tileContainer {{#if userDetails && (!userDetails.submitted || escrowAccounts)}}visible{{/if}}">
+                        <div class="tradingTable-filterBar">
+            				<div class="listingPage-filterBar">
+            					<ul class="listingPage-filter">
+            						<li class="listingPage-filterOption">
+                                        <input type="radio" class="hidden" id="rad-escrows-filter-all" name="{{finTxsPage.escrowsFilter}}" value="{{escrowsFilters.ALL}}" checked />
+                                        <label class="listingPage-filterLabel" for="rad-escrows-filter-all">{{texts.financialTransactions.escrows.filters.all}}</label>
+            						</li>
+            						<li class="listingPage-filterOption">
+                                        <input type="radio" class="hidden" id="rad-escrows-filter-xem" name="{{finTxsPage.escrowsFilter}}" value="{{escrowsFilters.XEM}}" />
+                                        <label class="listingPage-filterLabel" for="rad-escrows-filter-xem">{{texts.financialTransactions.escrows.filters.xem}}</label>
+            						</li>
+            						<li class="listingPage-filterOption">
+                                        <input type="radio" class="hidden" id="rad-escrows-filter-fiat" name="{{finTxsPage.escrowsFilter}}" value="{{escrowsFilters.FIAT}}" />
+                                        <label class="listingPage-filterLabel" for="rad-escrows-filter-fiat">{{texts.financialTransactions.escrows.filters.fiat}}</label>
+            						</li>
+            						<li class="listingPage-filterOption">
+                                        <input type="radio" class="hidden" id="rad-escrows-filter-btc" name="{{finTxsPage.escrowsFilter}}" value="{{escrowsFilters.BTC}}" />
+            							<label class="listingPage-filterLabel" for="rad-escrows-filter-btc">{{texts.financialTransactions.escrows.filters.btc}}</label>
+            						</li>
+            					</ul>
+            				</div>
+                        </div>
+                        <div class="tradingTable-container">
+                            <table class="txList tradingTable tradingTable-colorful">
+                                <thead>
+                                    <tr class="txList-row">
+                                        <th class="txList-header txList-col--current"></th>
+                                        <th class="txList-header txList-col--instrument">
+                                            {{texts.financialTransactions.escrows.tradeInstrument}}
+                                        </th>
+                                        <th class="txList-header txList-col--address">
+                                            {{texts.financialTransactions.escrowAddress}}</th>
+                                        <th class="txList-header txList-col--balance">
+                                            {{texts.financialTransactions.escrows.balance}}
+                                        </th>
+                                        <th class="txList-header txList-col--reserve">
+                                            {{texts.financialTransactions.escrows.reserve}}
+                                        </th>
+                                        <th class="txList-header txList-col--expiry">
+                                            {{texts.financialTransactions.escrows.expiry}}
+                                        </th>
+                                        <th class="txList-header txList-col--manage">
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {{#each page}}
+                                    <tr class="txList-row-currency">
+                                        {{#if .isCurrent}}
+                                            <td class="txList-cell txList-col--current icon-ok"
+                                                title="{{texts.financialTransactions.escrows.current}}"
+                                                on-mouseover="registerToolTip"></td>
+                                        {{else}}
+                                            <td class="txList-cell txList-col--current"></td>
+                                        {{/if}}
+
+                                        <td class="txList-cell txList-col--instrument">
+                                            {{.tradeInstrument.name}}
+                                        </td>
+                                        {{#if tradeInstrument.name === "XEM"}}
+                                            <td class="txList-cell txList-col--address"
+                                                title="{{.formattedAddress}}"
+                                                on-mouseover="registerToolTip">
+                                                <a class="hyperlink--default" href="javascript:;" on-click="viewAccount(address)">
+                                                    {{#if privateLabels[.address]}}
+                                                        {{privateLabels[.address]}}
+                                                    {{else}}
+                                                        {{.formattedAddress}}
+                                                    {{/if}}
+                                                </a>
+                                            </td>
+                                        {{/if}}
+
+                                        {{#if tradeInstrument.name === "BTC"}}
+                                            {{#if requestStatus === requestStatuses.established}}
+                                                <td class="txList-cell txList-col--address"
+                                                    title="{{.formattedAddress}}"
+                                                    on-mouseover="registerToolTip">
+                                                    <span on-mouseover="registerToolTip"
+                                                            title="{{.formattedAddress}}">
+                                                        {{.formattedAddress}}
+                                                    </span>
+                                                </td>
+                                            {{else}}
+                                                <td class="txList-cell txList-col--address">
+                                                    {{#if requestStatus === requestStatuses.confirmed}}
+                                                        <span class="icon-clock status-icon--invalid">
+                                                            {{texts.financialTransactions.escrows.statuses.invalid}}
+                                                        </span>
+                                                    {{/if}}
+
+                                                    {{#if requestStatus === requestStatuses.requested}}
+                                                        <span class="icon-clock status-icon--requested">
+                                                            {{texts.financialTransactions.escrows.statuses.requested}}
+                                                        </span>
+                                                    {{/if}}
+
+                                                    {{#if requestStatus === requestStatuses.invalid}}
+                                                        <span class="icon-attention-circled status-icon--invalid">
+                                                            {{texts.financialTransactions.escrows.statuses.invalid}}
+                                                        </span>
+                                                    {{/if}}
+                                                </td>
+                                            {{/if}}
+                                        {{/if}}
+
+                                        {{#if tradeInstrument.isFiat}}
+                                            <td class="txList-cell txList-col--address" title="{{.formattedAddress}}"
+                                                    on-mouseover="registerToolTip">
+                                                {{.formattedAddress}}
+                                            </td>
+                                        {{/if}}
+                                        <td class="txList-cell txList-col--balance">
+                                            {{{.formattedBalance}}}
+                                        </td>
+                                        <td class="txList-cell txList-col--reserve">
+                                            {{{.formattedReserve}}}
+                                        </td>
+                                        {{#if .paymentsExpiration === 0 }}
+                                            <td class="txList-cell txList-col--expiry">
+                                                &mdash;
+                                            </td>
+                                        {{else}}
+                                            <td class="txList-cell txList-col--expiry" title="{{.formattedPaymentsExpiration}}"
+                                                on-mouseover="registerToolTip">
+                                                {{.formattedPaymentsExpiration}}
+                                            </td>
+                                        {{/if}}
+                                        <td class="txList-cell txList-col--manage">
+                                            <div class="consecutiveButtons">
+                                                {{#if .tradeInstrument.name === 'XEM'}}
+                                                    <button class="consecutiveButtons-button"
+                                                            type="button" on-click="withdrawXem(this)">
+                                                        {{texts.financialTransactions.withdraw}}
+                                                    </button>
+                                                {{/if}}
+
+                                                {{#if .tradeInstrument.name === 'BTC'}}
+                                                    <button class="consecutiveButtons-button" type="button"
+                                                            disabled="{{!.address}}" on-click="withdrawBtc(this)">
+                                                        {{texts.financialTransactions.withdraw}}
+                                                    </button>
+                                                {{/if}}
+
+                                                {{#if .tradeInstrument.isFiat}}
+                                                    <button class="consecutiveButtons-button" type="button"
+                                                            on-click="withdrawFiat(this)">
+                                                        {{texts.financialTransactions.withdraw}}
+                                                    </button>
+                                                {{/if}}
+
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {{/each}}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="txList-pages txList-pages--colorful">
+                            {{#if .totalLength === 0}}
+                                <div class="tradingTable-noData">{{texts.financialTransactions.escrows.noEscrows}}</div>
+                            {{/if}}
+
+                            {{#if totalPages > 0}}
+                            <a href="javascript:;">
+                                Showing
+                                <span class="txList-seeAll-arrow icon-left-dir"
+                                      on-click="previousPage('finTxsPage.escrowsPager')"></span>
+                                    {{navString}}
+                                <span class="txList-seeAll-arrow icon-right-dir"
+                                      on-click="nextPage('finTxsPage.escrowsPager')"></span>
+                            </a>
+                            {{/if}}
+                        </div>
+                    </div>
+                    {{/with}}
+                </article>
+            </li>
+
+            <li class="tile gs-w tile--settings tile--fullHeight" data-row="1" data-col="3" data-sizex="1" data-sizey="2">
+                <article>
+                    <div class="settingsTile-head">
+                        <h1 class="tile-title">{{texts.financialTransactions.settings.title}}</h1>
+                        <div class="form-field">
+                            <div class="bulletTabs">
+                                <button class="bulletTab-control {{#settingsTab === 'details'}}active{{/}}"
+                                        on-click="set('finTxsPage.settingsTab', 'details')">
+                                        {{texts.financialTransactions.settings.userDetails}}</button>
+                                <button class="bulletTab-control {{#settingsTab === 'xem'}}active{{/}}"
+                                        on-click="set('finTxsPage.settingsTab', 'xem')">
+                                        {{texts.financialTransactions.settings.xem}}</button>
+                                <button class="bulletTab-control {{#settingsTab === 'fiat'}}active{{/}}"
+                                        on-click="set('finTxsPage.settingsTab', 'fiat')">
+                                        {{texts.financialTransactions.settings.fiat}}</button>
+                                <button class="bulletTab-control {{#settingsTab === 'btc'}}active{{/}}"
+                                        on-click="set('finTxsPage.settingsTab', 'btc')">
+                                        {{texts.financialTransactions.settings.btc}}</button>
+                            </div>
+                        </div>
+
+                        <div class="preloader">
+                            <div class="preloader-img loader {{#loading.settings}}loading{{/}}">
+                                <div class="loader-container">
+                                    <span class="loader-quarter quarter-1"></span>
+                                    <span class="loader-quarter quarter-2"></span>
+                                    <span class="loader-quarter quarter-3"></span>
+                                    <span class="loader-quarter quarter-4"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    {{#if userDetails && !userDetails.submitted}}
+                    <div class="settingsTile-body {{^loading.settings}}visible{{/}}">
+                        <div class="settingsTile-body-container">
+                            <div class="settingsTile-contentHead">
+                                <span>
+                                    {{texts.financialTransactions.settings.userDetailsSettings.header}}
+                                </span>
+                            </div>
+                            <div class="settingsTile-content">
+                                <div class="settingsTile-noData">
+                                    {{#if userDetails.isBeingProcessed || pendingUserDetails}}
+                                        <span class="noData-text">
+                                            <span class="icon-clock">{{texts.financialTransactions.settings.userDetailsSettings.pendingUserDetails}}</span>
+                                        </span>
+                                    {{else}}
+                                        <span class="noData-text">
+                                            {{texts.financialTransactions.settings.userDetailsSettings.noUserDetails}}
+                                        </span>
+                                        <button type="button" class="noData-button" on-click="setupUserDetails()">
+                                            {{texts.financialTransactions.settings.userDetailsSettings.setupUserDetails}}
+                                        </button>
+                                    {{/if}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {{/if}}
+
+                    {{#if userDetails && userDetails.submitted}}
+
+                        {{#if settingsTab === 'details'}}
+                        <div class="settingsTile-body {{^loading.settings}}visible{{/}}">
+                            <div class="settingsTile-body-container">
+                                <div class="settingsTile-contentHead">
+                                    <span>
+                                        {{texts.financialTransactions.settings.userDetailsSettings.header}}
+                                    </span>
+                                </div>
+                                {{#with userDetails}}
+                                <div class="settingsTile-content ">
+                                    <ul class="settingsTile-detailsList">
+                                        <li class="settingsTile-detail">
+                                            <div class="detail-label">
+                                                {{texts.financialTransactions.settings.userDetailsSettings.firstName}}
+                                            </div>
+                                            <div class="detail-data">
+                                                {{.firstName}}
+                                            </div>
+                                        </li>
+                                        <li class="settingsTile-detail">
+                                            <div class="detail-label">
+                                                {{texts.financialTransactions.settings.userDetailsSettings.lastName}}
+                                            </div>
+                                            <div class="detail-data">
+                                                {{.lastName}}
+                                            </div>
+                                        </li>
+                                        <li class="settingsTile-detail">
+                                            <div class="detail-label">
+                                                {{texts.financialTransactions.settings.userDetailsSettings.dateOfBirth}}
+                                            </div>
+                                            <div class="detail-data">
+                                                {{.formattedDateOfBirth}}
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                                {{/with}}
+                                <div class="settingsTile-footer">
+                                    <ul class="settingsTile-list">
+                                        <li class="settingsTile-listItem icon-resize-full" on-click="viewUserDetails">
+                                            <span>
+                                                {{texts.financialTransactions.settings.userDetailsSettings.showMoreDetails}}
+                                            </span>
+                                        </li>
+                                        <li class="settingsTile-listItem icon-pencil" on-click="editUserDetails">
+                                            <span>{{texts.financialTransactions.settings.userDetailsSettings.editDetails}}</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        {{/if}}
+
+                        {{#if settingsTab === 'xem'}}
+                        <div class="settingsTile-body {{^loading.settings}}visible{{/}}">
+                            <div class="settingsTile-body-container">
+                                <div class="settingsTile-contentHead">
+                                    <span>
+                                        {{texts.financialTransactions.settings.xemSettings.accountHeader}}
+                                    </span>
+                                </div>
+                                <div class="settingsTile-content">
+                                    {{#with trading.xem}}
+                                    <ul class="settingsTile-detailsList">
+                                        {{#with withdrawalAccount}}
+                                        <li class="settingsTile-detail">
+                                            <div class="detail-label">
+                                                {{texts.financialTransactions.settings.withdrawalAccount}}
+                                            </div>
+                                            <div class="detail-data">
+                                                {{#if formattedAddress}}
+                                                    {{formattedAddress}}
+                                                {{else}}
+                                                    {{#if isBeingProcessed || pendingXemWithdrawalAccount}}
+                                                        <span class="icon-clock"></span>
+                                                        {{texts.financialTransactions.settings.processing}}
+                                                    {{else}}
+                                                        <span class="icon-attention-circled"></span>
+                                                        {{texts.financialTransactions.settings.notSetup}}
+                                                    {{/if}}
+                                                {{/if}}
+                                            </div>
+                                        </li>
+                                        {{/with}}
+                                    </ul>
+                                    {{/with}}
+                                </div>
+                                <div class="settingsTile-footer">
+                                    <ul class="settingsTile-list">
+                                        <li class="settingsTile-listItem icon-credit-card" on-click="setXemWithdrawalAccount">
+                                            <span>
+                                                {{texts.financialTransactions.settings.xemSettings.setWithdrawal}}
+                                            </span>
+                                        </li>
+                                        <li class="settingsTile-listItem  icon-pencil" on-click="changeTradingAccount">
+                                            <span>
+                                                {{texts.financialTransactions.settings.xemSettings.selectTradingAccount}}
+                                            </span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        {{/if}}
+
+                        {{#if settingsTab === 'fiat'}}
+                            <div class="settingsTile-body {{^loading.settings}}visible{{/}}">
+                                <div class="settingsTile-body-container">
+                                    <div class="settingsTile-contentHead">
+                                        <span>
+                                            {{texts.financialTransactions.settings.fiatSettings.tradeInstrument}}
+                                        </span>
+                                    </div>
+                                    <div class="settingsTile-fiatInstrument">
+                                        <div class="form-dropdownbox">
+
+                                            <div class="form-input
+                                                    form-input--textbox
+                                                    form-dropdownbox-selection
+                                                    {{#active['settingsTile-currenciesDropdown']}}form-dropdownbox-selection--selecting{{/}}"
+                                                 on-click="toggleOn('settingsTile-tradeInstrumentsDropdown')">
+
+                                                {{#if .fiatInstrument}}
+                                                    {{.fiatInstrument.name}}
+                                                {{else}}
+                                                    {{texts.financialTransactions.settings.fiatSettings.noInstruments}}
+                                                {{/if}}
+                                            </div>
+
+                                            <ul class="form-dropdownbox-dropdown {{^active['settingsTile-tradeInstrumentsDropdown']}}hidden{{/}}">
+                                                {{#each trading.instruments.fiat}}
+                                                    <li class="form-dropdownbox-item" on-click="set('finTxsPage.fiatInstrument', this)">
+                                                        <span>{{.name}}</span>
+                                                    </li>
+                                                {{/each}}
+
+                                                {{^trading.instruments.fiat.length}}
+                                                    <li class="form-dropdownbox-item form-dropdownbox-item--unimportant">
+                                                        <span>{{texts.financialTransactions.settings.fiatSettings.noInstruments}}</span>
+                                                    </li>
+                                                {{/}}
+
+                                            </ul>
+
+                                        </div>
+                                    </div>
+                                    <div class="settingsTile-contentHead">
+                                        <span>
+                                            {{texts.common.withdrawalAccount}}
+                                        </span>
+                                    </div>
+                                    <div class="settingsTile-content">
+                                        {{#if trading.instruments.fiat.length}}
+                                            <ul class="settingsTile-detailsList">
+                                                <li class="settingsTile-detail">
+                                                    <div class="detail-label">
+                                                        {{texts.financialTransactions.settings.accountNumber}}
+                                                    </div>
+                                                    <div class="detail-data">
+                                                        {{#if fiatAccountsGroup.withdrawalAccount.address}}
+                                                            {{fiatAccountsGroup.withdrawalAccount.address}}
+                                                        {{else}}
+                                                            <span class="icon-attention-circled"></span>
+                                                            {{texts.financialTransactions.settings.notSetup}}
+                                                        {{/if}}
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        {{else}}
+                                            <div class="settingsTile-noData">
+                                                <span class="noData-text">
+                                                    {{texts.financialTransactions.settings.fiatSettings.noInstruments}}
+                                                </span>
+                                            </div>
+                                        {{/if}}
+                                    </div>
+                                    <div class="settingsTile-footer">
+                                        <ul class="settingsTile-list">
+                                            {{#if fiatInstrument}}
+                                                <li class="settingsTile-listItem icon-credit-card" on-click="setFiatWithdrawalAccount">
+                                                    <span>
+                                                        {{texts.financialTransactions.settings.fiatSettings.setWithdrawal}}
+                                                    </span>
+                                                </li>
+                                            {{/if}}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        {{/if}}
+
+                        {{#if settingsTab === 'btc'}}
+                            <div class="settingsTile-body settingsTile-transparent {{^loading.settings}}visible{{/}}">
+                                <div class="settingsTile-body-container">
+
+                                    <div class="settingsTile-contentHead">
+                                        <span>
+                                            {{texts.financialTransactions.settings.btcSettings.accountHeader}}
+                                        </span>
+                                    </div>
+
+                                    <div class="settingsTile-content">
+                                        {{#with trading.btc}}
+                                        <ul class="settingsTile-detailsList">
+                                            {{#with withdrawalAccount}}
+                                            <li class="settingsTile-detail">
+                                                <div class="detail-label">
+                                                    {{texts.financialTransactions.settings.withdrawalAccount}}
+                                                </div>
+                                                <div class="detail-data">
+                                                    {{#if formattedAddress}}
+                                                        {{address}}
+                                                    {{else}}
+                                                        {{#if .isBeingProcessed || pendingBtcWithdrawalAccount}}
+                                                            <span class="icon-clock"></span>
+                                                            {{texts.financialTransactions.settings.processing}}
+                                                        {{else}}
+                                                            <span class="icon-attention-circled"></span>
+                                                            {{texts.financialTransactions.settings.notSetup}}
+                                                        {{/if}}
+                                                    {{/if}}
+                                                </div>
+                                            </li>
+                                            {{/with}}
+                                        </ul>
+                                        {{/with}}
+                                    </div>
+
+                                    <div class="settingsTile-footer">
+                                        <ul class="settingsTile-list">
+                                            <li class="settingsTile-listItem icon-pig" on-click="requestBtcEscrowAccount">
+                                                <span>
+                                                    {{texts.financialTransactions.settings.btcSettings.requestNewEscrow}}
+                                                </span>
+                                            </li>
+                                            <li class="settingsTile-listItem icon-credit-card" on-click="setBtcWithdrawalAccount">
+                                                <span>
+                                                    {{texts.financialTransactions.settings.btcSettings.setupWithdrawal}}
+                                                </span>
+                                            </li>
+                                            <!--<li class="settingsTile-listItem icon-auth">-->
+                                                <!--<span>-->
+                                                    <!--{{texts.financialTransactions.settings.btcSettings.generateAuthKey}}-->
+                                                <!--</span>-->
+                                            <!--</li>-->
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        {{/if}}
+
+                    {{/if}}
+                </article>
+            </li>
+            <li class="tile gs-w tile--operations tile--fullheight" data-row="3" data-col="1" data-sizex="3" data-sizey="3">
+                <article>
+                    <h1 class="tile-title">{{texts.financialTransactions.tradingOperations.title}}</h1>
+                    <div class="tileContainer visible">
+                        <div class="operationsTile-controls-container">
+                            <div class="operationsTile-controls">
+                                <div class="form-field operations-dropdown">
+                                    <p class="form-label ">
+                                        {{texts.financialTransactions.tradingOperations.operation}}
+                                    </p>
+                                    <div class="form-dropdownbox">
+                                        <div class="form-input form-input--textbox form-dropdownbox-selection
+                                            {{#active['tradingOperationsTile-operationDropdown']}}form-dropdownbox-selection--selecting{{/}}"
+                                             on-click="toggleOn('tradingOperationsTile-operationDropdown')">
+                                            {{texts.financialTransactions.tradingOperations.filters[operationType]}}
+                                        </div>
+                                        <ul class="form-dropdownbox-dropdown {{^active['tradingOperationsTile-operationDropdown']}}hidden{{/}}">
+                                            {{#each operationTypes:name}}
+                                            <li class="form-dropdownbox-item" on-click="set('finTxsPage.operationType', this)">
+                                                {{texts.financialTransactions.tradingOperations.filters[this]}}
+                                            </li>
+                                            {{/each}}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {{#with .operationsPager}}
+                        {{^.loading}}
+                        <div class="tradingTable-container">
+                            <table class="txList tradingTable">
+                                <thead>
+                                    <tr>
+                                        <th class="txList-header txList-col--type"></th>
+                                        <th class="txList-header txList-col--operation">{{texts.financialTransactions.tradingOperations.operation}}</th>
+                                        <th class="txList-header txList-col--date">{{texts.financialTransactions.tradingOperations.date}}</th>
+                                        <th class="txList-header txList-col--sender">{{texts.financialTransactions.tradingOperations.senderOrRecipient}}</th>
+                                        <th class="txList-header txList-col--message-short">{{texts.financialTransactions.tradingOperations.message}}</th>
+                                        <th class="txList-header txList-col--encrypted">{{texts.financialTransactions.tradingOperations.encrypted}}</th>
+                                        <th class="txList-header"></th>
+                                        <th class="txList-header txList-col--confirmations">{{texts.financialTransactions.tradingOperations.confirmations}}</th>
+                                        <th class="txList-header txList-col--fee">{{texts.financialTransactions.tradingOperations.fee}} <span class="dimmed">(XEM)</span></th>
+                                        <th class="txList-header txList-col--amount">{{texts.financialTransactions.tradingOperations.amount}} <span class="dimmed">(XEM)</span></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {{#each page}}
+                                    <tr class="txList-row-operation">
+                                        {{#with .transaction}}
+                                            {{#if .confirmed}}
+                                                {{#if (.mainType === TransactionType.Importance_Transfer || .mainType === TransactionType.Aggregate_Modification)}}
+                                                    {{#if (.mainType === TransactionType.Importance_Transfer)}}
+                                                        <td class="txList-cell txList-col--type txList-col--type--incoming icon-upload" title="{{texts.transactionDirections.importance}}" on-mouseover="registerToolTip">{{#.isMultisig}}M{{/}}</td>
+                                                    {{else}}
+                                                        <td class="txList-cell txList-col--type encryptedIcon icon-magic" title="{{texts.transactionDirections.modification}}" on-mouseover="registerToolTip">{{#.isMultisig}}M{{/}}</td>
+                                                    {{/if}}
+                                                {{else}}
+                                                    {{#if (.isSelf || .isOutgoing || .isIncoming)}}
+                                                        {{#.isSelf}}
+                                                            <td class="txList-cell txList-col--type icon-ccw" title="{{texts.transactionDirections.self}}" on-mouseover="registerToolTip">{{#.isMultisig}}M{{/}}</td>
+                                                        {{/}}
+                                                        {{#.isOutgoing}}
+                                                            <td class="txList-cell txList-col--type txList-col--type--outgoing icon-minus-circled" title="{{texts.transactionDirections.outgoing}}" on-mouseover="registerToolTip">{{#.isMultisig}}M{{/}}</td>
+                                                        {{/}}
+                                                        {{#.isIncoming}}
+                                                            <td class="txList-cell txList-col--type txList-col--type--incoming icon-plus-circled" title="{{texts.transactionDirections.incoming}}" on-mouseover="registerToolTip">{{#.isMultisig}}M{{/}}</td>
+                                                        {{/}}
+                                                    {{else}}
+                                                        {{! NOTE: mind it's a .type not .mainType }}
+                                                        {{#if (.type === TransactionType.Multisig_Transfer)}}
+                                                            <td class="txList-cell txList-col--type encryptedIcon" title="">{{#.isMultisig}}M{{/}}</td>
+                                                        {{/if}}
+                                                    {{/if}}
+                                                {{/if}}
+                                            {{else}}
+                                                <td class="txList-cell txList-col--type txList-col--type--pending icon-clock" title="{{texts.transactionDirections.pending}}" on-mouseover="registerToolTip">{{#.isMultisig}}M{{/}}</td>
+                                            {{/if}}
+
+                                            <td class="txList-cell txList-col--operation" title="{{texts.financialTransactions.tradingOperations.filters[operationType]}}" on-mouseover="registerToolTip">
+                                                {{texts.financialTransactions.tradingOperations.filters[operationType]}}
+                                            </td>
+
+                                            <td class="txList-cell txList-col--date">{{.formattedDate}}</td>
+                                            {{#if (.isSelf || .isOutgoing || .isIncoming || .mainType === TransactionType.Aggregate_Modification)}}
+                                                {{#if (.isSelf || .isOutgoing)}}
+                                                    <td class="txList-cell txList-col--sender" title="{{formattedRecipient}}" on-mouseover="registerToolTip">
+                                                        <a class="hyperlink--default" href="javascript:;" on-click="viewAccount(.recipient)">
+                                                            {{#if privateLabels[.recipient]}}
+                                                                {{privateLabels[.recipient]}}
+                                                            {{else}}
+                                                                {{.formattedRecipient}}
+                                                            {{/if}}
+                                                        </a>
+                                                    </td>
+                                                {{/if}}
+                                                {{#if (.isIncoming || .mainType === TransactionType.Aggregate_Modification)}}
+                                                    <td class="txList-cell txList-col--sender" title="{{formattedSender}}" on-mouseover="registerToolTip">
+                                                        <a class="hyperlink--default" href="javascript:;" on-click="viewAccount(.sender)">
+                                                            {{#if privateLabels[.sender]}}
+                                                                {{privateLabels[.sender]}}
+                                                            {{else}}
+                                                                {{.formattedSender}}
+                                                            {{/if}}
+                                                        </a>
+                                                    </td>
+                                                {{/if}}
+                                            {{else}}
+                                                {{#if (.type === TransactionType.Multisig_Transfer)}}
+                                                    <td class="txList-cell txList-col--sender" title="{{formattedRecipient}}" on-mouseover="registerToolTip">
+                                                        <a class="hyperlink--default" href="javascript:;" on-click="viewAccount(.recipient)">
+                                                            {{#if privateLabels[.recipient]}}
+                                                                {{privateLabels[.recipient]}}
+                                                            {{else}}
+                                                                {{.formattedRecipient}}
+                                                            {{/if}}
+                                                        </a>
+                                                    </td>
+                                                {{/if}}
+                                            {{/if}}
+                                        <td class="txList-cell txList-col--message-short" title="{{.message}}" on-mouseover="registerToolTip">
+                                            {{#if .isMultisig}}
+                                                <span style='font-style:italic;'>{{.cosignatoriesCount}}</span>
+                                            {{else}}
+                                                {{#if .message}}
+                                                    {{.message}}
+                                                {{else}}
+                                                    <span class="dimmed">{{texts.dashboard.transactions.noMessage}}</span>
+                                                {{/if}}
+                                            {{/if}}
+                                        </td>
+                                        <td class="txList-cell txList-col--encrypted encryptedIcon">
+                                            {{#.encrypted}}
+                                                <span class="icon-lock" title="{{texts.dashboard.transactions.encrypted}}" on-mouseover="registerToolTip"></span>
+                                            {{/}}
+                                        </td>
+                                        <td class="txList-cell txList-col--details">
+                                            <a class="hyperlink--default" href="javascript:;" on-click="viewTransaction(.)">{{texts.dashboard.transactions.view}}</a>
+                                        </td>
+                                        <td class="txList-col--confirmations">
+                                            {{#if .confirmed}}
+                                                {{#if blockchainHeight}}
+                                                    {{blockchainHeight - .blockHeight + 1}}
+                                                {{else}}
+                                                    {{texts.dashboard.transactions.confirmationsUnknown}}
+                                                {{/if}}
+                                            {{else}}
+                                                {{texts.dashboard.transactions.pending}}
+                                            {{/if}}
+                                        </td>
+                                        <td class="txList-cell txList-col--fee">
+                                            {{#if .isMultisig}}
+                                                {{#if .confirmed}}
+                                                    {{{multisig.formattedTotalFees}}}
+                                                {{else}}
+                                                    n/a
+                                                {{/if}}
+                                            {{else}}
+                                                {{#.isOutgoing || .isSelf}}-{{/}}{{{formattedFee}}}
+                                            {{/if}}
+                                        </td>
+                                        <td class="txList-cell txList-col--amount">
+                                            {{#if .isMultisig}}
+                                                {{#if .requiresSignature}}
+                                                    <button type="button" class="transactionsTile-signMultisigButton icon-paper-plane-empty" disabled="{{nisUnavailable}}" on-click="openSignMultisig(.)">{{texts.dashboard.transactions.signMultisig}}</button>
+                                                {{else}}
+                                                    {{#if (.type === TransactionType.Multisig_Transfer)}}
+                                                        {{{multisig.formattedAmount}}}
+                                                    {{else}}
+                                                        n/a
+                                                    {{/if}}
+                                                {{/if}}
+                                            {{else}}
+                                                {{#.isSelf}}&plusmn;{{/}}
+                                                {{#.isOutgoing}}-{{/}}
+                                                {{#.isIncoming}}+{{/}}
+                                                {{{formattedAmount}}}
+                                            {{/if}}
+                                        </td>
+                                        {{/with}}
+                                    </tr>
+                                    {{/each}}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="txList-pages">
+                            {{#if totalLength === 0}}
+                                <p class="txList-noRecords transactionsPage-leftMost transactionsPage-rightMost">
+                                    {{texts.financialTransactions.tradingOperations.noOperations}}
+                                </p>
+                            {{/if}}
+
+                            {{#if totalPages > 0}}
+                            <a href="javascript:;">
+                                Showing
+                                    <span class="txList-seeAll-arrow icon-left-dir"
+                                          on-click="previousPage('finTxsPage.operationsPager')"></span>
+                                {{navString}}
+                                    <span class="txList-seeAll-arrow icon-right-dir"
+                                          on-click="nextPage('finTxsPage.operationsPager')"></span>
+                            </a>
+                            {{/if}}
+                        </div>
+                        {{/}}
+                        {{#.loading}}
+                            <div class="txList-preloader-container">
+                                <div class="preloader">
+                                    <div class="preloader-img loader loading">
+                                        <div class="loader-container">
+                                            <span class="loader-quarter quarter-1"></span>
+                                            <span class="loader-quarter quarter-2"></span>
+                                            <span class="loader-quarter quarter-3"></span>
+                                            <span class="loader-quarter quarter-4"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {{/}}
+                        {{/with}}
+                    </div>
+                </article>
+            </li>
+            {{/finTxsPage}}
+        </ul>
+    </div>
+</main>

@@ -1,0 +1,120 @@
+.transferButton {
+  margin-left: 10px;
+  height: 27px;
+  background-color: #41ce7d;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 500;
+  position: relative;
+  z-index: 1000;
+}
+.transferButton:before {
+  margin-right: 5px;
+  font-size: 16px;
+  vertical-align: -2px;
+}
+.transferButton:hover {
+  background-color: #6ad899;
+}
+.transferButton:disabled {
+  background-color: #888;
+  pointer-events: none;
+}
+
+/* Escrows panel */
+.tile--escrows .tradingTable tbody {
+  background-color: #095779;
+}
+.tile--escrows .txList-row-currency:nth-child(odd) {
+  background-color: #074661;
+}
+.tile--escrows .txList-pages {
+  background-color: #095779;
+}
+.tile--escrows .status-icon:before, .tile--escrows .status-icon--established:before, .tile--escrows .status-icon--confirmed:before, .tile--escrows .status-icon--invalid:before, .tile--escrows .status-icon--requested:before {
+  margin-right: 12px;
+}
+.tile--escrows .status-icon--established {
+  color: #41ce7d;
+}
+.tile--escrows .status-icon--confirmed {
+  color: #41ce7d;
+}
+.tile--escrows .status-icon--invalid {
+  color: #ea6153;
+}
+.tile--escrows .status-icon--invalid:before {
+  font-size: 1.3em;
+  margin-right: 6px;
+  margin-left: 2px;
+}
+.tile--escrows .status-icon--requested {
+  color: #f1c40f;
+}
+.tile--escrows .escrowsTile-menu {
+  display: inline-block;
+  float: right;
+  margin-top: 15px;
+  margin-right: 20px;
+  position: relative;
+  z-index: 20;
+  text-align: right;
+}
+.tile--escrows .escrowsTile-menu-button {
+  float: right;
+}
+.tile--escrows .escrowsTile-menu-dropdown {
+  margin-top: 25px;
+}
+.tile--escrows .escrowsTile-menu-dropdown .dropdownMenu-item {
+  text-align: left;
+}
+.tile--escrows .escrowsTile-menu-title {
+  font-weight: 500;
+}
+
+.tile--settings article {
+  position: absolute;
+  display: table;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  top: 0;
+}
+.tile--settings .settingsTile-accountNotRequested {
+  text-align: center;
+  color: white;
+}
+.tile--settings .noData-button {
+  -moz-transition: background-color 0.2s;
+  -o-transition: background-color 0.2s;
+  -webkit-transition: background-color 0.2s;
+  transition: background-color 0.2s;
+  margin-top: 12px;
+  background-color: #41ce7d;
+  padding: 8px 20px;
+  font-size: 13px;
+  font-weight: 500;
+}
+.tile--settings .noData-button:hover {
+  background-color: #6ad899;
+}
+.tile--settings .noData-text {
+  font-size: 15px;
+}
+
+.tile--operations .operationsTile-controls-container {
+  display: table-row;
+  height: 0;
+}
+.tile--operations .operationsTile-controls {
+  padding: 0px 20px 20px;
+  border-bottom: 1px solid #ebebeb;
+  margin-bottom: 15px;
+}
+.tile--operations .operations-dropdown {
+  width: 250px;
+}
+.tile--operations .txList-noRecords {
+  padding-left: 37px;
+}

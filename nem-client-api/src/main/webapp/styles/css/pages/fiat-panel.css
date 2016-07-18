@@ -1,0 +1,23 @@
+.fiatPanel {
+  margin-top: 9px;
+  margin-left: -10px;
+  margin-right: -10px;
+}
+
+.transactionsTile-overviewContainer {
+  display: table-row;
+  height: 0;
+}
+
+.transactionsTile-overview {
+  padding: 0px 20px 15px;
+}
+
+.fiatPanel-errorIcon {
+  color: #c03b2d;
+}
+
+.transactionsTile-sendNemButton {
+  z-index: 10;
+  position: relative;
+}
