@@ -1,5 +1,6 @@
 package org.nem.specific.deploy.appconfig;
 
+import com.sharedobjects.nis.PrimaryNisConnector;
 import org.nem.core.connect.*;
 import org.nem.core.connect.client.AsyncNisConnector;
 import org.nem.core.metadata.ApplicationMetaData;

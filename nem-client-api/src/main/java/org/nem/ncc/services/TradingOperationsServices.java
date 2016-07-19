@@ -1,7 +1,6 @@
 package org.nem.ncc.services;
 
 import com.sharedobjects.nis.*;
-import org.nem.ncc.connector.PrimaryNisConnector;
 import org.nem.ncc.model.*;
 import java.util.function.*;
 import org.nem.ncc.trading.storage.*;

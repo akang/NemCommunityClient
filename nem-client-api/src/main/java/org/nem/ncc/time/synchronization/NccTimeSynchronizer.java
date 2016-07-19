@@ -1,9 +1,9 @@
 package org.nem.ncc.time.synchronization;
 
+import com.sharedobjects.nis.PrimaryNisConnector;
 import org.nem.core.model.primitive.TimeOffset;
 import org.nem.core.time.*;
 import org.nem.core.time.synchronization.*;
-import org.nem.ncc.connector.PrimaryNisConnector;
 import org.nem.ncc.services.TimeSynchronizationServices;
 
 import java.util.concurrent.CompletableFuture;

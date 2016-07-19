@@ -16,13 +16,13 @@ public class LevelsManager extends ReceiveManager
     private final BrokerMapper brokerMapper;
     private final Collection<Consumer<MarketDepthQuotes>> consumers;
     private Instant lastTimeReceived;
-
+    
     public LevelsManager(final BrokerMapper brokerMapper, final CommonConfiguration config) {
         super(ZMQ.context(1), config.getBrokerBindAddress(), (short)Port.INFO_PUBLISHER.getCode(), 7, false);
         this.consumers = new ArrayList<Consumer<MarketDepthQuotes>>();
         this.brokerMapper = brokerMapper;
     }
-
+    
     private void handleResponse(final Object received) {
         if (received instanceof com.sharedobjects.client.MarketDepthQuotes) {
             final MarketDepthQuotes quotes = this.brokerMapper.toClientModel((com.sharedobjects.client.MarketDepthQuotes)received);
@@ -32,20 +32,20 @@ public class LevelsManager extends ReceiveManager
             this.log.info((Object)((ResponseMessage)received).getMessage());
         }
     }
-
+    
     private void notifyConsumers(final MarketDepthQuotes marketDepth) {
-        this.consumers.forEach(listener -> listener.accept((Object)marketDepth));
+        this.consumers.forEach(listener -> listener.accept(marketDepth));
     }
-
+    
     public void subscribe(final Consumer<MarketDepthQuotes> consumer) {
         this.consumers.add(consumer);
     }
-
+    
     protected void manageReceivedData(final Object receivedData) throws Exception {
         this.lastTimeReceived = Instant.now();
         this.handleResponse(receivedData);
     }
-
+    
     public Instant getLastTimeReceived() {
         return this.lastTimeReceived;
     }

@@ -1,5 +1,13 @@
 package org.nem.ncc.services;
 
+import com.sharedobjects.client.Country;
+import com.sharedobjects.client.KickstartReceiveAccount;
+import com.sharedobjects.client.MarketDepthQuotes;
+import com.sharedobjects.client.OperatorOptions;
+import com.sharedobjects.client.UserDetails;
+import com.sharedobjects.trading.Match;
+import com.sharedobjects.trading.TradeInstrument;
+import com.sharedobjects.trading.TradePair;
 import org.nem.ncc.connector.*;
 import java.time.*;
 import java.time.temporal.*;
@@ -14,6 +22,10 @@ import com.sharedobjects.client.*;
 import org.nem.ncc.model.*;
 import com.sharedobjects.trading.*;
 import org.nem.core.model.*;
+import org.nem.ncc.model.MarketDepthQuote;
+import org.nem.ncc.model.OrderUpdate;
+import org.nem.ncc.model.TradeHistoryTransaction;
+
 import java.util.*;
 
 public class BrokerMapper

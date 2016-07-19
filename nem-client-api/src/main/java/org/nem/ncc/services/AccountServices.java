@@ -1,11 +1,11 @@
 package org.nem.ncc.services;
 
+import com.sharedobjects.nis.PrimaryNisConnector;
 import org.nem.core.connect.HttpJsonPostRequest;
 import org.nem.core.connect.client.NisApiId;
 import org.nem.core.model.*;
 import org.nem.core.model.ncc.*;
 import org.nem.core.serialization.*;
-import org.nem.ncc.connector.PrimaryNisConnector;
 
 import java.util.*;
 import java.util.logging.Logger;

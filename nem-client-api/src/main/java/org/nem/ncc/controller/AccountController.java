@@ -1,5 +1,6 @@
 package org.nem.ncc.controller;
 
+import com.sharedobjects.nis.PrimaryNisConnector;
 import org.nem.core.connect.HttpJsonPostRequest;
 import org.nem.core.connect.client.NisApiId;
 import org.nem.core.crypto.*;
@@ -8,7 +9,6 @@ import org.nem.core.model.mosaic.MosaicDefinition;
 import org.nem.core.model.ncc.*;
 import org.nem.core.model.primitive.BlockHeight;
 import org.nem.core.serialization.*;
-import org.nem.ncc.connector.PrimaryNisConnector;
 import org.nem.ncc.controller.annotations.RequiresTrustedNis;
 import org.nem.ncc.controller.requests.*;
 import org.nem.ncc.controller.viewmodels.*;

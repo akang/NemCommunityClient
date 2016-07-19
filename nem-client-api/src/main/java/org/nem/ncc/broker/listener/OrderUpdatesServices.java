@@ -7,10 +7,9 @@ import org.nem.deploy.*;
 import org.nem.ncc.trading.storage.*;
 import org.nem.ncc.broker.manager.*;
 import java.util.concurrent.*;
-import java.util.function.*;
-import org.nem.ncc.model.*;
 import org.nem.core.model.*;
 import java.util.*;
+import org.nem.ncc.model.*;
 
 public class OrderUpdatesServices
 {
@@ -20,7 +19,7 @@ public class OrderUpdatesServices
     private final SimpMessagingTemplate messagingTemplate;
     private final CommonConfiguration configuration;
     private final Map<TradingStorageName, OrderUpdatesEmitter> orderUpdatesEmitters;
-
+    
     public OrderUpdatesServices(final BrokerMapper brokerMapper, final PrimaryBrokerConnector brokerConnector, final SecureRequestMapper secureRequestMapper, final SimpMessagingTemplate messagingTemplate, final CommonConfiguration configuration) {
         this.orderUpdatesEmitters = new ConcurrentHashMap<TradingStorageName, OrderUpdatesEmitter>();
         this.brokerMapper = brokerMapper;
@@ -29,7 +28,7 @@ public class OrderUpdatesServices
         this.messagingTemplate = messagingTemplate;
         this.configuration = configuration;
     }
-
+    
     public void subscribe(final TradingStorageName name) {
         if (this.orderUpdatesEmitters.containsKey(name)) {
             return;
@@ -41,16 +40,16 @@ public class OrderUpdatesServices
         }
         final OrderUpdatesEmitter emitter = new OrderUpdatesEmitter(this.brokerConnector.getPersonalPort(tradingAccount, userId), this.brokerMapper, this.configuration, this.brokerConnector.requestBrokerAccount(), tradingAccount);
         this.orderUpdatesEmitters.put(name, emitter);
-        emitter.subscribeToUpdates((Consumer<OrderUpdate>)(update -> this.notifyOrderUpdate(update, name)));
-        emitter.subscribeToMatches((Consumer<Match>)(match -> this.notifyMatch(match, name)));
+        emitter.subscribeToUpdates(update -> this.notifyOrderUpdate(update, name));
+        emitter.subscribeToMatches(match -> this.notifyMatch(match, name));
         final Thread emitterThread = new Thread((Runnable)emitter);
         emitterThread.start();
     }
-
+    
     private void notifyOrderUpdate(final OrderUpdate update, final TradingStorageName tradingStorageName) {
         this.messagingTemplate.convertAndSend((Object)("/topic/" + tradingStorageName.toString() + "/orders"), (Object)update);
     }
-
+    
     private void notifyMatch(final Match match, final TradingStorageName tradingStorageName) {
         this.messagingTemplate.convertAndSend((Object)("/topic/" + tradingStorageName.toString() + "/matches"), (Object)match);
     }

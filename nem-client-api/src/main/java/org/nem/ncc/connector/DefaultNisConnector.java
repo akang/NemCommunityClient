@@ -1,5 +1,6 @@
 package org.nem.ncc.connector;
 
+import com.sharedobjects.nis.PrimaryNisConnector;
 import org.nem.core.connect.HttpPostRequest;
 import org.nem.core.connect.client.*;
 import org.nem.core.node.NodeEndpoint;
