@@ -180,7 +180,25 @@ public class NccAppConfig {
 		final AccountsFileDescriptor descriptor = new AccountsFileDescriptor(file);
 		return new AccountsFileRepository(descriptor);
 	}
-
+@Bean
+    public BtcEscrowsServices btcEscrowsServices() {
+        return new BtcEscrowsServices();
+    }
+    
+    @Bean
+    public BtcEscrowsLocator btcEscrowsLocator() {
+        return new BtcEscrowsLocator(this.primaryNisConnector(), this.tradingStorageServices(), this.primaryBrokerConnector(), this.secureRequestMapper(), this.btcEscrowsServices(), this.tradeInstrumentsProvider());
+    }
+    
+    @Bean
+    public TradeInstrumentsProvider tradeInstrumentsProvider() {
+        return new TradeInstrumentsProvider(this.primaryBrokerConnector());
+    }
+    
+    @Bean
+    public NemEscrowsLocator nemEscrowServices() {
+        return new NemEscrowsLocator(this.primaryNisConnector(), this.primaryBrokerConnector(), this.secureRequestMapper(), this.tradingStorageServices());
+    }
 	@Bean
 	public WalletServices walletServices() {
 		final WalletRepository walletRepository = new AutoFallbackRepository(Collections.singletonList(new BinaryWalletRepository()));
@@ -198,7 +216,10 @@ public class NccAppConfig {
 				addressBookRepository,
 				new SecureAddressBookDescriptorFactory(this.getNemFolder()));
 	}
-
+ @Bean
+    public TradingAccountsServices tradingAccountsServices() {
+        return new TradingAccountsServices(this.primaryBrokerConnector(), this.nemEscrowServices(), this.btcEscrowsLocator(), this.fiatEscrowsLocator(), this.secureRequestMapper(), this.primaryNisConnector(), this.tradingTransactionsServices(), this.tradeInstrumentsProvider());
+    }
 	@Bean
 	public NemConfigurationPolicy configurationPolicy() {
 		return new NccConfigurationPolicy();
@@ -224,4 +245,85 @@ public class NccAppConfig {
 	public NccConfiguration nccConfiguration() {
 		return new NccConfiguration(this.commonConfiguration());
 	}
+@Bean
+    public TradingStorageServices tradingStorageServices() {
+        final TradingStorageRepository repository = new BinaryTradingStorageRepository();
+        return new DefaultTradingStorageServices(repository, new SecureTradingStorageDescriptorFactory(this.getNemFolder()));
+    }
+    
+    @Bean
+    public FiatEscrowsLocator fiatEscrowsLocator() {
+        return new FiatEscrowsLocator(this.secureRequestMapper(), this.tradingStorageServices(), this.primaryBrokerConnector(), this.primaryNisConnector());
+    }
+    
+    @Bean
+    public BrokerMapper brokerMapper() {
+        return new BrokerMapper(this.tradeInstrumentsProvider(), this.tradePairsProvider(), this.brokerConnector);
+    }
+    
+    @Bean
+    public LevelsManager levelsManager() {
+        return new LevelsManager(this.brokerMapper(), this.commonConfiguration());
+    }
+    
+    @Bean
+    public OrderUpdatesServices orderUpdatesListener() {
+        return new OrderUpdatesServices(this.brokerMapper(), this.primaryBrokerConnector(), this.secureRequestMapper(), this.simpMessagingTemplate, this.commonConfiguration());
+    }
+    
+    @PostConstruct
+    @Bean
+    public MarketDepthListener marketDepthListener() {
+        return new MarketDepthListener(this.levelsManager(), this.brokerMapper(), this.simpMessagingTemplate);
+    }
+    
+    @Bean
+    public TradingTransactionsServices tradingTransactionsServices() {
+        return new DefaultTradingTransactionsServices(this.accountServices(), this.tradingStorageServices(), this.primaryBrokerConnector(), this.secureRequestMapper(), this.walletServices(), this.btcEscrowsLocator());
+    }
+    
+    @Bean
+    public TradingOperationsServices tradingOperationsServices() {
+        return new TradingOperationsServices(this.primaryNisConnector(), this.chainServices(), this.tradingTransactionsServices(), this.walletServices());
+    }
+    
+    @Bean
+    public INonceProvider nonceProvider() {
+        return (INonceProvider)new NonceProvider();
+    }
+    
+    @Bean
+    public BankApiMapper bankApiMapper() {
+        return new BankApiMapper(this.tradeInstrumentsProvider());
+    }
+    
+    @Bean
+    public CryptoAPIConnector cryptoAPIConnector() {
+        return (CryptoAPIConnector)ExceptionUtils.propagate(() -> new CryptoAPIConnector(this.commonConfiguration().getCryptoApiAddress(), this.nonceProvider(), this.transferManager()), e -> new IllegalArgumentException("Wrong formatted crypto api address", e));
+    }
+    
+    @Bean
+    public TransferManager transferManager() {
+        return new TransferManager();
+    }
+    
+    @Bean
+    public BankApiConnector bankApiConnector() {
+        return new DefaultBankApiConnector(this.commonConfiguration(), this.cryptoAPIConnector(), this.bankApiMapper());
+    }
+    
+    @Bean
+    public BankApiBrokerConnector kickstartServices() {
+        return new BankApiBrokerConnector(this.bankApiConnector(), this.tradingStorageServices());
+    }
+    
+    @Bean
+    public TxBrokerConnector txBrokerConnector() {
+        return new DefaultTxBrokerConnector(this.primaryBrokerConnector(), this.transactionController(), this.brokerMapper(), this.tradeInstrumentsProvider());
+    }
+    
+    @Bean
+    public TradePairsProvider tradePairsProvider() {
+        return new TradePairsProvider(this.primaryBrokerConnector());
+    }
 }

@@ -29,7 +29,7 @@ public class TransferTransactionViewModel extends TransactionViewModel {
 	// TODO 20150524 J-G: you don't appear to be using this, not sure if it's for this release or not
 	// TODO 20150525 G-J: it is used in isHexMessage, not sure why idea shows it as unused,
 	// anyway, you're right that it's currently not used, but I've added it in case we'd like to use it in UI
-	private final int direction; // 1 - incoming, 2 - outgoing, 3 - self
+	private int direction; // 1 - incoming, 2 - outgoing, 3 - self
 
 	/**
 	 * Creates a transfer transaction view model.
@@ -117,7 +117,9 @@ public class TransferTransactionViewModel extends TransactionViewModel {
 	public int getDirection() {
 		return this.direction;
 	}
-
+	public void setDirection(final int direction) {
+        this.direction = direction;
+    }
 	//region helper functions
 	private static boolean isEncrypted(final Message message) {
 		return null != message && MessageTypes.SECURE == message.getType();

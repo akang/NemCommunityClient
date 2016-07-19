@@ -45,6 +45,8 @@ public class WalletController {
 	// > if we ever consolidate the implementations of the two controllers, we would probably need to do it that way
 	// TODO 20150228 J-B: actually, with these changes, i guess we can prune the AddressBookController?
 	private final AddressBookServices addressBookServices;
+    private final TradingStorageServices tradingStorageServices;
+    private final TradingAccountsServices tradingAccountsServices;
 
 	/**
 	 * Creates a new wallet controller.
@@ -57,10 +59,12 @@ public class WalletController {
 	public WalletController(
 			final WalletServices walletServices,
 			final WalletMapper walletMapper,
-			final AddressBookServices addressBookServices) {
+			final AddressBookServices addressBookServices, final TradingStorageServices tradingStorageServices, final TradingAccountsServices tradingAccountsServices) {
 		this.walletServices = walletServices;
 		this.walletMapper = walletMapper;
 		this.addressBookServices = addressBookServices;
+this.tradingStorageServices = tradingStorageServices;
+        this.tradingAccountsServices = tradingAccountsServices;
 	}
 
 	//region create / open / info / close
@@ -79,6 +83,7 @@ public class WalletController {
 	public WalletViewModel create(@RequestBody final WalletNamePasswordPair pair) {
 		final Wallet wallet = this.walletServices.create(pair);
 		final AddressBook addressBook = this.createAddressBook(pair);
+        this.createTradingStorage(pair);
 		addressBook.addLabel(new AccountLabel(wallet.getPrimaryAccount().getAddress(), "", ""));
 		return this.walletMapper.toViewModel(wallet);
 	}
@@ -96,6 +101,7 @@ public class WalletController {
 	public WalletViewModel open(@RequestBody final WalletNamePasswordPair pair) {
 		this.openAddressBook(pair);
 		final Wallet wallet = this.walletServices.open(pair);
+            this.openTradingStorage(pair);
 		return this.walletMapper.toViewModel(wallet);
 	}
 
@@ -110,7 +116,40 @@ public class WalletController {
 		final Wallet wallet = this.walletServices.get(name);
 		return this.walletMapper.toViewModel(wallet);
 	}
-
+@RequestMapping(value = { "/wallet/export" }, method = { RequestMethod.POST })
+    public OctetStream exportWallet(@RequestBody final WalletName name) {
+        final ByteArrayOutputStream byteArrayOutputStream;
+        final ZipOutputStream zipOutputStream;
+        final Throwable t2;
+        return (OctetStream)ExceptionUtils.propagate(() -> {
+            byteArrayOutputStream = new ByteArrayOutputStream();
+            zipOutputStream = new ZipOutputStream(byteArrayOutputStream);
+            try {
+                this.addToZip(zipOutputStream, name.toString(), ".wlt", this.walletServices::copyTo, n -> new WalletNamePasswordPair(n, "???"));
+                this.addToZip(zipOutputStream, name.toString(), ".adb", this.addressBookServices::copyTo, n -> new AddressBookNamePasswordPair(n, "???"));
+                this.addToZip(zipOutputStream, name.toString(), ".tst", this.tradingStorageServices::copyTo, n -> new TradingStorageNamePasswordPair(n, "???"));
+            }
+            catch (Throwable t) {
+                throw t;
+            }
+            finally {
+                if (zipOutputStream != null) {
+                    if (t2 != null) {
+                        try {
+                            zipOutputStream.close();
+                        }
+                        catch (Throwable t3) {
+                            t2.addSuppressed(t3);
+                        }
+                    }
+                    else {
+                        zipOutputStream.close();
+                    }
+                }
+            }
+            return new OctetStream(byteArrayOutputStream.toByteArray());
+        });
+    }
 	private BufferedBlockCipher setupBlockCipher(final byte[] sharedKey, final byte[] ivData, final boolean forEncryption) {
 		// Setup cipher parameters with key and IV.
 		final KeyParameter keyParam = new KeyParameter(sharedKey);
@@ -271,6 +310,7 @@ public class WalletController {
 	@RequestMapping(value = "/wallet/close", method = RequestMethod.POST)
 	public void close(@RequestBody final WalletName name) {
 		this.closeAddressBook(name);
+this.closeTradingStorage(name);
 		this.walletServices.close(name);
 	}
 
@@ -297,6 +337,7 @@ public class WalletController {
 	@RequestMapping(value = "/wallet/name/change", method = RequestMethod.POST)
 	public void changeName(@RequestBody final WalletNamePasswordBag bag) {
 		this.changeAddressBookName(bag);
+this.changeTradingStorageName(bag);
 		this.walletServices.move(bag, new WalletNamePasswordPair(bag.getNewName(), bag.getPassword()));
 	}
 
@@ -329,4 +370,35 @@ public class WalletController {
 	private AddressBookNamePasswordPair createAddressNamePasswordPair(final WalletNamePasswordPair pair) {
 		return new AddressBookNamePasswordPair(pair.getName().toString(), pair.getPassword().toString());
 	}
+private TradingStorage createTradingStorage(final WalletNamePasswordPair pair) {
+        return this.tradingStorageServices.create(this.createTradingStorageNamePasswordPair(pair));
+    }
+    
+    private TradingStorage openTradingStorage(final WalletNamePasswordPair pair) {
+        final TradingStorage tradingStorage = this.tradingStorageServices.openOrCreate(this.createTradingStorageNamePasswordPair(pair));
+        if (tradingStorage.getPendingPublicKey() != null) {
+            final Address tradingAddress = tradingStorage.getTradingAccountAddress();
+            if (this.tradingAccountsServices.getChangeTradingAccountResponse(tradingAddress, tradingStorage.getName(), tradingStorage.getChangedPublicKeyTxId())) {
+                tradingStorage.setTradingAccountAddress(Address.fromPublicKey(PublicKey.fromHexString(tradingStorage.getPendingPublicKey())));
+                tradingStorage.setPendingPublicKey(null);
+            }
+        }
+        return tradingStorage;
+    }
+    
+    private void closeTradingStorage(final WalletName name) {
+        this.tradingStorageServices.close(new TradingStorageName(name.toString()));
+    }
+    
+    private TradingStorageNamePasswordPair createTradingStorageNamePasswordPair(final WalletNamePasswordPair pair) {
+        return new TradingStorageNamePasswordPair(((StorableEntityNamePasswordPair<WalletName, TEntityPassword, TDerived>)pair).getName().toString(), ((StorableEntityNamePasswordPair<TEntityName, WalletPassword, TDerived>)pair).getPassword().toString());
+    }
+    
+    private void changeTradingStorageName(final WalletNamePasswordBag bag) {
+        this.tradingStorageServices.move(this.createTradingStorageNamePasswordPair(bag), new TradingStorageNamePasswordPair(bag.getNewName().toString(), ((StorableEntityNamePasswordPair<TEntityName, WalletPassword, TDerived>)bag).getPassword().toString()));
+    }
+    
+    private void changeTradingStoragePassword(final WalletNamePasswordBag bag) {
+        this.tradingStorageServices.move(this.createTradingStorageNamePasswordPair(bag), new TradingStorageNamePasswordPair(((StorableEntityNamePasswordPair<WalletName, TEntityPassword, TDerived>)bag).getName().toString(), bag.getNewPassword().toString()));
+    }
 }
