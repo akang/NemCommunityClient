@@ -19,9 +19,9 @@ public class BtcEscrowsServices
         final List<DiscoveredAddress> publishedAddresses = responseTxs.stream().map(responseTx -> this.responseToAddress(recipient, responseTx)).filter(discoveredAddress -> !processedAddresses.contains(discoveredAddress.getAddress())).collect((Collector<? super Object, ?, List<DiscoveredAddress>>)Collectors.toList());
         requestTxs.sort((t1, t2) -> ((Transaction)t1.getEntity()).getTimeStamp().compareTo(((Transaction)t2.getEntity()).getTimeStamp()));
         final int responsesSize = publishedAddresses.size();
-        final ImmutablePair immutablePair;
-        final int n;
-        final List<DiscoveredAddress> list;
+        final ImmutablePair immutablePair = null;
+        final int n = 0;
+        final List<DiscoveredAddress> list = new ArrayList<>();
         return IntStream.range(0, requestTxs.size()).mapToObj(i -> {
             new ImmutablePair((Object)requestTxs.get(i), (Object)((i >= n) ? null : list.get(i)));
             return immutablePair;

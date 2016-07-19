@@ -33,13 +33,14 @@ public class UserDetails implements SerializableEntity
     public PublicKey getPublicKey() {
         return this.publicKey;
     }
-    
+
+    @SuppressWarnings("unchecked")
     public UserDetails(final Deserializer deserializer) {
         this.id = UUID.fromString(deserializer.readString("id"));
         this.firstName = deserializer.readString("firstName");
         this.lastName = deserializer.readString("lastName");
         this.dateOfBirth = new Date(deserializer.readLong("dateOfBirth"));
-        this.country = (Country)deserializer.readObject("country", (ObjectDeserializer)Country.getObjectDeserializer());
+        this.country = (Country)deserializer.readObject("country", (ObjectDeserializer<Country>)Country.getObjectDeserializer());
         this.passport = deserializer.readString("passport");
         this.address = deserializer.readString("address");
         this.contactNumber = deserializer.readString("contactNumber");

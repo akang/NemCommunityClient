@@ -10,12 +10,12 @@ public class SecureTradingStorageDescriptor extends SecureStorableEntityDescript
     
     @Override
     public TradingStorageName getTradingStorageName() {
-        return ((SecureStorableEntityDescriptor<TEntity, TEntityName, TEntityFileExtension, TEntityPassword, TradingStorageDescriptor>)this).getDescriptor().getTradingStorageName();
+        return ((SecureStorableEntityDescriptor<StorableTradingStorage, TradingStorageName, TradingStorageFileExtension, TradingStoragePassword, TradingStorageDescriptor>)this).getDescriptor().getTradingStorageName();
     }
     
     @Override
     public String getTradingStorageLocation() {
-        return ((SecureStorableEntityDescriptor<TEntity, TEntityName, TEntityFileExtension, TEntityPassword, TradingStorageDescriptor>)this).getDescriptor().getTradingStorageLocation();
+        return ((SecureStorableEntityDescriptor<StorableTradingStorage, TradingStorageName, TradingStorageFileExtension, TradingStoragePassword, TradingStorageDescriptor>)this).getDescriptor().getTradingStorageLocation();
     }
     
     @Override

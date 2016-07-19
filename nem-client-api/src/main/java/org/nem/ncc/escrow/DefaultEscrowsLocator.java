@@ -6,6 +6,9 @@ import com.google.common.base.*;
 import java.util.function.*;
 import org.nem.ncc.services.*;
 import org.nem.ncc.trading.storage.*;
+
+import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.*;
 import org.nem.core.crypto.*;
 import com.sharedobjects.nis.*;
@@ -40,7 +43,7 @@ public abstract class DefaultEscrowsLocator<TEscrow extends EscrowAccount, TDisc
         final TradingStorage tradingStorage = this.tradingStorageServices.get(name);
         final Collection<TDiscoveredEntity> discoveredEntities = this.discoverEntities(tradingStorage);
         this.entitiesSaver.accept(tradingStorage, discoveredEntities);
-        final Collection<TDiscoveredEntity> fullList = (Collection<TDiscoveredEntity>)this.entitiesSupplier.apply((Object)tradingStorage);
+        final Collection<TDiscoveredEntity> fullList = (Collection<TDiscoveredEntity>)this.entitiesSupplier.apply(tradingStorage);
         return this.balancesSupplier.apply(this.secureRequestMapper.toTradingAccount(tradingStorage), fullList);
     }
     

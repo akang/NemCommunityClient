@@ -1,9 +1,9 @@
 package org.nem.ncc.controller;
 
+import com.sharedobjects.nis.PrimaryNisConnector;
 import org.nem.core.metadata.ApplicationMetaData;
 import org.nem.core.model.primitive.BlockHeight;
 import org.nem.core.node.NisNodeInfo;
-import org.nem.ncc.connector.PrimaryNisConnector;
 import org.nem.ncc.controller.viewmodels.*;
 import org.nem.ncc.exceptions.NccException;
 import org.nem.ncc.model.*;

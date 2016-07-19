@@ -1,5 +1,6 @@
 package org.nem.ncc.connector;
 
+import com.bim.helper.Future;
 import org.apache.log4j.*;
 import org.nem.deploy.*;
 import org.nem.ncc.services.*;

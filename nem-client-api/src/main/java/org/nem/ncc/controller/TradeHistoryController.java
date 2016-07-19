@@ -5,6 +5,8 @@ import org.nem.ncc.controller.requests.*;
 import org.nem.core.serialization.*;
 import org.nem.ncc.model.*;
 import java.util.*;
+
+import org.nem.ncc.model.TradeHistoryTransaction;
 import org.springframework.web.bind.annotation.*;
 import com.sharedobjects.client.*;
 

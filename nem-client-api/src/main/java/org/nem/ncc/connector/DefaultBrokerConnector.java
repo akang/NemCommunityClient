@@ -1,6 +1,14 @@
 package org.nem.ncc.connector;
 
+import com.sharedobjects.broker.UserDetailsRequest;
+import com.sharedobjects.client.InfoRequest;
 import org.nem.ncc.broker.manager.*;
+import org.nem.ncc.model.Country;
+import org.nem.ncc.model.KickstartReceiveAccount;
+import org.nem.ncc.model.TradeHistoryTransaction;
+import org.nem.ncc.model.TradeInstrument;
+import org.nem.ncc.model.TradePair;
+import org.nem.ncc.model.UserDetails;
 import org.nem.ncc.services.*;
 import org.apache.log4j.*;
 import org.nem.deploy.*;

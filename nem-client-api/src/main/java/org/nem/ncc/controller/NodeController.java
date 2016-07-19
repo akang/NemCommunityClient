@@ -1,11 +1,11 @@
 package org.nem.ncc.controller;
 
+import com.sharedobjects.nis.PrimaryNisConnector;
 import org.nem.core.connect.*;
 import org.nem.core.connect.client.NisApiId;
 import org.nem.core.crypto.PrivateKey;
 import org.nem.core.model.ncc.NemRequestResult;
 import org.nem.core.serialization.JsonSerializer;
-import org.nem.ncc.connector.PrimaryNisConnector;
 import org.nem.ncc.controller.annotations.RequiresTrustedNis;
 import org.nem.ncc.controller.requests.BootNodeRequest;
 import org.nem.ncc.services.WalletServices;
