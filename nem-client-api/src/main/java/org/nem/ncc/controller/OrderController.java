@@ -3,6 +3,7 @@ package org.nem.ncc.controller;
 import org.nem.ncc.connector.*;
 import org.nem.ncc.services.*;
 import org.nem.ncc.broker.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.nem.ncc.controller.requests.*;
 import org.nem.core.serialization.*;
@@ -16,7 +17,8 @@ public class OrderController
 {
     private final PrimaryBrokerConnector brokerConnector;
     private final SecureRequestMapper secureRequestMapper;
-    
+
+    @Autowired
     public OrderController(final PrimaryBrokerConnector brokerConnector, final SecureRequestMapper secureRequestMapper) {
         this.brokerConnector = brokerConnector;
         this.secureRequestMapper = secureRequestMapper;

@@ -7,6 +7,7 @@ import org.nem.ncc.model.*;
 import java.util.*;
 
 import org.nem.ncc.model.TradeHistoryTransaction;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.sharedobjects.client.*;
 
@@ -14,7 +15,8 @@ import com.sharedobjects.client.*;
 public class TradeHistoryController
 {
     private final PrimaryBrokerConnector brokerConnector;
-    
+
+    @Autowired
     public TradeHistoryController(final PrimaryBrokerConnector tmeConnector) {
         this.brokerConnector = tmeConnector;
     }

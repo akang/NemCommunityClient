@@ -3,6 +3,7 @@ package org.nem.ncc.controller;
 import org.nem.ncc.connector.*;
 import com.sharedobjects.nis.*;
 import org.nem.ncc.services.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.nem.ncc.controller.viewmodels.*;
 import org.nem.ncc.trading.storage.*;
@@ -20,7 +21,8 @@ public class TradingStorageController
     private final SecureRequestMapper secureRequestMapper;
     private final PrimaryNisConnector nisConnector;
     private final ChainServices chainServices;
-    
+
+    @Autowired
     public TradingStorageController(final TradingStorageServices tradingStorageServices, final TxBrokerConnector txBrokerConnector, final SecureRequestMapper secureRequestMapper, final PrimaryNisConnector nisConnector, final ChainServices chainServices) {
         this.tradingStorageServices = tradingStorageServices;
         this.txBrokerConnector = txBrokerConnector;

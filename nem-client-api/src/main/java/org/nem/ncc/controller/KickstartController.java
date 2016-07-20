@@ -6,6 +6,7 @@ import org.nem.core.serialization.*;
 import org.nem.ncc.model.*;
 import java.util.*;
 import org.nem.ncc.controller.requests.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -13,7 +14,8 @@ public class KickstartController
 {
     private final PrimaryBrokerConnector brokerConnector;
     private final BankApiBrokerConnector bankApiBrokerConnector;
-    
+
+    @Autowired
     public KickstartController(final PrimaryBrokerConnector brokerConnector, final BankApiBrokerConnector bankApiBrokerConnector) {
         this.brokerConnector = brokerConnector;
         this.bankApiBrokerConnector = bankApiBrokerConnector;

@@ -5,6 +5,8 @@ import org.nem.ncc.trading.storage.*;
 import org.nem.core.serialization.*;
 import org.nem.ncc.controller.viewmodels.*;
 import java.util.*;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.nem.ncc.controller.requests.*;
 
@@ -12,7 +14,8 @@ import org.nem.ncc.controller.requests.*;
 public class TradingOperationsController
 {
     private final TradingOperationsServices operationsServices;
-    
+
+    @Autowired
     public TradingOperationsController(final TradingOperationsServices operationsServices) {
         this.operationsServices = operationsServices;
     }

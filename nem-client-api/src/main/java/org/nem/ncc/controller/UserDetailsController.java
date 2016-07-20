@@ -4,6 +4,7 @@ import org.nem.ncc.services.*;
 import org.nem.ncc.connector.*;
 import org.nem.ncc.controller.viewmodels.*;
 import org.nem.core.model.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.nem.ncc.broker.*;
 import org.nem.ncc.wallet.*;
@@ -21,7 +22,8 @@ public class UserDetailsController
     private final TradingStorageServices tradingStorageServices;
     private final TradingTransactionsServices tradingTransactionsServices;
     private final TxBrokerConnector txBrokerConnector;
-    
+
+    @Autowired
     public UserDetailsController(final PrimaryBrokerConnector brokerConnector, final SecureRequestMapper secureRequestMapper, final TradingStorageServices tradingStorageServices, final TradingTransactionsServices tradingTransactionsServices, final TxBrokerConnector txBrokerConnector) {
         this.brokerConnector = brokerConnector;
         this.secureRequestMapper = secureRequestMapper;

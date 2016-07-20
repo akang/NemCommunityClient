@@ -4,6 +4,7 @@ import org.nem.ncc.connector.*;
 import org.nem.ncc.services.*;
 import org.nem.core.serialization.*;
 import org.nem.ncc.controller.viewmodels.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.nem.ncc.model.*;
 import java.util.*;
@@ -22,7 +23,8 @@ public class EscrowAccountController
     private final PrimaryBrokerConnector brokerConnector;
     private final TxBrokerConnector txBrokerConnector;
     private final TradingStorageServices tradingStorageServices;
-    
+
+    @Autowired
     public EscrowAccountController(final NemEscrowsLocator nemEscrowServices, final BtcEscrowsLocator btcEscrowLocator, final FiatEscrowsLocator fiatEscrowsLocator, final PrimaryBrokerConnector brokerConnector, final TxBrokerConnector txBrokerConnector, final TradingStorageServices tradingStorageServices) {
         this.nemEscrowServices = nemEscrowServices;
         this.btcEscrowLocator = btcEscrowLocator;

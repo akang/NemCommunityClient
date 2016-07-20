@@ -5,6 +5,7 @@ import org.nem.ncc.services.*;
 import org.nem.ncc.model.*;
 import java.util.*;
 import org.nem.ncc.trading.storage.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.nem.core.model.*;
 import org.nem.core.serialization.*;
@@ -15,7 +16,8 @@ public class TradePairController
     private final PrimaryBrokerConnector brokerConnector;
     private final SecureRequestMapper secureRequestMapper;
     private final TradePairsProvider tradePairsProvider;
-    
+
+    @Autowired
     public TradePairController(final PrimaryBrokerConnector brokerConnector, final SecureRequestMapper secureRequestMapper, final TradePairsProvider tradePairsProvider) {
         this.brokerConnector = brokerConnector;
         this.secureRequestMapper = secureRequestMapper;

@@ -2,6 +2,7 @@ package org.nem.ncc.controller;
 
 import org.nem.ncc.services.*;
 import org.nem.ncc.connector.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.nem.ncc.trading.storage.*;
 import org.nem.core.serialization.*;
@@ -17,7 +18,8 @@ public class BankAccountsController
 {
     private final TradingStorageServices tradingStorageServices;
     private final BankApiConnector bankApiConnector;
-    
+
+    @Autowired
     public BankAccountsController(final TradingStorageServices tradingStorageServices, final BankApiConnector bankApiConnector) {
         this.tradingStorageServices = tradingStorageServices;
         this.bankApiConnector = bankApiConnector;

@@ -5,6 +5,7 @@ import org.nem.ncc.services.*;
 import org.nem.ncc.controller.requests.*;
 import org.nem.ncc.trading.storage.*;
 import org.nem.ncc.model.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -13,7 +14,8 @@ public class BankTransferController
     private final BankApiConnector bankApiConnector;
     private final TradingStorageServices tradingStorageServices;
     private final BankApiBrokerConnector bankApiBrokerConnector;
-    
+
+    @Autowired
     public BankTransferController(final BankApiConnector bankApiConnector, final TradingStorageServices tradingStorageServices, final BankApiBrokerConnector bankApiBrokerConnector) {
         this.bankApiConnector = bankApiConnector;
         this.tradingStorageServices = tradingStorageServices;

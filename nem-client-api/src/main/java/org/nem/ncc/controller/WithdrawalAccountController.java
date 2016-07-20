@@ -5,6 +5,7 @@ import org.nem.ncc.connector.*;
 import org.nem.ncc.broker.*;
 import org.nem.ncc.wallet.*;
 import org.nem.ncc.trading.storage.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.nem.ncc.controller.requests.*;
 import org.nem.ncc.storable.entity.*;
@@ -16,7 +17,8 @@ public class WithdrawalAccountController
     private final PrimaryBrokerConnector brokerConnector;
     private final TradingStorageServices tradingStorageServices;
     private final TxBrokerConnector txBrokerConnector;
-    
+
+    @Autowired
     public WithdrawalAccountController(final SecureRequestMapper secureRequestMapper, final PrimaryBrokerConnector brokerConnector, final TradingStorageServices tradingStorageServices, final TxBrokerConnector txBrokerConnector) {
         this.secureRequestMapper = secureRequestMapper;
         this.brokerConnector = brokerConnector;
