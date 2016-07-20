@@ -99,7 +99,7 @@ public class DefaultBrokerConnector implements PrimaryBrokerConnector
     @Override
     public Collection<TradeHistoryTransaction> getTradeHistoryTransactions(final int tradePairCode, final int count, final int skip) {
         final TradeHistoryRequest request = new TradeHistoryRequest(tradePairCode, count, skip);
-        return this.brokerMapper.toClientModel(this.socketsManager.request((IKryoSerializable)request, Port.ADDITIONAL_INFO_LISTENER, com.sharedobjects.client.TradeHistoryTransaction[].class));
+        return this.brokerMapper.toClientModel(this.socketsManager.request((IKryoSerializable)request, Port.ADDITIONAL_INFO_LISTENER, TradeHistoryTransaction[].class));
     }
     
     @Override
@@ -154,7 +154,7 @@ public class DefaultBrokerConnector implements PrimaryBrokerConnector
         final XemEscrowBalanceRequest request = new XemEscrowBalanceRequest(xemEscrowPublicKeyStrings);
         final XemEscrowBalanceResponse[] balances = this.socketsManager.signedRequest(account, (IKryoSerializable)request, Port.ADDITIONAL_INFO_LISTENER, XemEscrowBalanceResponse[].class);
         Arrays.stream(balances).forEach(balance -> balance.setCreationTimeMills(xemPubKeys.stream().filter(pk -> Address.fromPublicKey(pk.getPublicKey()).getEncoded().equals(balance.getAddress())).findFirst().get().getCreated().toEpochMilli()));
-        return Arrays.stream(balances).map((Function<? super XemEscrowBalanceResponse, ?>)this.brokerMapper::toClientModel).collect((Collector<? super Object, ?, Collection<EscrowAccount>>)Collectors.toList());
+        return Arrays.stream(balances).map((Function<? super XemEscrowBalanceResponse, EscrowAccount>)this.brokerMapper::toClientModel).collect(Collectors.toList());
     }
     
     @Override
@@ -165,7 +165,7 @@ public class DefaultBrokerConnector implements PrimaryBrokerConnector
         final String[] addresses = btcAddresses.stream().map((Function<? super TradeAddress, ?>)TradeAddress::toString).toArray(String[]::new);
         final BtcEscrowBalanceRequest request = new BtcEscrowBalanceRequest(addresses);
         final BtcEscrowBalanceResponse[] responses = this.socketsManager.signedRequest(account, (IKryoSerializable)request, Port.ADDITIONAL_INFO_LISTENER, BtcEscrowBalanceResponse[].class);
-        return Arrays.stream(responses).map((Function<? super BtcEscrowBalanceResponse, ?>)this.brokerMapper::toClientModel).collect((Collector<? super Object, ?, Collection<BtcEscrowAccount>>)Collectors.toList());
+        return Arrays.stream(responses).map((Function<? super BtcEscrowBalanceResponse, BtcEscrowAccount>)this.brokerMapper::toClientModel).collect(Collectors.toList());
     }
     
     @Override
@@ -175,7 +175,7 @@ public class DefaultBrokerConnector implements PrimaryBrokerConnector
         final int[] instrumentCodes = addressesMap.values().stream().mapToInt(Integer::valueOf).toArray();
         final FiatEscrowBalanceRequest request = new FiatEscrowBalanceRequest(instrumentCodes, accountNumbers);
         final FiatEscrowBalanceResponse[] balances = this.socketsManager.signedRequest(account, (IKryoSerializable)request, Port.ADDITIONAL_INFO_LISTENER, FiatEscrowBalanceResponse[].class);
-        final Collection<EscrowAccount> accounts = Arrays.stream(balances).map((Function<? super FiatEscrowBalanceResponse, ?>)this.brokerMapper::toClientModel).collect((Collector<? super Object, ?, Collection<EscrowAccount>>)Collectors.toList());
+        final Collection<EscrowAccount> accounts = Arrays.stream(balances).map((Function<? super FiatEscrowBalanceResponse, EscrowAccount>)this.brokerMapper::toClientModel).collect(Collectors.toList());
         accounts.stream().forEach(balance -> balance.setCreated(addresses.stream().filter(discovered -> discovered.getAddress().equals(balance.getAddress())).findFirst().get().getCreated()));
         return accounts;
     }
@@ -232,7 +232,7 @@ public class DefaultBrokerConnector implements PrimaryBrokerConnector
     public Collection<KickstartReceiveAccount> getKickstartReceiveAccounts() {
         final InfoRequest infoRequest = new InfoRequest(InfoRequest.Type.KICKSTART_ACCOUNTS);
         final com.sharedobjects.client.KickstartReceiveAccount[] accounts = this.socketsManager.request((IKryoSerializable)infoRequest, Port.ADDITIONAL_INFO_LISTENER, com.sharedobjects.client.KickstartReceiveAccount[].class);
-        return Arrays.stream(accounts).map((Function<? super com.sharedobjects.client.KickstartReceiveAccount, ?>)this.brokerMapper::toClientModel).collect((Collector<? super Object, ?, Collection<KickstartReceiveAccount>>)Collectors.toList());
+        return Arrays.stream(accounts).map((Function<? super com.sharedobjects.client.KickstartReceiveAccount, KickstartReceiveAccount>)this.brokerMapper::toClientModel).collect(Collectors.toList());
     }
     
     private Amount getResponseFee(final InfoRequest request) {

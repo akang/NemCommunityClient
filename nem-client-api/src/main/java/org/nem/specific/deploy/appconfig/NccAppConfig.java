@@ -1,25 +1,44 @@
 package org.nem.specific.deploy.appconfig;
 
+import com.bim.CryptoAPIConnector;
+import com.bim.TransferManager;
+import com.bim.helper.INonceProvider;
+import com.bim.helper.NonceProvider;
 import com.sharedobjects.nis.PrimaryNisConnector;
 import org.nem.core.connect.*;
 import org.nem.core.connect.client.AsyncNisConnector;
 import org.nem.core.metadata.ApplicationMetaData;
 import org.nem.core.model.NetworkInfos;
 import org.nem.core.time.TimeProvider;
+import org.nem.core.utils.ExceptionUtils;
 import org.nem.deploy.*;
 import org.nem.ncc.*;
 import org.nem.ncc.addressbook.*;
 import org.nem.ncc.addressbook.storage.SecureAddressBookDescriptorFactory;
+import org.nem.ncc.broker.listener.MarketDepthListener;
+import org.nem.ncc.broker.listener.OrderUpdatesServices;
+import org.nem.ncc.broker.manager.LevelsManager;
 import org.nem.ncc.cache.*;
 import org.nem.ncc.connector.*;
+import org.nem.ncc.controller.TransactionController;
+import org.nem.ncc.escrow.BtcEscrowsLocator;
+import org.nem.ncc.escrow.BtcEscrowsServices;
+import org.nem.ncc.escrow.FiatEscrowsLocator;
+import org.nem.ncc.escrow.NemEscrowsLocator;
 import org.nem.ncc.model.graph.GraphViewModelFactory;
 import org.nem.ncc.services.*;
 import org.nem.ncc.time.synchronization.NccTimeSynchronizer;
+import org.nem.ncc.trading.storage.BinaryTradingStorageRepository;
+import org.nem.ncc.trading.storage.SecureTradingStorageDescriptorFactory;
+import org.nem.ncc.trading.storage.TradingStorageRepository;
 import org.nem.ncc.wallet.*;
 import org.nem.ncc.wallet.storage.SecureWalletDescriptorFactory;
 import org.nem.specific.deploy.NccConfigurationPolicy;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.*;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 
+import javax.annotation.PostConstruct;
 import java.io.File;
 import java.util.Collections;
 
@@ -29,6 +48,9 @@ import java.util.Collections;
 @Configuration
 public class NccAppConfig {
 	private DefaultAsyncNisConnector connector;
+	private PrimaryBrokerConnector brokerConnector;
+	@Autowired
+	private SimpMessagingTemplate simpMessagingTemplate;
 
 	@Bean
 	public AsyncNisConnector cloudConnector() {
@@ -51,6 +73,23 @@ public class NccAppConfig {
 				this.cloudConnector());
 	}
 
+	@Bean
+	public SecureRequestMapper secureRequestMapper() {
+		return new SecureRequestMapper(this.walletServices(), this.tradingStorageServices());
+	}
+
+	@Bean
+	public PrimaryBrokerConnector primaryBrokerConnector() {
+		if (this.brokerConnector != null) {
+			return this.brokerConnector;
+		}
+		final DefaultBrokerConnector brokerConnector = new DefaultBrokerConnector(this.commonConfiguration());
+		this.brokerConnector = brokerConnector;
+		final BrokerMapper brokerMapper = new BrokerMapper(this.tradeInstrumentsProvider(), this.tradePairsProvider(), this.primaryBrokerConnector());
+		brokerConnector.setBrokerMapper(brokerMapper);
+		brokerConnector.setTradeInstrumentsProvider(this.tradeInstrumentsProvider());
+		return brokerConnector;
+	}
 	private HttpMethodClient<ErrorResponseDeserializerUnion> httpMethodClient() {
 		final int CONNECTION_TIMEOUT = 10000;
 		final int SOCKET_TIMEOUT = 10000;
@@ -134,6 +173,7 @@ public class NccAppConfig {
 		);
 	}
 
+
 	@Bean
 	public AddressBookLocator addressBookLocator() {
 		return new AddressBookFileLocator(this.getNemFolder());
@@ -142,6 +182,11 @@ public class NccAppConfig {
 	@Bean
 	public AddressBookMapper addressBookMapper() {
 		return new AddressBookMapper();
+	}
+
+	@Bean
+	public TransactionController transactionController() {
+		return new TransactionController(this.transactionMapper(), this.primaryNisConnector());
 	}
 
 	@Bean
@@ -290,7 +335,7 @@ public class NccAppConfig {
     
     @Bean
     public INonceProvider nonceProvider() {
-        return (INonceProvider)new NonceProvider();
+        return new NonceProvider();
     }
     
     @Bean
@@ -300,7 +345,7 @@ public class NccAppConfig {
     
     @Bean
     public CryptoAPIConnector cryptoAPIConnector() {
-        return (CryptoAPIConnector)ExceptionUtils.propagate(() -> new CryptoAPIConnector(this.commonConfiguration().getCryptoApiAddress(), this.nonceProvider(), this.transferManager()), e -> new IllegalArgumentException("Wrong formatted crypto api address", e));
+        return (CryptoAPIConnector) ExceptionUtils.propagate(() -> new CryptoAPIConnector(this.commonConfiguration().getCryptoApiAddress(), this.nonceProvider(), this.transferManager()), e -> new IllegalArgumentException("Wrong formatted crypto api address", e));
     }
     
     @Bean

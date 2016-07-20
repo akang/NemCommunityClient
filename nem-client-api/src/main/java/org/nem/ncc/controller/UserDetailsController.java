@@ -47,7 +47,7 @@ public class UserDetailsController
     public void setupUserDetails(@RequestBody final UserDetailsRequest userDetails) {
         final WalletNamePasswordPair walletPair = userDetails.toWalletNamePasswordPair();
         final TradingStorage tradingStorage = this.tradingStorageServices.open(userDetails);
-        final boolean success = this.txBrokerConnector.setupUserDetails(((StorableEntityNamePasswordPair<WalletName, TEntityPassword, TDerived>)walletPair).getName(), tradingStorage.getTradingAccountAddress(), ((StorableEntityNamePasswordPair<TEntityName, WalletPassword, TDerived>)walletPair).getPassword(), userDetails.getUserDetails());
+        final boolean success = this.txBrokerConnector.setupUserDetails(((StorableEntityNamePasswordPair<WalletName, WalletPassword, WalletNamePasswordPair>)walletPair).getName(), tradingStorage.getTradingAccountAddress(), ((StorableEntityNamePasswordPair<WalletName, WalletPassword, WalletNamePasswordPair>)walletPair).getPassword(), userDetails.getUserDetails());
         if (!success) {
             throw new BrokerException();
         }
@@ -57,7 +57,7 @@ public class UserDetailsController
     public void updateUserDetails(@RequestBody final UserDetailsRequest request) {
         final WalletNamePasswordPair walletPair = request.toWalletNamePasswordPair();
         final TradingStorage tradingStorage = this.tradingStorageServices.open(request);
-        final boolean success = this.txBrokerConnector.updateUserDetails(((StorableEntityNamePasswordPair<WalletName, TEntityPassword, TDerived>)walletPair).getName(), tradingStorage.getTradingAccountAddress(), ((StorableEntityNamePasswordPair<TEntityName, WalletPassword, TDerived>)walletPair).getPassword(), request.getUserDetails());
+        final boolean success = this.txBrokerConnector.updateUserDetails(((StorableEntityNamePasswordPair<WalletName, WalletPassword, WalletNamePasswordPair>)walletPair).getName(), tradingStorage.getTradingAccountAddress(), ((StorableEntityNamePasswordPair<WalletName, WalletPassword, WalletNamePasswordPair>)walletPair).getPassword(), request.getUserDetails());
         if (!success) {
             throw new BrokerException();
         }

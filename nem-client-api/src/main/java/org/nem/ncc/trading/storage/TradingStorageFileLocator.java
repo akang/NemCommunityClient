@@ -8,7 +8,7 @@ import java.util.*;
 public class TradingStorageFileLocator extends StorableEntityFileLocator<StorableTradingStorage, TradingStorageName, TradingStorageFileExtension, TradingStorageDescriptor> implements TradingStorageLocator
 {
     public TradingStorageFileLocator(final File directory) {
-        super(directory, (dir, name) -> TradingStorageFileExtension.isValidAndHasDefaultExtension(name), (org.nem.core.serialization.ObjectDeserializer<StorableEntity>)MemoryTradingStorage::new, TradingStorageName::new, TradingStorageFileExtension::new, TradingStorageFileDescriptor::new);
+        super(directory, (dir, name) -> TradingStorageFileExtension.isValidAndHasDefaultExtension(name), MemoryTradingStorage::new, TradingStorageName::new, TradingStorageFileExtension::new, TradingStorageFileDescriptor::new);
     }
     
     @Override

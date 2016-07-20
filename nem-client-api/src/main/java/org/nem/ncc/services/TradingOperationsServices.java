@@ -41,7 +41,7 @@ public class TradingOperationsServices
     }
     
     private TradingOperation toTradingOperation(final TradingOperationType type, final TransactionMetaDataPair metaDataPair, final Address address) {
-        final BlockHeight lastBlockHeight = (BlockHeight)this.nisConnector.forward((Function)this.chainServices::getChainHeightAsync);
+        final BlockHeight lastBlockHeight = (BlockHeight)this.nisConnector.forward(this.chainServices::getChainHeightAsync);
         return new TradingOperation(type, TransactionToViewModelMapper.map(metaDataPair, address, lastBlockHeight));
     }
     
@@ -58,7 +58,7 @@ public class TradingOperationsServices
     
     public List<TradingOperation> getAllOperations(final TradingStorageName name) {
         try {
-            return this.tradingOperationSources.keySet().stream().map(type -> this.getOperations(name, type)).flatMap(coll -> coll.stream()).sorted((op1, op2) -> Long.compare(op2.getTransaction().getTimeStamp(), op1.getTransaction().getTimeStamp())).collect((Collector<? super Object, ?, List<TradingOperation>>)Collectors.toList());
+            return this.tradingOperationSources.keySet().stream().map(type -> this.getOperations(name, type)).flatMap(coll -> coll.stream()).sorted((op1, op2) -> Long.compare(op2.getTransaction().getTimeStamp(), op1.getTransaction().getTimeStamp())).collect(Collectors.toList());
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -68,9 +68,9 @@ public class TradingOperationsServices
     
     public List<TradingOperation> getOperations(final TradingStorageName name, final TradingOperationType type) {
         final Wallet wallet = this.walletServices.get(new WalletName(name.toString()));
-        final Collection<Address> accounts = wallet.getOtherAccounts().stream().map((Function<? super Object, ?>)WalletAccount::getAddress).collect((Collector<? super Object, ?, Collection<Address>>)Collectors.toList());
+        final Collection<Address> accounts = wallet.getOtherAccounts().stream().map(WalletAccount::getAddress).collect(Collectors.toList());
         accounts.add(wallet.getPrimaryAccount().getAddress());
-        return this.tradingOperationSources.get(type).apply(name).stream().map(tx -> this.toTradingOperation(type, tx, this.getRecipient((Transaction)tx.getEntity()))).map(tx -> this.fixDirection(tx, accounts)).collect((Collector<? super Object, ?, List<TradingOperation>>)Collectors.toList());
+        return this.tradingOperationSources.get(type).apply(name).stream().map(tx -> this.toTradingOperation(type, tx, this.getRecipient((Transaction)tx.getEntity()))).map(tx -> this.fixDirection(tx, accounts)).collect(Collectors.toList());
     }
     
     private Address getRecipient(final Transaction tx) {

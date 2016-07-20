@@ -50,7 +50,7 @@ public class OrderUpdatesEmitter extends ReceiveManager
         }
         final Object requestBody = this.readData(request.getRequestBody());
         if (requestBody instanceof com.sharedobjects.client.OrderUpdate) {
-            this.notifyConsumers(this.brokerMapper.toClientModel((com.sharedobjects.client.OrderUpdate)requestBody));
+            this.notifyConsumers(this.brokerMapper.toClientModel((OrderUpdate)requestBody));
         }
         if (requestBody instanceof com.sharedobjects.trading.Match) {
             this.notifyConsumers(this.brokerMapper.toClientModel((com.sharedobjects.trading.Match)requestBody, this.traderAccount));

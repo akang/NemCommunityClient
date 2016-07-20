@@ -1,5 +1,6 @@
 package org.nem.ncc.connector;
 
+import com.sharedobjects.nis.PrimaryNisConnector;
 import org.hamcrest.core.IsEqual;
 import org.junit.*;
 import org.mockito.Mockito;

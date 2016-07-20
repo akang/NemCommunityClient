@@ -49,7 +49,7 @@ public abstract class DefaultEscrowsLocator<TEscrow extends EscrowAccount, TDisc
     
     public Collection<TDiscoveredEntity> discoverEntities(final TradingStorage tradingStorage) {
         final EscrowAccountTransmittersResponse[] responses = this.transmittersResponseSupplier.get();
-        return Arrays.stream(responses).map(response -> this.discoverEntities(response, tradingStorage)).flatMap((java.util.function.Function<? super Object, ? extends Stream<?>>)Collection::stream).collect((Collector<? super Object, ?, Collection<TDiscoveredEntity>>)Collectors.toList());
+        return Arrays.stream(responses).map(response -> this.discoverEntities(response, tradingStorage)).flatMap(Collection::stream).collect(Collectors.toList());
     }
     
     private Collection<TDiscoveredEntity> discoverEntities(final EscrowAccountTransmittersResponse transmittersResponse, final TradingStorage tradingStorage) {
@@ -62,7 +62,7 @@ public abstract class DefaultEscrowsLocator<TEscrow extends EscrowAccount, TDisc
             final long lastScannedTxId = ((TransactionMetaData)publishTxs.get(publishTxs.size() - 1).getMetaData()).getId();
             tradingStorage.setLastScannedTxId(instrumentCode, lastScannedTxId);
         }
-        return publishTxs.stream().map(txPair -> this.extractEntity(txPair, to)).collect((Collector<? super Object, ?, Collection<TDiscoveredEntity>>)Collectors.toList());
+        return publishTxs.stream().map(txPair -> this.extractEntity(txPair, to)).collect(Collectors.toList());
     }
     
     private TDiscoveredEntity extractEntity(final TransactionMetaDataPair trPair, final Address recipient) {

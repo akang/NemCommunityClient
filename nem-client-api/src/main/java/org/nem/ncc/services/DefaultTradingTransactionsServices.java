@@ -32,7 +32,7 @@ public class DefaultTradingTransactionsServices implements TradingTransactionsSe
     }
     
     private List<Address> getNemEscrowAddresses(final TradingStorageName name) {
-        return this.tradingStorageServices.get(name).getXemEscrowPublicKeys().stream().map(pk -> Address.fromPublicKey(pk.getPublicKey())).collect((Collector<? super Object, ?, List<Address>>)Collectors.toList());
+        return this.tradingStorageServices.get(name).getXemEscrowPublicKeys().stream().map(pk -> Address.fromPublicKey(pk.getPublicKey())).collect(Collectors.toList());
     }
     
     private Address getNemWithdrawalAddress(final TradingStorageName name) {
@@ -45,13 +45,13 @@ public class DefaultTradingTransactionsServices implements TradingTransactionsSe
     
     private Collection<Address> getAccountAddresses(final TradingStorageName name) {
         final Wallet wallet = this.walletServices.get(new WalletName(name.toString()));
-        final Collection<Address> accountAddresses = wallet.getOtherAccounts().stream().map(account -> account.getAddress()).collect((Collector<? super Object, ?, Collection<Address>>)Collectors.toList());
+        final Collection<Address> accountAddresses = wallet.getOtherAccounts().stream().map(account -> account.getAddress()).collect(Collectors.toList());
         accountAddresses.add(wallet.getPrimaryAccount().getAddress());
         return accountAddresses;
     }
     
     private boolean isTxFromAnyOfAddresses(final Collection<Address> accountAddresses, final Transaction transaction) {
-        final List<Address> txAddresses = transaction.getAccounts().stream().map(acc -> acc.getAddress()).collect((Collector<? super Object, ?, List<Address>>)Collectors.toList());
+        final List<Address> txAddresses = transaction.getAccounts().stream().map(acc -> acc.getAddress()).collect(Collectors.toList());
         txAddresses.retainAll(accountAddresses);
         return txAddresses.size() > 0;
     }
@@ -66,7 +66,7 @@ public class DefaultTradingTransactionsServices implements TradingTransactionsSe
         final List<TransactionMetaDataPair> operations = new ArrayList<TransactionMetaDataPair>();
         final Collection<Address> accountAddresses = this.getAccountAddresses(name);
         final Collection<Address> nemEscrowAddresses = this.getNemEscrowAddresses(name);
-        nemEscrowAddresses.stream().map(escrow -> this.getTransactions(TransactionDirection.INCOMING, escrow).stream().filter(tx -> this.isTxFromAnyOfAddresses(accountAddresses, (Transaction)tx.getEntity())).filter(tx -> this.hasEmptyMessage((Transaction)tx.getEntity())).collect((Collector<? super Object, ?, List<? super Object>>)Collectors.toList())).forEach(ops -> operations.addAll(ops));
+        nemEscrowAddresses.stream().map(escrow -> this.getTransactions(TransactionDirection.INCOMING, escrow).stream().filter(tx -> this.isTxFromAnyOfAddresses(accountAddresses, (Transaction)tx.getEntity())).filter(tx -> this.hasEmptyMessage((Transaction)tx.getEntity())).collect(Collectors.toList())).forEach(ops -> operations.addAll(ops));
         return operations;
     }
     
@@ -87,7 +87,7 @@ public class DefaultTradingTransactionsServices implements TradingTransactionsSe
         if (nemWithdrawalAddress == null) {
             return new ArrayList<TransactionMetaDataPair>();
         }
-        return this.getTransactions(TransactionDirection.INCOMING, nemWithdrawalAddress).stream().filter(tx -> this.isTransactionFromMyEscrow((Transaction)tx.getEntity(), nemEscrowAddresses)).filter(tx -> this.hasEmptyMessage((Transaction)tx.getEntity())).collect((Collector<? super Object, ?, List<TransactionMetaDataPair>>)Collectors.toList());
+        return this.getTransactions(TransactionDirection.INCOMING, nemWithdrawalAddress).stream().filter(tx -> this.isTransactionFromMyEscrow((Transaction)tx.getEntity(), nemEscrowAddresses)).filter(tx -> this.hasEmptyMessage((Transaction)tx.getEntity())).collect(Collectors.toList());
     }
     
     @Override
@@ -103,22 +103,22 @@ public class DefaultTradingTransactionsServices implements TradingTransactionsSe
     
     @Override
     public List<TransactionMetaDataPair> getUserDetailsSetupTxs(final TradingStorageName name) {
-        return this.getFromTradingAddressToBroker(name).filter(tx -> this.isOfType(tx, NemRequestType.ADDING_USER_DETAILS)).collect((Collector<? super TransactionMetaDataPair, ?, List<TransactionMetaDataPair>>)Collectors.toList());
+        return this.getFromTradingAddressToBroker(name).filter(tx -> this.isOfType(tx, NemRequestType.ADDING_USER_DETAILS)).collect(Collectors.toList());
     }
     
     @Override
     public List<TransactionMetaDataPair> getUserDetailsUpdateTxs(final TradingStorageName name) {
-        return this.getFromTradingAddressToBroker(name).filter(tx -> this.isOfType(tx, NemRequestType.UPDATING_USER_DETAILS)).collect((Collector<? super TransactionMetaDataPair, ?, List<TransactionMetaDataPair>>)Collectors.toList());
+        return this.getFromTradingAddressToBroker(name).filter(tx -> this.isOfType(tx, NemRequestType.UPDATING_USER_DETAILS)).collect(Collectors.toList());
     }
     
     @Override
     public List<TransactionMetaDataPair> getBtcWithdrawalAccountSetTxs(final TradingStorageName name) {
-        return this.getFromTradingAddressToBroker(name).filter(tx -> this.isOfType(tx, NemRequestType.ADDING_BTC_WITHDRAWAL_ACCOUNT)).collect((Collector<? super TransactionMetaDataPair, ?, List<TransactionMetaDataPair>>)Collectors.toList());
+        return this.getFromTradingAddressToBroker(name).filter(tx -> this.isOfType(tx, NemRequestType.ADDING_BTC_WITHDRAWAL_ACCOUNT)).collect(Collectors.toList());
     }
     
     @Override
     public List<TransactionMetaDataPair> getXemWithdrawalAccountSetTxs(final TradingStorageName name) {
-        return this.getFromTradingAddressToBroker(name).filter(tx -> this.isOfType(tx, NemRequestType.ADDING_XEM_WITHDRAWAL_ACCOUNT)).collect((Collector<? super TransactionMetaDataPair, ?, List<TransactionMetaDataPair>>)Collectors.toList());
+        return this.getFromTradingAddressToBroker(name).filter(tx -> this.isOfType(tx, NemRequestType.ADDING_XEM_WITHDRAWAL_ACCOUNT)).collect(Collectors.toList());
     }
     
     private Stream<TransactionMetaDataPair> getFromTradingAddressToBroker(final TradingStorageName name) {

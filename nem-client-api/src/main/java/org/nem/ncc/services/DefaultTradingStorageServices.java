@@ -26,7 +26,7 @@ public class DefaultTradingStorageServices implements TradingStorageServices
     }
     
     public List<TradingStorageName> getOpenTradingStorageNames() {
-        return this.tradingStorages.keySet().stream().collect((Collector<? super Object, ?, List<TradingStorageName>>)Collectors.toList());
+        return this.tradingStorages.keySet().stream().collect(Collectors.toList());
     }
     
     @Override
@@ -40,7 +40,7 @@ public class DefaultTradingStorageServices implements TradingStorageServices
     
     @Override
     public TradingStorage open(final TradingStorageNamePasswordPair pair) {
-        final TradingStorage tradingStorage = this.tradingStorages.getOrDefault(((StorableEntityNamePasswordPair<Object, TEntityPassword, TDerived>)pair).getName(), null);
+        final TradingStorage tradingStorage = this.tradingStorages.getOrDefault(((StorableEntityNamePasswordPair<TradingStorageName, TradingStoragePassword, TradingStorageNamePasswordPair>)pair).getName(), null);
         final TradingStorageDescriptor descriptor = this.descriptorFactory.openExisting(pair, new TradingStorageFileExtension());
         if (tradingStorage != null) {
             this.repository.load(descriptor);
@@ -65,7 +65,7 @@ public class DefaultTradingStorageServices implements TradingStorageServices
     @Override
     public TradingStorage create(final TradingStorageNamePasswordPair pair) {
         final TradingStorageDescriptor descriptor = this.descriptorFactory.createNew(pair, new TradingStorageFileExtension());
-        final AutoSavingTradingStorage tradingStorage = this.wrapTradingStorage(new MemoryTradingStorage(((StorableEntityNamePasswordPair<TradingStorageName, TEntityPassword, TDerived>)pair).getName()), descriptor);
+        final AutoSavingTradingStorage tradingStorage = this.wrapTradingStorage(new MemoryTradingStorage(((StorableEntityNamePasswordPair<TradingStorageName, TradingStoragePassword, TradingStorageNamePasswordPair>)pair).getName()), descriptor);
         tradingStorage.save();
         return tradingStorage;
     }
@@ -77,14 +77,14 @@ public class DefaultTradingStorageServices implements TradingStorageServices
     
     @Override
     public void move(final TradingStorageNamePasswordPair originalPair, final TradingStorageNamePasswordPair desiredPair) {
-        final boolean hasNameChange = !((StorableEntityNamePasswordPair<TradingStorageName, TEntityPassword, TDerived>)originalPair).getName().equals(((StorableEntityNamePasswordPair<Object, TEntityPassword, TDerived>)desiredPair).getName());
+        final boolean hasNameChange = !((StorableEntityNamePasswordPair<TradingStorageName, TradingStoragePassword, TradingStorageNamePasswordPair>)originalPair).getName().equals(((StorableEntityNamePasswordPair<TradingStorageName, TradingStoragePassword, TradingStorageNamePasswordPair>)desiredPair).getName());
         final TradingStorageDescriptor newTradingStorageDescriptor = hasNameChange ? this.descriptorFactory.createNew(desiredPair, new TradingStorageFileExtension()) : this.descriptorFactory.openExisting(desiredPair, new TradingStorageFileExtension());
         final TradingStorageDescriptor originalTradingStorageDescriptor = this.descriptorFactory.openExisting(originalPair, new TradingStorageFileExtension());
         final TradingStorage originalTradingStorage = this.repository.load(originalTradingStorageDescriptor);
-        final AutoSavingTradingStorage addressBook = this.wrapTradingStorage(new MemoryTradingStorage(((StorableEntityNamePasswordPair<TradingStorageName, TEntityPassword, TDerived>)desiredPair).getName(), originalTradingStorage.getXemEscrowPublicKeys(), originalTradingStorage.getBtcEscrowAddresses(), originalTradingStorage.getFiatEscrowAddresses(), originalTradingStorage.getFiatAccounts(), originalTradingStorage.getLastScannedTxIds(), originalTradingStorage.getTradingAccountAddress(), originalTradingStorage.getUserId()), newTradingStorageDescriptor);
+        final AutoSavingTradingStorage addressBook = this.wrapTradingStorage(new MemoryTradingStorage(((StorableEntityNamePasswordPair<TradingStorageName, TradingStoragePassword, TradingStorageNamePasswordPair>)desiredPair).getName(), originalTradingStorage.getXemEscrowPublicKeys(), originalTradingStorage.getBtcEscrowAddresses(), originalTradingStorage.getFiatEscrowAddresses(), originalTradingStorage.getFiatAccounts(), originalTradingStorage.getLastScannedTxIds(), originalTradingStorage.getTradingAccountAddress(), originalTradingStorage.getUserId()), newTradingStorageDescriptor);
         addressBook.save();
         if (hasNameChange) {
-            this.tradingStorages.remove(((StorableEntityNamePasswordPair<Object, TEntityPassword, TDerived>)originalPair).getName());
+            this.tradingStorages.remove(((StorableEntityNamePasswordPair<TradingStorageName, TradingStoragePassword, TradingStorageNamePasswordPair>)originalPair).getName());
             originalTradingStorageDescriptor.delete();
         }
     }
@@ -101,7 +101,7 @@ public class DefaultTradingStorageServices implements TradingStorageServices
     
     @Override
     public BankAccount tryFindAccount(final TradeAddress address) {
-        return this.tradingStorages.values().stream().map((Function<? super TradingStorage, ?>)TradingStorage::getFiatAccounts).flatMap(bankAccounts -> bankAccounts.stream()).filter(bankAccount -> bankAccount.getAddress().equals(address)).findFirst().orElseThrow(() -> new TradingStorageException(TradingStorageException.Code.NO_FIAT_ACCOUNT_WITH_ADDRESS));
+        return this.tradingStorages.values().stream().map((Function<? super TradingStorage, Collection<BankAccount>>)TradingStorage::getFiatAccounts).flatMap(bankAccounts -> bankAccounts.stream()).filter(bankAccount -> bankAccount.getAddress().equals(address)).findFirst().orElseThrow(() -> new TradingStorageException(TradingStorageException.Code.NO_FIAT_ACCOUNT_WITH_ADDRESS));
     }
     
     private AutoSavingTradingStorage wrapTradingStorage(final StorableTradingStorage tradingStorage, final TradingStorageDescriptor descriptor) {

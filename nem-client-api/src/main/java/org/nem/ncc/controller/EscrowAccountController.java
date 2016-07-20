@@ -34,12 +34,12 @@ public class EscrowAccountController
     
     @RequestMapping(value = { "/trading/accounts/escrow/xem" }, method = { RequestMethod.POST })
     public SerializableList<EscrowAccountViewModel> getXemEscrows(@RequestBody final TradingStorageName name) {
-        return (SerializableList<EscrowAccountViewModel>)new SerializableList((Collection)EscrowMapper.toViewModelList(((DefaultEscrowsLocator<? extends EscrowAccount, TDiscoveredEntity>)this.nemEscrowServices).getEscrowBalances(name)));
+        return (SerializableList<EscrowAccountViewModel>)new SerializableList((Collection)EscrowMapper.toViewModelList(((DefaultEscrowsLocator<? extends EscrowAccount, DiscoveredPublicKey>)this.nemEscrowServices).getEscrowBalances(name)));
     }
     
     @RequestMapping(value = { "/trading/accounts/escrow/fiat" }, method = { RequestMethod.POST })
     public SerializableList<EscrowAccountViewModel> getFiatEscrows(@RequestBody final TradingStorageName name) {
-        return (SerializableList<EscrowAccountViewModel>)new SerializableList((Collection)EscrowMapper.toViewModelList(((DefaultEscrowsLocator<? extends EscrowAccount, TDiscoveredEntity>)this.fiatEscrowsLocator).getEscrowBalances(name)));
+        return (SerializableList<EscrowAccountViewModel>)new SerializableList((Collection)EscrowMapper.toViewModelList((this.fiatEscrowsLocator).getEscrowBalances(name)));
     }
     
     @RequestMapping(value = { "/trading/accounts/escrow/btc" }, method = { RequestMethod.POST })
@@ -51,13 +51,13 @@ public class EscrowAccountController
     public SerializableList<EscrowAccountViewModel> getEscrowAccounts(@RequestBody final TradingStorageName name) {
         Stream<EscrowAccountViewModel> escrows = Stream.concat(this.getBtcEscrows(name).asCollection().stream(), this.getXemEscrows(name).asCollection().stream());
         escrows = Stream.concat((Stream<? extends EscrowAccountViewModel>)escrows, this.getFiatEscrows(name).asCollection().stream());
-        return (SerializableList<EscrowAccountViewModel>)new SerializableList((Collection)escrows.collect((Collector<? super EscrowAccountViewModel, ?, List<? super EscrowAccountViewModel>>)Collectors.toList()));
+        return (SerializableList<EscrowAccountViewModel>)new SerializableList((Collection)escrows.collect(Collectors.toList()));
     }
     
     @RequestMapping(value = { "/trading/accounts/escrow/btc/request" }, method = { RequestMethod.POST })
     public void requestNewBtcEscrowAccount(@RequestBody final TradingStorageNamePasswordPair pair) {
         final WalletNamePasswordPair walletPair = pair.toWalletNamePasswordPair();
         final TradingStorage tradingStorage = this.tradingStorageServices.open(pair);
-        this.txBrokerConnector.requestNewBtcEscrowAccount(((StorableEntityNamePasswordPair<WalletName, TEntityPassword, TDerived>)walletPair).getName(), tradingStorage.getTradingAccountAddress(), ((StorableEntityNamePasswordPair<TEntityName, WalletPassword, TDerived>)walletPair).getPassword());
+        this.txBrokerConnector.requestNewBtcEscrowAccount(((StorableEntityNamePasswordPair<WalletName, WalletPassword, WalletNamePasswordPair>)walletPair).getName(), tradingStorage.getTradingAccountAddress(), ((StorableEntityNamePasswordPair<WalletName, WalletPassword, WalletNamePasswordPair>)walletPair).getPassword());
     }
 }

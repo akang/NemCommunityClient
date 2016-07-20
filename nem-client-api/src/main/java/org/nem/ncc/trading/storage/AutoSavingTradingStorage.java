@@ -94,7 +94,7 @@ public class AutoSavingTradingStorage implements StorableTradingStorage
     
     @Override
     public TradingStorageFileExtension getFileExtension() {
-        return ((StorableEntity<TEntityName, TradingStorageFileExtension>)this.tradingStorage).getFileExtension();
+        return ((StorableEntity<TradingStorageName, TradingStorageFileExtension>)this.tradingStorage).getFileExtension();
     }
     
     public StorableTradingStorage deserialize(final Deserializer deserializer) {

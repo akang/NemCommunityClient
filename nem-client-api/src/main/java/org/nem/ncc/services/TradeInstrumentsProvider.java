@@ -31,7 +31,7 @@ public class TradeInstrumentsProvider extends UpdatableDataProvider<Map<Integer,
         if (instruments == null) {
             return null;
         }
-        return instruments.stream().collect(Collectors.toMap((Function<? super TradeInstrument, ? extends Integer>)TradeInstrument::getCode, (Function<? super TradeInstrument, ? extends TradeInstrument>)Function.identity()));
+        return instruments.stream().collect(Collectors.toMap((Function<? super TradeInstrument, ? extends Integer>)TradeInstrument::getCode, Function.identity()));
     }
     
     public TradeInstrument getBtc() {

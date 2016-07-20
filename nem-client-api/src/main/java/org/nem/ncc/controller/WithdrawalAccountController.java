@@ -28,7 +28,7 @@ public class WithdrawalAccountController
     public void setupBtcWithdrawalAccount(@RequestBody final BtcWithdrawalAccountRequest request) {
         final WalletNamePasswordPair walletPair = request.toWalletNamePasswordPair();
         final TradingStorage tradingStorage = this.tradingStorageServices.open(request);
-        final boolean success = this.txBrokerConnector.setBtcWithdrawalAccount(request.getEncodedWithdrawalAddress(), ((StorableEntityNamePasswordPair<WalletName, TEntityPassword, TDerived>)walletPair).getName(), tradingStorage.getTradingAccountAddress(), ((StorableEntityNamePasswordPair<TEntityName, WalletPassword, TDerived>)walletPair).getPassword());
+        final boolean success = this.txBrokerConnector.setBtcWithdrawalAccount(request.getEncodedWithdrawalAddress(), ((StorableEntityNamePasswordPair<WalletName, WalletPassword, WalletNamePasswordPair>)walletPair).getName(), tradingStorage.getTradingAccountAddress(), ((StorableEntityNamePasswordPair<WalletName, WalletPassword, WalletNamePasswordPair>)walletPair).getPassword());
         if (!success) {
             throw new BrokerException();
         }
@@ -37,7 +37,7 @@ public class WithdrawalAccountController
     @RequestMapping(value = { "/trading/accounts/withdrawal/fiat/set" }, method = { RequestMethod.POST })
     public void setFiatWithdrawalAccount(@RequestBody final FiatWithdrawalAccountRequest request) {
         final WalletNamePasswordPair walletPair = request.toWalletNamePasswordPair();
-        final boolean success = this.txBrokerConnector.setFiatWithdrawalAccount(request.getAccountNumber(), request.getTradeInstrument(), this.secureRequestMapper.toTradingAccount(request).getAddress(), ((StorableEntityNamePasswordPair<WalletName, TEntityPassword, TDerived>)walletPair).getName(), ((StorableEntityNamePasswordPair<TEntityName, WalletPassword, TDerived>)walletPair).getPassword());
+        final boolean success = this.txBrokerConnector.setFiatWithdrawalAccount(request.getAccountNumber(), request.getTradeInstrument(), this.secureRequestMapper.toTradingAccount(request).getAddress(), ((StorableEntityNamePasswordPair<WalletName, WalletPassword, WalletNamePasswordPair>)walletPair).getName(), ((StorableEntityNamePasswordPair<WalletName, WalletPassword, WalletNamePasswordPair>)walletPair).getPassword());
         if (!success) {
             throw new BrokerException();
         }
@@ -65,7 +65,7 @@ public class WithdrawalAccountController
     public void setXemWithdrawalAccountPrice(@RequestBody final XemWithdrawalAccountRequest request) {
         final WalletNamePasswordPair walletPair = request.toWalletNamePasswordPair();
         final TradingStorage tradingStorage = this.tradingStorageServices.open(request);
-        final boolean success = this.txBrokerConnector.setXemWithdrawalAccount(request.getAccountPublicKey(), ((StorableEntityNamePasswordPair<WalletName, TEntityPassword, TDerived>)walletPair).getName(), tradingStorage.getTradingAccountAddress(), ((StorableEntityNamePasswordPair<TEntityName, WalletPassword, TDerived>)walletPair).getPassword());
+        final boolean success = this.txBrokerConnector.setXemWithdrawalAccount(request.getAccountPublicKey(), ((StorableEntityNamePasswordPair<WalletName, WalletPassword, WalletNamePasswordPair>)walletPair).getName(), tradingStorage.getTradingAccountAddress(), ((StorableEntityNamePasswordPair<WalletName, WalletPassword, WalletNamePasswordPair>)walletPair).getPassword());
         if (!success) {
             throw new BrokerException();
         }

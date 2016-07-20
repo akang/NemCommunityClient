@@ -10,6 +10,6 @@ import java.util.function.*;
 public class SecureTradingStorageDescriptorFactory extends SecureStorableEntityDescriptorFactory<StorableTradingStorage, TradingStorageName, TradingStoragePassword, TradingStorageNamePasswordPair, TradingStorageFileExtension, TradingStorageDescriptor, TradingStorageFileDescriptorFactory, SecureTradingStorageDescriptor> implements TradingStorageDescriptorFactory
 {
     public SecureTradingStorageDescriptorFactory(final File directory) {
-        super(directory, (org.nem.core.serialization.ObjectDeserializer<StorableEntity>)MemoryTradingStorage::new, TradingStorageName::new, TradingStorageFileExtension::new, (QuadFunction<File, org.nem.core.serialization.ObjectDeserializer<StorableEntity>, Function<String, TradingStorageName>, Function<String, TradingStorageFileExtension>, TradingStorageDescriptor>)TradingStorageFileDescriptor::new, SecureTradingStorageDescriptor::new, TradingStorageFileDescriptorFactory::new);
+        super(directory, MemoryTradingStorage::new, TradingStorageName::new, TradingStorageFileExtension::new, TradingStorageFileDescriptor::new, SecureTradingStorageDescriptor::new, TradingStorageFileDescriptorFactory::new);
     }
 }

@@ -54,9 +54,9 @@ public class TradingStorageController
     public void setTradingAccount(@RequestBody final TradingAccountChangeRequest request) {
         final TradingStorage tradingStorage = this.tradingStorageServices.get(request.getName());
         final WalletNamePasswordPair walletPair = request.toWalletNamePasswordPair();
-        final boolean success = this.txBrokerConnector.updateTradingAccount(((StorableEntityNamePasswordPair<WalletName, TEntityPassword, TDerived>)walletPair).getName(), tradingStorage.getTradingAccountAddress(), ((StorableEntityNamePasswordPair<TEntityName, WalletPassword, TDerived>)walletPair).getPassword(), this.secureRequestMapper.toTradingAccount(request.getName()).getAddress().getPublicKey());
+        final boolean success = this.txBrokerConnector.updateTradingAccount(((StorableEntityNamePasswordPair<WalletName, WalletPassword, WalletNamePasswordPair>)walletPair).getName(), tradingStorage.getTradingAccountAddress(), ((StorableEntityNamePasswordPair<WalletName, WalletPassword, WalletNamePasswordPair>)walletPair).getPassword(), this.secureRequestMapper.toTradingAccount(request.getName()).getAddress().getPublicKey());
         if (success) {
-            final BlockHeight lastBlockHeight = (BlockHeight)this.nisConnector.forward((Function)this.chainServices::getChainHeightAsync);
+            final BlockHeight lastBlockHeight = (BlockHeight)this.nisConnector.forward(this.chainServices::getChainHeightAsync);
             tradingStorage.setPendingPublicKey(this.secureRequestMapper.toTradingAccount(request.getName()).getAddress().getPublicKey().toString());
             tradingStorage.setChangedPublicKeyTx(lastBlockHeight.getRaw());
         }

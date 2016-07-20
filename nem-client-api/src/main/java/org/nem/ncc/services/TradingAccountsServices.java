@@ -37,27 +37,27 @@ public class TradingAccountsServices
     }
     
     private Collection<TradeInstrument> getFiatInstruments() {
-        return this.brokerConnector.getTradeInstruments().stream().filter(TradeInstrument::isFiat).collect((Collector<? super TradeInstrument, ?, Collection<TradeInstrument>>)Collectors.toList());
+        return this.brokerConnector.getTradeInstruments().stream().filter(TradeInstrument::isFiat).collect(Collectors.toList());
     }
     
     public Collection<TradingAccountsViewModel> getFiatAccounts(final TradingStorageName name) {
         final Account tradingAccount = this.secureRequestMapper.toTradingAccount(name);
-        final Collection<EscrowAccount> fiatEscrows = ((DefaultEscrowsLocator<EscrowAccount, TDiscoveredEntity>)this.fiatEscrowsLocator).getEscrowBalances(name);
-        final Collection<Object> collection;
-        final Collection<EscrowAccountViewModel> escrowAccounts;
-        final Account account;
-        final WithdrawalAccount withdrawalAccount;
-        final WithdrawalAccountViewModel viewModel;
+        final Collection<EscrowAccount> fiatEscrows = this.fiatEscrowsLocator.getEscrowBalances(name);
+        Collection<? extends EscrowAccount> collection = null; //Hung TODO
+        //final Collection<EscrowAccountViewModel> escrowAccounts;
+        final Account account = null; //Hung TODO
+        //final WithdrawalAccount withdrawalAccount;
+        //final WithdrawalAccountViewModel viewModel;
         return this.getFiatInstruments().stream().map(instrument -> {
-            escrowAccounts = EscrowMapper.toViewModelList((Collection<? extends EscrowAccount>)collection.stream().filter(escrow -> escrow.getTradeInstrument().getCode() == instrument.getCode()).collect((Collector<? super Object, ?, List<Object>>)Collectors.toList()));
-            withdrawalAccount = this.brokerConnector.getFiatWithdrawalAccount(account, instrument.getCode());
-            viewModel = new WithdrawalAccountViewModel(withdrawalAccount, WithdrawalAccountViewModel.Status.PRESENT);
+            final Collection<EscrowAccountViewModel> escrowAccounts = EscrowMapper.toViewModelList((Collection<? extends EscrowAccount>)collection.stream().filter(escrow -> escrow.getTradeInstrument().getCode() == instrument.getCode()).collect(Collectors.toList()));
+            final WithdrawalAccount withdrawalAccount = this.brokerConnector.getFiatWithdrawalAccount(account, instrument.getCode());
+            final WithdrawalAccountViewModel viewModel = new WithdrawalAccountViewModel(withdrawalAccount, WithdrawalAccountViewModel.Status.PRESENT);
             return new TradingAccountsViewModel(instrument, viewModel, escrowAccounts, this.getLatestEscrowAccount(escrowAccounts));
-        }).collect((Collector<? super Object, ?, Collection<TradingAccountsViewModel>>)Collectors.toList());
+        }).collect(Collectors.toList());
     }
     
     public TradingAccountsViewModel getXemAccounts(final TradingStorageName name) {
-        final Collection<EscrowAccountViewModel> escrows = EscrowMapper.toViewModelList(((DefaultEscrowsLocator<? extends EscrowAccount, TDiscoveredEntity>)this.nemEscrowServices).getEscrowBalances(name));
+        final Collection<EscrowAccountViewModel> escrows = EscrowMapper.toViewModelList((this.nemEscrowServices).getEscrowBalances(name));
         final WithdrawalAccountViewModel withdrawalAccount = this.getXemWithdrawalAccount(name);
         return new TradingAccountsViewModel(this.tradeInstrumentsProvider.getXem(), withdrawalAccount, escrows, this.getLatestEscrowAccount(escrows));
     }

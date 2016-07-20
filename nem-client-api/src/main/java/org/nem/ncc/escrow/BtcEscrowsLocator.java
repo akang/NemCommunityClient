@@ -83,15 +83,15 @@ public class BtcEscrowsLocator
         final Collection<Address> brokerAddresses = Arrays.asList(this.brokerConnector.requestBrokerAccount().getAddress());
         final List<TransactionMetaDataPair> requests = this.getBtcEscrowRequests(tradingAccount.getAddress(), brokerAddresses, tradingStorage.getLastScannedTxId(btc.getCode()));
         final List<TransactionMetaDataPair> responses = this.getBtcEscrowResponses(tradingAccount, brokerAddresses, tradingStorage.getLastScannedTxId(btc.getCode()));
-        final List<TradeAddress> processedAddresses = tradingStorage.getBtcEscrowAddresses().stream().map((Function<? super DiscoveredAddress, ?>)DiscoveredAddress::getAddress).collect((Collector<? super Object, ?, List<TradeAddress>>)Collectors.toList());
+        final List<TradeAddress> processedAddresses = tradingStorage.getBtcEscrowAddresses().stream().map((Function<? super DiscoveredAddress, TradeAddress>)DiscoveredAddress::getAddress).collect(Collectors.toList());
         final List<ImmutablePair<TransactionMetaDataPair, DiscoveredAddress>> matched = this.btcEscrowsServices.match(tradingAccount, requests, responses, processedAddresses);
         this.btcEscrowsServices.getLastToScanTx((List<? extends Pair<TransactionMetaDataPair, DiscoveredAddress>>)matched).ifPresent(txId -> tradingStorage.setLastScannedTxId(btc.getCode(), txId));
-        final List<DiscoveredAddress> resolvedAddresses = matched.stream().filter(pair -> pair.getRight() != null).map((Function<? super Object, ?>)Pair::getRight).collect((Collector<? super Object, ?, List<DiscoveredAddress>>)Collectors.toList());
+        final List<DiscoveredAddress> resolvedAddresses = matched.stream().filter(pair -> pair.getRight() != null).map(Pair::getRight).collect(Collectors.toList());
         return (Pair<Collection<DiscoveredAddress>, Integer>)new ImmutablePair((Object)resolvedAddresses, (Object)(matched.size() - resolvedAddresses.size()));
     }
     
     private Collection<BtcEscrowAccount> getEmptyAccounts(final int count, final Address tradingAccountAddress) {
-        return IntStream.range(0, count).mapToObj(index -> this.getEmptyAccount(tradingAccountAddress)).collect((Collector<? super Object, ?, Collection<BtcEscrowAccount>>)Collectors.toList());
+        return IntStream.range(0, count).mapToObj(index -> this.getEmptyAccount(tradingAccountAddress)).collect(Collectors.toList());
     }
     
     private BtcEscrowAccount getEmptyAccount(final Address tradingAccountAddress) {
@@ -99,8 +99,8 @@ public class BtcEscrowsLocator
     }
     
     private Collection<BtcEscrowAccount> getBalances(final Account account, final Collection<DiscoveredAddress> discoveredAddresses) {
-        final Collection<BtcEscrowAccount> balances = this.brokerConnector.getBtcEscrowBalances(account, (Collection<TradeAddress>)discoveredAddresses.stream().map((Function<? super DiscoveredAddress, ?>)DiscoveredAddress::getAddress).collect((Collector<? super Object, ?, List<? super Object>>)Collectors.toList()));
-        balances.stream().forEach(escrow -> escrow.setCreated(discoveredAddresses.stream().filter(address -> address.getAddress().equals(escrow.getAddress())).map((Function<? super DiscoveredAddress, ? extends Instant>)DiscoveredEntity::getCreated).findFirst().orElse(Instant.ofEpochMilli(0L))));
+        final Collection<BtcEscrowAccount> balances = this.brokerConnector.getBtcEscrowBalances(account, (Collection<TradeAddress>)discoveredAddresses.stream().map((Function<? super DiscoveredAddress, TradeAddress>)DiscoveredAddress::getAddress).collect(Collectors.toList()));
+        balances.stream().forEach(escrow -> escrow.setCreated(discoveredAddresses.stream().filter(address -> address.getAddress().equals(escrow.getAddress())).map(DiscoveredEntity::getCreated).findFirst().orElse(Instant.ofEpochMilli(0L))));
         return balances;
     }
 }

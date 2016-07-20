@@ -1,5 +1,6 @@
 package org.nem.ncc.controller;
 
+import com.sharedobjects.nis.PrimaryNisConnector;
 import net.minidev.json.*;
 import org.hamcrest.core.IsEqual;
 import org.junit.*;
@@ -13,7 +14,6 @@ import org.nem.core.model.primitive.*;
 import org.nem.core.node.NodeEndpoint;
 import org.nem.core.serialization.*;
 import org.nem.core.time.TimeInstant;
-import org.nem.ncc.connector.PrimaryNisConnector;
 import org.nem.ncc.controller.requests.*;
 import org.nem.ncc.controller.viewmodels.*;
 import org.nem.ncc.services.*;

@@ -35,7 +35,7 @@ public class TradeInstrumentController
     
     @RequestMapping(value = { "/trading/instruments/fiat" }, method = { RequestMethod.GET })
     public SerializableList<TradeInstrument> getFiatTradeInstruments() {
-        return (SerializableList<TradeInstrument>)new SerializableList((Collection)this.instrumentsProvider.getTradeInstruments().stream().filter(TradeInstrument::isFiat).collect((Collector<? super TradeInstrument, ?, List<? super TradeInstrument>>)Collectors.toList()));
+        return (SerializableList<TradeInstrument>)new SerializableList((Collection)this.instrumentsProvider.getTradeInstruments().stream().filter(TradeInstrument::isFiat).collect(Collectors.toList()));
     }
     
     @RequestMapping(value = { "/trading/instruments/available" }, method = { RequestMethod.POST })

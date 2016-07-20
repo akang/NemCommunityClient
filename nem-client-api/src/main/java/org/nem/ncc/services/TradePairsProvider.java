@@ -32,7 +32,7 @@ public class TradePairsProvider extends UpdatableDataProvider<Map<Integer, Trade
         if (pairs == null) {
             return null;
         }
-        return pairs.stream().collect(Collectors.toMap((Function<? super TradePair, ? extends Integer>)TradePair::getCode, (Function<? super TradePair, ? extends TradePair>)Function.identity()));
+        return pairs.stream().collect(Collectors.toMap((Function<? super TradePair, ? extends Integer>)TradePair::getCode, Function.identity()));
     }
     
     public Collection<TradePair> getTradePairs() {

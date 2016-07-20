@@ -69,7 +69,7 @@ public class BrokerMapper
         if (orders == null) {
             return null;
         }
-        return Arrays.stream(orders).map((Function<? super SimpleOrder, ?>)this::toClientModel).collect((Collector<? super Object, ?, Collection<Order>>)Collectors.toList());
+        return Arrays.stream(orders).map((Function<? super SimpleOrder, Order>)this::toClientModel).collect(Collectors.toList());
     }
 
     public com.sharedobjects.client.OperatorOptions toBrokerModel(final OperatorOptions operatorOptions) {
@@ -81,7 +81,7 @@ public class BrokerMapper
     }
 
     public Collection<TradeInstrument> toClientModel(final com.sharedobjects.trading.TradeInstrument[] tradeInstruments) {
-        return Arrays.stream(tradeInstruments).map((Function<? super com.sharedobjects.trading.TradeInstrument, ?>)this::toClientModel).collect((Collector<? super Object, ?, Collection<TradeInstrument>>)Collectors.toList());
+        return Arrays.stream(tradeInstruments).map((Function<? super com.sharedobjects.trading.TradeInstrument, TradeInstrument>)this::toClientModel).collect(Collectors.toList());
     }
 
     public TradePair toClientModel(final com.sharedobjects.trading.TradePair tradePair) {
@@ -89,7 +89,7 @@ public class BrokerMapper
     }
 
     public Collection<TradePair> toClientModel(final com.sharedobjects.trading.TradePair[] tradePairs) {
-        return Arrays.stream(tradePairs).map((Function<? super com.sharedobjects.trading.TradePair, ?>)this::toClientModel).collect((Collector<? super Object, ?, Collection<TradePair>>)Collectors.toList());
+        return Arrays.stream(tradePairs).map((Function<? super com.sharedobjects.trading.TradePair, TradePair>)this::toClientModel).collect(Collectors.toList());
     }
 
     public Country toClientModel(final com.sharedobjects.client.Country country) {
@@ -105,7 +105,7 @@ public class BrokerMapper
     }
 
     public Collection<org.nem.ncc.model.TradeHistoryTransaction> toClientModel(final TradeHistoryTransaction[] transactions) {
-        return Arrays.stream(transactions).map((Function<? super TradeHistoryTransaction, ?>)this::toClientModel).collect((Collector<? super Object, ?, Collection<org.nem.ncc.model.TradeHistoryTransaction>>)Collectors.toList());
+        return Arrays.stream(transactions).map((Function<? super TradeHistoryTransaction, org.nem.ncc.model.TradeHistoryTransaction>)this::toClientModel).collect(Collectors.toList());
     }
 
     public OperatorOptions toClientModel(final com.sharedobjects.client.OperatorOptions operatorOptions) {
@@ -129,7 +129,7 @@ public class BrokerMapper
     }
 
     public Collection<org.nem.ncc.model.MarketDepthQuote> toClientModel(final MarketDepthQuote[] quotes) {
-        return Arrays.stream(quotes).map((Function<? super MarketDepthQuote, ?>)this::toClientModel).collect((Collector<? super Object, ?, Collection<org.nem.ncc.model.MarketDepthQuote>>)Collectors.toList());
+        return Arrays.stream(quotes).map((Function<? super MarketDepthQuote, org.nem.ncc.model.MarketDepthQuote>)this::toClientModel).collect(Collectors.toList());
     }
 
     public org.nem.ncc.model.MarketDepthQuotes toClientModel(final MarketDepthQuotes marketQuotes) {
@@ -144,7 +144,7 @@ public class BrokerMapper
     }
 
     private BigDecimal getTradePairBid(final org.nem.ncc.model.MarketDepthQuotes quotes) {
-        return quotes.getSellQuotes().stream().map((Function<? super org.nem.ncc.model.MarketDepthQuote, ? extends BigDecimal>)org.nem.ncc.model.MarketDepthQuote::getPrice).filter(price -> price.compareTo(BigDecimal.ZERO) > 0).min(BigDecimal::compareTo).orElse(BigDecimal.ZERO);
+        return quotes.getSellQuotes().stream().map(org.nem.ncc.model.MarketDepthQuote::getPrice).filter(price -> price.compareTo(BigDecimal.ZERO) > 0).min(BigDecimal::compareTo).orElse(BigDecimal.ZERO);
     }
 
     private BigDecimal getTradePairAsk(final org.nem.ncc.model.MarketDepthQuotes quotes) {
@@ -152,7 +152,7 @@ public class BrokerMapper
     }
 
     public Collection<Country> toClientModel(final com.sharedobjects.client.Country[] countries) {
-        return Arrays.stream(countries).map((Function<? super com.sharedobjects.client.Country, ?>)this::toClientModel).collect((Collector<? super Object, ?, Collection<Country>>)Collectors.toList());
+        return Arrays.stream(countries).map((Function<? super com.sharedobjects.client.Country, Country>)this::toClientModel).collect(Collectors.toList());
     }
 
     public org.nem.ncc.model.OrderUpdate toClientModel(final OrderUpdate response) {
@@ -189,7 +189,7 @@ public class BrokerMapper
     public org.nem.ncc.model.Match toClientModel(final Match match, final Account traderAccount) {
         final Optional<Order> sellOrder = this.brokerConnector.getOrder(traderAccount, match.getSellingOrderId());
         final Optional<Order> buyOrder = this.brokerConnector.getOrder(traderAccount, match.getBuyingOrderId());
-        final Order tradersOrder = sellOrder.map((Function<? super Order, ? extends Optional<Order>>)Optional::of).orElse(buyOrder).get();
+        final Order tradersOrder = sellOrder.map(Optional::of).orElse(buyOrder).get();
         return new org.nem.ncc.model.Match(tradersOrder, match.getVolume(), match.getPrice());
     }
 }

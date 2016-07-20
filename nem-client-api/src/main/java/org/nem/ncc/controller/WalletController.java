@@ -14,6 +14,8 @@ import org.bouncycastle.crypto.params.KeyParameter;
 import org.bouncycastle.crypto.params.ParametersWithIV;
 import org.eclipse.jetty.util.UrlEncoded;
 import org.nem.core.crypto.Hashes;
+import org.nem.core.crypto.PublicKey;
+import org.nem.core.model.Address;
 import org.nem.core.serialization.JsonSerializer;
 import org.nem.core.utils.ExceptionUtils;
 import org.nem.core.utils.HexEncoder;
@@ -22,6 +24,10 @@ import org.nem.ncc.addressbook.*;
 import org.nem.ncc.controller.requests.WalletNamePasswordBag;
 import org.nem.ncc.controller.viewmodels.WalletViewModel;
 import org.nem.ncc.services.*;
+import org.nem.ncc.storable.entity.StorableEntityNamePasswordPair;
+import org.nem.ncc.trading.storage.TradingStorage;
+import org.nem.ncc.trading.storage.TradingStorageName;
+import org.nem.ncc.trading.storage.TradingStorageNamePasswordPair;
 import org.nem.ncc.wallet.*;
 import org.nem.specific.deploy.OctetStream;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,7 +69,7 @@ public class WalletController {
 		this.walletServices = walletServices;
 		this.walletMapper = walletMapper;
 		this.addressBookServices = addressBookServices;
-this.tradingStorageServices = tradingStorageServices;
+        this.tradingStorageServices = tradingStorageServices;
         this.tradingAccountsServices = tradingAccountsServices;
 	}
 
@@ -118,12 +124,13 @@ this.tradingStorageServices = tradingStorageServices;
 	}
 @RequestMapping(value = { "/wallet/export" }, method = { RequestMethod.POST })
     public OctetStream exportWallet(@RequestBody final WalletName name) {
-        final ByteArrayOutputStream byteArrayOutputStream;
-        final ZipOutputStream zipOutputStream;
-        final Throwable t2;
+        //final ByteArrayOutputStream byteArrayOutputStream;
+        //final ZipOutputStream zipOutputStream;
+
         return (OctetStream)ExceptionUtils.propagate(() -> {
-            byteArrayOutputStream = new ByteArrayOutputStream();
-            zipOutputStream = new ZipOutputStream(byteArrayOutputStream);
+			final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+			final ZipOutputStream zipOutputStream = new ZipOutputStream(byteArrayOutputStream);
+			final Throwable t2 = null;
             try {
                 this.addToZip(zipOutputStream, name.toString(), ".wlt", this.walletServices::copyTo, n -> new WalletNamePasswordPair(n, "???"));
                 this.addToZip(zipOutputStream, name.toString(), ".adb", this.addressBookServices::copyTo, n -> new AddressBookNamePasswordPair(n, "???"));
@@ -267,7 +274,7 @@ this.tradingStorageServices = tradingStorageServices;
 	 * @return The raw bytes.
 	 */
 	@RequestMapping(value = "/wallet/export/zip", method = RequestMethod.POST)
-	public OctetStream exportWallet(@RequestBody final WalletName name) {
+	public OctetStream exportWalletZip(@RequestBody final WalletName name) {
 		return ExceptionUtils.propagate(() -> {
 			final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 			try (final ZipOutputStream zipOutputStream = new ZipOutputStream(byteArrayOutputStream)) {
@@ -391,14 +398,14 @@ private TradingStorage createTradingStorage(final WalletNamePasswordPair pair) {
     }
     
     private TradingStorageNamePasswordPair createTradingStorageNamePasswordPair(final WalletNamePasswordPair pair) {
-        return new TradingStorageNamePasswordPair(((StorableEntityNamePasswordPair<WalletName, TEntityPassword, TDerived>)pair).getName().toString(), ((StorableEntityNamePasswordPair<TEntityName, WalletPassword, TDerived>)pair).getPassword().toString());
+        return new TradingStorageNamePasswordPair(((StorableEntityNamePasswordPair<WalletName, WalletPassword, WalletNamePasswordPair>)pair).getName().toString(), ((StorableEntityNamePasswordPair<WalletName, WalletPassword, WalletNamePasswordPair>)pair).getPassword().toString());
     }
     
     private void changeTradingStorageName(final WalletNamePasswordBag bag) {
-        this.tradingStorageServices.move(this.createTradingStorageNamePasswordPair(bag), new TradingStorageNamePasswordPair(bag.getNewName().toString(), ((StorableEntityNamePasswordPair<TEntityName, WalletPassword, TDerived>)bag).getPassword().toString()));
+        this.tradingStorageServices.move(this.createTradingStorageNamePasswordPair(bag), new TradingStorageNamePasswordPair(bag.getNewName().toString(), ((StorableEntityNamePasswordPair<WalletName, WalletPassword, WalletNamePasswordPair>)bag).getPassword().toString()));
     }
     
     private void changeTradingStoragePassword(final WalletNamePasswordBag bag) {
-        this.tradingStorageServices.move(this.createTradingStorageNamePasswordPair(bag), new TradingStorageNamePasswordPair(((StorableEntityNamePasswordPair<WalletName, TEntityPassword, TDerived>)bag).getName().toString(), bag.getNewPassword().toString()));
+        this.tradingStorageServices.move(this.createTradingStorageNamePasswordPair(bag), new TradingStorageNamePasswordPair(((StorableEntityNamePasswordPair<WalletName, WalletPassword, WalletNamePasswordPair>)bag).getName().toString(), bag.getNewPassword().toString()));
     }
 }

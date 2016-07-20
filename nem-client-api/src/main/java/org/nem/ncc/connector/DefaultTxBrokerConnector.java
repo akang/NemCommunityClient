@@ -1,5 +1,6 @@
 package org.nem.ncc.connector;
 
+import com.sharedobjects.UserDetailsRequest;
 import org.nem.ncc.controller.*;
 import org.nem.ncc.services.*;
 import com.sharedobjects.nis.*;

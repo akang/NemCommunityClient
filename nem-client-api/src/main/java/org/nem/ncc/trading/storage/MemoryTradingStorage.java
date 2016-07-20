@@ -114,7 +114,7 @@ public class MemoryTradingStorage implements StorableTradingStorage
         serializer.writeObjectArray("lastScannedTxIds", (Collection)this.lastScannedTxIds.values());
         serializer.writeLong("changedPublicKeyTxId", (this.changedPublicKeyTxId != null) ? ((long)this.changedPublicKeyTxId) : 0L);
         serializer.writeString("pendingPublicKey", (this.pendingPublicKey != null) ? this.pendingPublicKey : MemoryTradingStorage.EMPTY_STRING);
-        StorableEntityName.writeTo(serializer, "tradingStorage", (StorableEntityName<StorableEntityName>)this.name);
+        StorableEntityName.writeTo(serializer, "tradingStorage", this.name);
         serializer.writeString("userId", this.userId.toString());
     }
     

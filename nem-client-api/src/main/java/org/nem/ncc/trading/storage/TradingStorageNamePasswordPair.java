@@ -23,6 +23,6 @@ public class TradingStorageNamePasswordPair extends StorableEntityNamePasswordPa
     }
     
     public WalletNamePasswordPair toWalletNamePasswordPair() {
-        return new WalletNamePasswordPair(((StorableEntityNamePasswordPair<TradingStorageName, TEntityPassword, TDerived>)this).getName().toString(), ((StorableEntityNamePasswordPair<TEntityName, TradingStoragePassword, TDerived>)this).getPassword().toString());
+        return new WalletNamePasswordPair(((StorableEntityNamePasswordPair<TradingStorageName, TradingStoragePassword, TradingStorageNamePasswordPair>)this).getName().toString(), ((StorableEntityNamePasswordPair<TradingStorageName, TradingStoragePassword, TradingStorageNamePasswordPair>)this).getPassword().toString());
     }
 }

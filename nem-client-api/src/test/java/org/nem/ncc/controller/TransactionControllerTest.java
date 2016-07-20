@@ -10,7 +10,7 @@ import org.nem.core.crypto.Signature;
 import org.nem.core.model.*;
 import org.nem.core.model.ncc.*;
 import org.nem.core.serialization.*;
-import org.nem.ncc.connector.PrimaryNisConnector;
+import com.sharedobjects.nis.PrimaryNisConnector;
 import org.nem.ncc.controller.requests.*;
 import org.nem.ncc.controller.viewmodels.PartialTransferInformationViewModel;
 import org.nem.ncc.exceptions.NisException;

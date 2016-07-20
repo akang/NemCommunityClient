@@ -277,12 +277,14 @@ public class WalletControllerTest {
 		private final Wallet wallet = Mockito.mock(Wallet.class);
 		private final WalletViewModel walletViewModel = Mockito.mock(WalletViewModel.class);
 		private final WalletServices walletServices = Mockito.mock(WalletServices.class);
+		final TradingStorageServices tradingStorageServices = Mockito.mock(TradingStorageServices.class);
+		final TradingAccountsServices tradingAccountsServices = Mockito.mock(TradingAccountsServices.class);
 		private final WalletMapper walletMapper = Mockito.mock(WalletMapper.class);
 		private final AddressBookServices addressBookServices = Mockito.mock(AddressBookServices.class);
 		private final AddressBook addressBook = Mockito.mock(AddressBook.class);
 		private final WalletController controller = new WalletController(
 				this.walletServices,
 				this.walletMapper,
-				this.addressBookServices);
+				this.addressBookServices, tradingStorageServices, tradingAccountsServices);
 	}
 }

@@ -39,6 +39,7 @@ public class NccException extends RuntimeException {
 		PRIVATE_KEY_PUBLIC_KEY_MISMATCH(1000),
 
 		TRADING_STORAGE_IS_NOT_OPEN(1111),
+		TRADING_ACCOUNT_WALLET_IS_NOT_OPEN(1112),
 		/**
 		 * The address derived from the public key does not match the given address.
 		 */

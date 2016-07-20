@@ -10,7 +10,7 @@ import org.nem.core.model.ncc.*;
 import org.nem.core.model.primitive.*;
 import org.nem.core.serialization.*;
 import org.nem.core.time.TimeInstant;
-import org.nem.ncc.connector.PrimaryNisConnector;
+import com.sharedobjects.nis.PrimaryNisConnector;
 import org.nem.ncc.test.*;
 
 import java.util.*;

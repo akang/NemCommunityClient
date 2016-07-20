@@ -25,7 +25,7 @@ public class LevelsManager extends ReceiveManager
     
     private void handleResponse(final Object received) {
         if (received instanceof com.sharedobjects.client.MarketDepthQuotes) {
-            final MarketDepthQuotes quotes = this.brokerMapper.toClientModel((com.sharedobjects.client.MarketDepthQuotes)received);
+            final MarketDepthQuotes quotes = this.brokerMapper.toClientModel((MarketDepthQuotes)received);
             this.notifyConsumers(quotes);
         }
         else if (received instanceof ResponseMessage) {

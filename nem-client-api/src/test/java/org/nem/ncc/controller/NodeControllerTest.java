@@ -10,7 +10,7 @@ import org.nem.core.crypto.*;
 import org.nem.core.model.*;
 import org.nem.core.model.ncc.NemRequestResult;
 import org.nem.core.serialization.JsonSerializer;
-import org.nem.ncc.connector.PrimaryNisConnector;
+import com.sharedobjects.nis.PrimaryNisConnector;
 import org.nem.ncc.controller.requests.BootNodeRequest;
 import org.nem.ncc.services.WalletServices;
 import org.nem.ncc.test.Utils;

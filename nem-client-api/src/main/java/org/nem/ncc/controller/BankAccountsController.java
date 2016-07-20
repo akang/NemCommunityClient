@@ -31,7 +31,7 @@ public class BankAccountsController
     @RequestMapping(value = { "/trading/bank_accounts" }, method = { RequestMethod.POST })
     public SerializableList<BankAccountTransfersPair> getBankAccounts(@RequestBody final TradingStorageName name) {
         final Collection<BankAccount> bankAccounts = this.tradingStorageServices.get(name).getFiatAccounts();
-        final Collection<BankAccountTransfersPair> pairs = bankAccounts.stream().map(bankAccount -> new BankAccountTransfersPair(this.bankApiConnector.getBankAccountInfo(bankAccount), this.bankApiConnector.getTransfers(bankAccount, Instant.EPOCH))).collect((Collector<? super Object, ?, Collection<BankAccountTransfersPair>>)Collectors.toList());
+        final Collection<BankAccountTransfersPair> pairs = bankAccounts.stream().map(bankAccount -> new BankAccountTransfersPair(this.bankApiConnector.getBankAccountInfo(bankAccount), this.bankApiConnector.getTransfers(bankAccount, Instant.EPOCH))).collect(Collectors.toList());
         return (SerializableList<BankAccountTransfersPair>)new SerializableList((Collection)pairs);
     }
     

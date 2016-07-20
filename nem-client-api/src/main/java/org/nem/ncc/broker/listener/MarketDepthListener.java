@@ -20,13 +20,13 @@ public class MarketDepthListener implements InitializingBean
     }
     
     private void sendMessage(final String destination, final Object content) {
-        this.messagingTemplate.convertAndSend((Object)destination, content);
+        this.messagingTemplate.convertAndSend(destination, content);
     }
     
     public void afterPropertiesSet() throws Exception {
-        final ExtendedTradePair extendedPair;
+
         this.levelsManager.subscribe(quotes -> {
-            extendedPair = this.brokerMapper.extractExtendedTradePair(quotes);
+            final ExtendedTradePair extendedPair = this.brokerMapper.extractExtendedTradePair(quotes);
             this.sendMessage("/topic/marketDepth", quotes);
             this.sendMessage("/topic/extendedPair", extendedPair);
             return;

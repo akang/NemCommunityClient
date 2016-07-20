@@ -47,10 +47,10 @@ public class OrderUpdatesServices
     }
     
     private void notifyOrderUpdate(final OrderUpdate update, final TradingStorageName tradingStorageName) {
-        this.messagingTemplate.convertAndSend((Object)("/topic/" + tradingStorageName.toString() + "/orders"), (Object)update);
+        this.messagingTemplate.convertAndSend(("/topic/" + tradingStorageName.toString() + "/orders"), (Object)update);
     }
     
     private void notifyMatch(final Match match, final TradingStorageName tradingStorageName) {
-        this.messagingTemplate.convertAndSend((Object)("/topic/" + tradingStorageName.toString() + "/matches"), (Object)match);
+        this.messagingTemplate.convertAndSend(("/topic/" + tradingStorageName.toString() + "/matches"), (Object)match);
     }
 }
