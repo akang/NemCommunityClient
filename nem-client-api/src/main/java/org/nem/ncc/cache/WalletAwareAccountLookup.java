@@ -45,6 +45,7 @@ public class WalletAwareAccountLookup implements AccountMetaDataPairLookup {
 
 	@Override
 	public AccountMetaDataPair findPairByAddress(final Address id) {
+		//get from cache to display if have
 		final AccountMetaDataPair pair = this.accountLookup.findPairByAddress(id);
 		if (null == pair || null != pair.getEntity().getKeyPair()) {
 			return pair;

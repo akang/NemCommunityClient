@@ -1,5 +1,6 @@
 package org.nem.ncc.services;
 
+import com.sun.media.jfxmedia.logging.Logger;
 import org.nem.ncc.connector.*;
 import java.util.stream.*;
 import org.nem.ncc.trading.storage.*;
@@ -16,6 +17,8 @@ import org.nem.ncc.escrow.*;
 
 public class TradingAccountsServices
 {
+    private static final org.apache.log4j.Logger Log = org.apache.log4j.Logger.getLogger(TradingAccountsServices.class.getName());
+
     private final PrimaryBrokerConnector brokerConnector;
     private final NemEscrowsLocator nemEscrowServices;
     private final BtcEscrowsLocator btcEscrowLocator;
@@ -43,17 +46,22 @@ public class TradingAccountsServices
     public Collection<TradingAccountsViewModel> getFiatAccounts(final TradingStorageName name) {
         final Account tradingAccount = this.secureRequestMapper.toTradingAccount(name);
         final Collection<EscrowAccount> fiatEscrows = this.fiatEscrowsLocator.getEscrowBalances(name);
-        Collection<? extends EscrowAccount> collection = null; //Hung TODO
+        Collection<? extends EscrowAccount> collection = fiatEscrows; //Hung TODO
         //final Collection<EscrowAccountViewModel> escrowAccounts;
-        final Account account = null; //Hung TODO
+        final Account account = tradingAccount; //Hung TODO
         //final WithdrawalAccount withdrawalAccount;
         //final WithdrawalAccountViewModel viewModel;
-        return this.getFiatInstruments().stream().map(instrument -> {
-            final Collection<EscrowAccountViewModel> escrowAccounts = EscrowMapper.toViewModelList((Collection<? extends EscrowAccount>)collection.stream().filter(escrow -> escrow.getTradeInstrument().getCode() == instrument.getCode()).collect(Collectors.toList()));
-            final WithdrawalAccount withdrawalAccount = this.brokerConnector.getFiatWithdrawalAccount(account, instrument.getCode());
-            final WithdrawalAccountViewModel viewModel = new WithdrawalAccountViewModel(withdrawalAccount, WithdrawalAccountViewModel.Status.PRESENT);
-            return new TradingAccountsViewModel(instrument, viewModel, escrowAccounts, this.getLatestEscrowAccount(escrowAccounts));
-        }).collect(Collectors.toList());
+        try {
+            return this.getFiatInstruments().stream().map(instrument -> {
+                final Collection<EscrowAccountViewModel> escrowAccounts = EscrowMapper.toViewModelList((Collection<? extends EscrowAccount>) collection.stream().filter(escrow -> escrow.getTradeInstrument().getCode() == instrument.getCode()).collect(Collectors.toList()));
+                final WithdrawalAccount withdrawalAccount = this.brokerConnector.getFiatWithdrawalAccount(account, instrument.getCode());
+                final WithdrawalAccountViewModel viewModel = new WithdrawalAccountViewModel(withdrawalAccount, WithdrawalAccountViewModel.Status.PRESENT);
+                return new TradingAccountsViewModel(instrument, viewModel, escrowAccounts, this.getLatestEscrowAccount(escrowAccounts));
+            }).collect(Collectors.toList());
+        }catch(Exception e){
+            Log.error(e);
+            return null;
+        }
     }
     
     public TradingAccountsViewModel getXemAccounts(final TradingStorageName name) {
