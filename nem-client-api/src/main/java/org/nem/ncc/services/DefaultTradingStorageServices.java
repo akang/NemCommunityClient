@@ -20,7 +20,7 @@ public class DefaultTradingStorageServices implements TradingStorageServices
     private final Map<TradingStorageName, TradingStorage> tradingStorages;
     
     public DefaultTradingStorageServices(final TradingStorageRepository repository, final TradingStorageDescriptorFactory descriptorFactory) {
-        this.tradingStorages = new ConcurrentHashMap<TradingStorageName, TradingStorage>();
+        this.tradingStorages = new ConcurrentHashMap<>();
         this.repository = repository;
         this.descriptorFactory = descriptorFactory;
     }
@@ -40,7 +40,7 @@ public class DefaultTradingStorageServices implements TradingStorageServices
     
     @Override
     public TradingStorage open(final TradingStorageNamePasswordPair pair) {
-        final TradingStorage tradingStorage = this.tradingStorages.getOrDefault(((StorableEntityNamePasswordPair<TradingStorageName, TradingStoragePassword, TradingStorageNamePasswordPair>)pair).getName(), null);
+        final TradingStorage tradingStorage = this.tradingStorages.getOrDefault(pair.getName(), null);
         final TradingStorageDescriptor descriptor = this.descriptorFactory.openExisting(pair, new TradingStorageFileExtension());
         if (tradingStorage != null) {
             this.repository.load(descriptor);
