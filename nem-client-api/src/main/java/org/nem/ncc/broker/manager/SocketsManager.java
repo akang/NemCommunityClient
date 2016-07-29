@@ -16,11 +16,11 @@ public class SocketsManager
 
     public SocketsManager(final CommonConfiguration config) {
         final ZMQ.Context context = ZMQ.context(1);
-        (this.socketManagers = new HashMap<Port, RequestManager>()).put(Port.ADDITIONAL_INFO_LISTENER, (RequestManager)new BrokerReqSocketManager(context, config.getBrokerConnectAddress(), Port.ADDITIONAL_INFO_LISTENER));
-        this.socketManagers.put(Port.ORDER_SERVER, (RequestManager)new BrokerReqSocketManager(context, config.getBrokerConnectAddress(), Port.ORDER_SERVER));
-        this.socketManagers.put(Port.BROKER_OPERATIONS_LISTENER, (RequestManager)new BrokerReqSocketManager(context, config.getBrokerConnectAddress(), Port.BROKER_OPERATIONS_LISTENER));
-        this.socketManagers.put(Port.WITHDRAW_DEPOSIT_LISTENER, (RequestManager)new BrokerReqSocketManager(context, config.getBrokerConnectAddress(), Port.WITHDRAW_DEPOSIT_LISTENER));
-        this.socketManagers.put(Port.ORDER_SERVER, (RequestManager)new DealerClient(context, config.getBrokerConnectAddress(), 30000, Port.ORDER_SERVER));
+        (this.socketManagers = new HashMap<>()).put(Port.ADDITIONAL_INFO_LISTENER, new BrokerReqSocketManager(context, config.getBrokerConnectAddress(), Port.ADDITIONAL_INFO_LISTENER));
+        this.socketManagers.put(Port.ORDER_SERVER, new BrokerReqSocketManager(context, config.getBrokerConnectAddress(), Port.ORDER_SERVER));
+        this.socketManagers.put(Port.BROKER_OPERATIONS_LISTENER, new BrokerReqSocketManager(context, config.getBrokerConnectAddress(), Port.BROKER_OPERATIONS_LISTENER));
+        this.socketManagers.put(Port.WITHDRAW_DEPOSIT_LISTENER, new BrokerReqSocketManager(context, config.getBrokerConnectAddress(), Port.WITHDRAW_DEPOSIT_LISTENER));
+        this.socketManagers.put(Port.ORDER_SERVER, new DealerClient(context, config.getBrokerConnectAddress(), 30000, Port.ORDER_SERVER));
         this.initSockets();
     }
 
