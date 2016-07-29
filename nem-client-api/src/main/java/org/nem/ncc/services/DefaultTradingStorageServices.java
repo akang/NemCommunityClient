@@ -65,7 +65,7 @@ public class DefaultTradingStorageServices implements TradingStorageServices
     @Override
     public TradingStorage create(final TradingStorageNamePasswordPair pair) {
         final TradingStorageDescriptor descriptor = this.descriptorFactory.createNew(pair, new TradingStorageFileExtension());
-        final AutoSavingTradingStorage tradingStorage = this.wrapTradingStorage(new MemoryTradingStorage(((StorableEntityNamePasswordPair<TradingStorageName, TradingStoragePassword, TradingStorageNamePasswordPair>)pair).getName()), descriptor);
+        final AutoSavingTradingStorage tradingStorage = this.wrapTradingStorage(new MemoryTradingStorage(pair.getName()), descriptor);
         tradingStorage.save();
         return tradingStorage;
     }
@@ -77,14 +77,14 @@ public class DefaultTradingStorageServices implements TradingStorageServices
     
     @Override
     public void move(final TradingStorageNamePasswordPair originalPair, final TradingStorageNamePasswordPair desiredPair) {
-        final boolean hasNameChange = !((StorableEntityNamePasswordPair<TradingStorageName, TradingStoragePassword, TradingStorageNamePasswordPair>)originalPair).getName().equals(((StorableEntityNamePasswordPair<TradingStorageName, TradingStoragePassword, TradingStorageNamePasswordPair>)desiredPair).getName());
+        final boolean hasNameChange = !originalPair.getName().equals(desiredPair.getName());
         final TradingStorageDescriptor newTradingStorageDescriptor = hasNameChange ? this.descriptorFactory.createNew(desiredPair, new TradingStorageFileExtension()) : this.descriptorFactory.openExisting(desiredPair, new TradingStorageFileExtension());
         final TradingStorageDescriptor originalTradingStorageDescriptor = this.descriptorFactory.openExisting(originalPair, new TradingStorageFileExtension());
         final TradingStorage originalTradingStorage = this.repository.load(originalTradingStorageDescriptor);
-        final AutoSavingTradingStorage addressBook = this.wrapTradingStorage(new MemoryTradingStorage(((StorableEntityNamePasswordPair<TradingStorageName, TradingStoragePassword, TradingStorageNamePasswordPair>)desiredPair).getName(), originalTradingStorage.getXemEscrowPublicKeys(), originalTradingStorage.getBtcEscrowAddresses(), originalTradingStorage.getFiatEscrowAddresses(), originalTradingStorage.getFiatAccounts(), originalTradingStorage.getLastScannedTxIds(), originalTradingStorage.getTradingAccountAddress(), originalTradingStorage.getUserId()), newTradingStorageDescriptor);
+        final AutoSavingTradingStorage addressBook = this.wrapTradingStorage(new MemoryTradingStorage(desiredPair.getName(), originalTradingStorage.getXemEscrowPublicKeys(), originalTradingStorage.getBtcEscrowAddresses(), originalTradingStorage.getFiatEscrowAddresses(), originalTradingStorage.getFiatAccounts(), originalTradingStorage.getLastScannedTxIds(), originalTradingStorage.getTradingAccountAddress(), originalTradingStorage.getUserId()), newTradingStorageDescriptor);
         addressBook.save();
         if (hasNameChange) {
-            this.tradingStorages.remove(((StorableEntityNamePasswordPair<TradingStorageName, TradingStoragePassword, TradingStorageNamePasswordPair>)originalPair).getName());
+            this.tradingStorages.remove(originalPair.getName());
             originalTradingStorageDescriptor.delete();
         }
     }
@@ -101,7 +101,7 @@ public class DefaultTradingStorageServices implements TradingStorageServices
     
     @Override
     public BankAccount tryFindAccount(final TradeAddress address) {
-        return this.tradingStorages.values().stream().map((Function<? super TradingStorage, Collection<BankAccount>>)TradingStorage::getFiatAccounts).flatMap(bankAccounts -> bankAccounts.stream()).filter(bankAccount -> bankAccount.getAddress().equals(address)).findFirst().orElseThrow(() -> new TradingStorageException(TradingStorageException.Code.NO_FIAT_ACCOUNT_WITH_ADDRESS));
+        return this.tradingStorages.values().stream().map(TradingStorage::getFiatAccounts).flatMap(bankAccounts -> bankAccounts.stream()).filter(bankAccount -> bankAccount.getAddress().equals(address)).findFirst().orElseThrow(() -> new TradingStorageException(TradingStorageException.Code.NO_FIAT_ACCOUNT_WITH_ADDRESS));
     }
     
     private AutoSavingTradingStorage wrapTradingStorage(final StorableTradingStorage tradingStorage, final TradingStorageDescriptor descriptor) {
