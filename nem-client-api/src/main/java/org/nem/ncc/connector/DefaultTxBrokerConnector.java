@@ -44,7 +44,7 @@ public class DefaultTxBrokerConnector implements TxBrokerConnector
         final Amount multisigFee = Amount.ZERO;
         NemAnnounceResult result = null;
         final UserDetailsRequest userDetailsRequest = new UserDetailsRequest(this.brokerMapper.toBrokerModel(userDetails));
-        final List<String> messages = (List<String>)userDetailsRequest.serializeToArray();
+        final List<String> messages = userDetailsRequest.serializeToArray();
         for (int i = 0; i < messages.size(); ++i) {
             result = this.transfer(walletName, null, senderAddress, recipientAddress, amount, messages.get(i), false, true, 1, password, this.getFreeSecureRequestFee(messages.get(i)), multisigFee, 257);
         }
