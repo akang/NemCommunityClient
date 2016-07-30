@@ -42,7 +42,7 @@ public class DefaultBrokerConnector implements PrimaryBrokerConnector
     @Override
     public boolean isConnected() {
         try {
-            this.socketsManager.request((IKryoSerializable)ResponseMessage.IS_CONNECTED, Port.ADDITIONAL_INFO_LISTENER, ResponseMessage.class);
+            this.socketsManager.request(ResponseMessage.IS_CONNECTED, Port.ADDITIONAL_INFO_LISTENER, ResponseMessage.class);
         }
         catch (Exception e) {
             return false;
@@ -58,25 +58,25 @@ public class DefaultBrokerConnector implements PrimaryBrokerConnector
     @Override
     public EscrowAccountTransmittersResponse[] getFiatEscrowTransmitters() {
         final EscrowAccountTransmittersRequest request = new EscrowAccountTransmittersRequest(EscrowAccountTransmittersRequest.Type.ALL_FIAT, this.tradeInstrumentsProvider.getXem().getCode());
-        return this.socketsManager.request((IKryoSerializable)request, Port.ADDITIONAL_INFO_LISTENER, EscrowAccountTransmittersResponse[].class);
+        return this.socketsManager.request(request, Port.ADDITIONAL_INFO_LISTENER, EscrowAccountTransmittersResponse[].class);
     }
     
     @Override
     public Collection<TradeInstrument> getAvailableFiatTradeInstruments(final Account account) {
         final UserRequest request = new UserRequest(UserRequest.Type.AvailableFiatTradeInstruments);
-        return this.brokerMapper.toClientModel(this.socketsManager.signedRequest(account, (IKryoSerializable)request, Port.ADDITIONAL_INFO_LISTENER, com.sharedobjects.trading.TradeInstrument[].class));
+        return this.brokerMapper.toClientModel(this.socketsManager.signedRequest(account, request, Port.ADDITIONAL_INFO_LISTENER, com.sharedobjects.trading.TradeInstrument[].class));
     }
     
     @Override
     public Collection<TradeInstrument> getAvailableTradeInstruments(final Account account) {
         final UserRequest request = new UserRequest(UserRequest.Type.AvailableTradeInstruments);
-        return this.brokerMapper.toClientModel(this.socketsManager.signedRequest(account, (IKryoSerializable)request, Port.ADDITIONAL_INFO_LISTENER, com.sharedobjects.trading.TradeInstrument[].class));
+        return this.brokerMapper.toClientModel(this.socketsManager.signedRequest(account, request, Port.ADDITIONAL_INFO_LISTENER, com.sharedobjects.trading.TradeInstrument[].class));
     }
     
     @Override
     public Collection<TradeInstrument> getTradeInstruments() {
         final TradeToolsGetRequest request = new TradeToolsGetRequest(TradeToolsGetRequest.Type.INSTRUMENTS);
-        return this.brokerMapper.toClientModel(this.socketsManager.request((IKryoSerializable)request, Port.ADDITIONAL_INFO_LISTENER, com.sharedobjects.trading.TradeInstrument[].class));
+        return this.brokerMapper.toClientModel(this.socketsManager.request(request, Port.ADDITIONAL_INFO_LISTENER, com.sharedobjects.trading.TradeInstrument[].class));
     }
     
     @Override
@@ -87,32 +87,32 @@ public class DefaultBrokerConnector implements PrimaryBrokerConnector
     @Override
     public Collection<TradePair> getAvailablePairs(final Account account) {
         final UserRequest request = new UserRequest(UserRequest.Type.AvailablePairs);
-        return this.brokerMapper.toClientModel(this.socketsManager.signedRequest(account, (IKryoSerializable)request, Port.ADDITIONAL_INFO_LISTENER, com.sharedobjects.trading.TradePair[].class));
+        return this.brokerMapper.toClientModel(this.socketsManager.signedRequest(account, request, Port.ADDITIONAL_INFO_LISTENER, com.sharedobjects.trading.TradePair[].class));
     }
     
     @Override
     public Collection<TradePair> getTradePairs() {
         final TradeToolsGetRequest request = new TradeToolsGetRequest(TradeToolsGetRequest.Type.PAIRS);
-        return this.brokerMapper.toClientModel(this.socketsManager.request((IKryoSerializable)request, Port.ADDITIONAL_INFO_LISTENER, com.sharedobjects.trading.TradePair[].class));
+        return this.brokerMapper.toClientModel(this.socketsManager.request(request, Port.ADDITIONAL_INFO_LISTENER, com.sharedobjects.trading.TradePair[].class));
     }
     
     @Override
     public Collection<TradeHistoryTransaction> getTradeHistoryTransactions(final int tradePairCode, final int count, final int skip) {
         final TradeHistoryRequest request = new TradeHistoryRequest(tradePairCode, count, skip);
-        return this.brokerMapper.toClientModel(this.socketsManager.request((IKryoSerializable)request, Port.ADDITIONAL_INFO_LISTENER, TradeHistoryTransaction[].class));
+        return this.brokerMapper.toClientModel(this.socketsManager.request(request, Port.ADDITIONAL_INFO_LISTENER, TradeHistoryTransaction[].class));
     }
     
     @Override
     public Collection<Order> getPendingOrders(final Account account, final int skip, final int limit) {
         final PendingOrdersRequest request = new PendingOrdersRequest(limit, skip);
-        final SimpleOrder[] orders = this.socketsManager.signedRequest(account, (IKryoSerializable)request, Port.ADDITIONAL_INFO_LISTENER, SimpleOrder[].class);
-        return new ArrayList<Order>(this.brokerMapper.toClientModels(orders));
+        final SimpleOrder[] orders = this.socketsManager.signedRequest(account, request, Port.ADDITIONAL_INFO_LISTENER, SimpleOrder[].class);
+        return new ArrayList<>(this.brokerMapper.toClientModels(orders));
     }
     
     @Override
     public boolean placeOrder(final Order order, final Account account) {
-        final ResponseMessage response = this.socketsManager.signedRequest(account, (IKryoSerializable)this.brokerMapper.toBrokerModel(order), Port.ORDER_SERVER, ResponseMessage.class);
-        if (!ResponseMessage.SUCCESS.equals((Object)response)) {
+        final ResponseMessage response = this.socketsManager.signedRequest(account, this.brokerMapper.toBrokerModel(order), Port.ORDER_SERVER, ResponseMessage.class);
+        if (!ResponseMessage.SUCCESS.equals(response)) {
             throw new BrokerException(response.getCode(), response.getMessage());
         }
         return true;
@@ -121,21 +121,21 @@ public class DefaultBrokerConnector implements PrimaryBrokerConnector
     @Override
     public WithdrawalAccount getXemWithdrawalAccount(final Account account) {
         final WithdrawalAccountGetRequest request = new WithdrawalAccountGetRequest(WithdrawalAccountGetRequest.Type.XEM, 0);
-        final WithdrawAccount withdrawAccount = this.socketsManager.signedRequest(account, (IKryoSerializable)request, Port.ADDITIONAL_INFO_LISTENER, WithdrawAccount.class);
+        final WithdrawAccount withdrawAccount = this.socketsManager.signedRequest(account, request, Port.ADDITIONAL_INFO_LISTENER, WithdrawAccount.class);
         return (withdrawAccount == null) ? null : new WithdrawalAccount(new TradeAddress(withdrawAccount.getAccountData()), withdrawAccount.getId(), this.tradeInstrumentsProvider.getXem());
     }
     
     @Override
     public WithdrawalAccount getBtcWithdrawalAccount(final Account account) {
         final WithdrawalAccountGetRequest request = new WithdrawalAccountGetRequest(WithdrawalAccountGetRequest.Type.BTC, 0);
-        final WithdrawAccount withdrawAccount = this.socketsManager.signedRequest(account, (IKryoSerializable)request, Port.ADDITIONAL_INFO_LISTENER, WithdrawAccount.class);
+        final WithdrawAccount withdrawAccount = this.socketsManager.signedRequest(account, request, Port.ADDITIONAL_INFO_LISTENER, WithdrawAccount.class);
         return (withdrawAccount == null) ? null : new WithdrawalAccount(new TradeAddress(withdrawAccount.getAccountData()), withdrawAccount.getId(), this.tradeInstrumentsProvider.getBtc());
     }
     
     @Override
     public WithdrawalAccount getFiatWithdrawalAccount(final Account account, final int tradeInstrumentCode) {
         final WithdrawalAccountGetRequest request = new WithdrawalAccountGetRequest(WithdrawalAccountGetRequest.Type.BY_CODE, tradeInstrumentCode);
-        final WithdrawAccount withdrawAccount = this.socketsManager.signedRequest(account, (IKryoSerializable)request, Port.ADDITIONAL_INFO_LISTENER, WithdrawAccount.class);
+        final WithdrawAccount withdrawAccount = this.socketsManager.signedRequest(account, request, Port.ADDITIONAL_INFO_LISTENER, WithdrawAccount.class);
         if (withdrawAccount == null) {
             return null;
         }
@@ -145,27 +145,27 @@ public class DefaultBrokerConnector implements PrimaryBrokerConnector
     @Override
     public EscrowAccountTransmittersResponse[] getXemEscrowAccountTransmitters() {
         final EscrowAccountTransmittersRequest request = new EscrowAccountTransmittersRequest(EscrowAccountTransmittersRequest.Type.BY_CODE, this.tradeInstrumentsProvider.getXem().getCode());
-        return new EscrowAccountTransmittersResponse[] { this.socketsManager.request((IKryoSerializable)request, Port.ADDITIONAL_INFO_LISTENER, EscrowAccountTransmittersResponse.class) };
+        return new EscrowAccountTransmittersResponse[] { this.socketsManager.request(request, Port.ADDITIONAL_INFO_LISTENER, EscrowAccountTransmittersResponse.class) };
     }
     
     @Override
     public Collection<EscrowAccount> getXemEscrowBalances(final Account account, final Collection<DiscoveredPublicKey> xemPubKeys) {
         final String[] xemEscrowPublicKeyStrings = xemPubKeys.stream().map(discovered -> discovered.getPublicKey().toString()).toArray(String[]::new);
         final XemEscrowBalanceRequest request = new XemEscrowBalanceRequest(xemEscrowPublicKeyStrings);
-        final XemEscrowBalanceResponse[] balances = this.socketsManager.signedRequest(account, (IKryoSerializable)request, Port.ADDITIONAL_INFO_LISTENER, XemEscrowBalanceResponse[].class);
+        final XemEscrowBalanceResponse[] balances = this.socketsManager.signedRequest(account, request, Port.ADDITIONAL_INFO_LISTENER, XemEscrowBalanceResponse[].class);
         Arrays.stream(balances).forEach(balance -> balance.setCreationTimeMills(xemPubKeys.stream().filter(pk -> Address.fromPublicKey(pk.getPublicKey()).getEncoded().equals(balance.getAddress())).findFirst().get().getCreated().toEpochMilli()));
-        return Arrays.stream(balances).map((Function<? super XemEscrowBalanceResponse, EscrowAccount>)this.brokerMapper::toClientModel).collect(Collectors.toList());
+        return Arrays.stream(balances).map(this.brokerMapper::toClientModel).collect(Collectors.toList());
     }
     
     @Override
     public Collection<BtcEscrowAccount> getBtcEscrowBalances(final Account account, final Collection<TradeAddress> btcAddresses) {
         if (btcAddresses == null || btcAddresses.size() == 0) {
-            return new LinkedList<BtcEscrowAccount>();
+            return new LinkedList<>();
         }
         final String[] addresses = btcAddresses.stream().map((Function<? super TradeAddress, ?>)TradeAddress::toString).toArray(String[]::new);
         final BtcEscrowBalanceRequest request = new BtcEscrowBalanceRequest(addresses);
-        final BtcEscrowBalanceResponse[] responses = this.socketsManager.signedRequest(account, (IKryoSerializable)request, Port.ADDITIONAL_INFO_LISTENER, BtcEscrowBalanceResponse[].class);
-        return Arrays.stream(responses).map((Function<? super BtcEscrowBalanceResponse, BtcEscrowAccount>)this.brokerMapper::toClientModel).collect(Collectors.toList());
+        final BtcEscrowBalanceResponse[] responses = this.socketsManager.signedRequest(account, request, Port.ADDITIONAL_INFO_LISTENER, BtcEscrowBalanceResponse[].class);
+        return Arrays.stream(responses).map(this.brokerMapper::toClientModel).collect(Collectors.toList());
     }
     
     @Override
@@ -174,8 +174,8 @@ public class DefaultBrokerConnector implements PrimaryBrokerConnector
         final String[] accountNumbers = addressesMap.keySet().stream().toArray(String[]::new);
         final int[] instrumentCodes = addressesMap.values().stream().mapToInt(Integer::valueOf).toArray();
         final FiatEscrowBalanceRequest request = new FiatEscrowBalanceRequest(instrumentCodes, accountNumbers);
-        final FiatEscrowBalanceResponse[] balances = this.socketsManager.signedRequest(account, (IKryoSerializable)request, Port.ADDITIONAL_INFO_LISTENER, FiatEscrowBalanceResponse[].class);
-        final Collection<EscrowAccount> accounts = Arrays.stream(balances).map((Function<? super FiatEscrowBalanceResponse, EscrowAccount>)this.brokerMapper::toClientModel).collect(Collectors.toList());
+        final FiatEscrowBalanceResponse[] balances = this.socketsManager.signedRequest(account, request, Port.ADDITIONAL_INFO_LISTENER, FiatEscrowBalanceResponse[].class);
+        final Collection<EscrowAccount> accounts = Arrays.stream(balances).map(this.brokerMapper::toClientModel).collect(Collectors.toList());
         accounts.stream().forEach(balance -> balance.setCreated(addresses.stream().filter(discovered -> discovered.getAddress().equals(balance.getAddress())).findFirst().get().getCreated()));
         return accounts;
     }
@@ -183,8 +183,8 @@ public class DefaultBrokerConnector implements PrimaryBrokerConnector
     @Override
     public boolean withdraw(final int escrowAccountId, final UUID withdrawAccount, final BigDecimal amount, final Account account) {
         final WithdrawRequest request = new WithdrawRequest(escrowAccountId, amount, withdrawAccount);
-        final ResponseMessage response = this.socketsManager.signedRequest(account, (IKryoSerializable)request, Port.WITHDRAW_DEPOSIT_LISTENER, ResponseMessage.class);
-        if (ResponseMessage.SUCCESS.equals((Object)response)) {
+        final ResponseMessage response = this.socketsManager.signedRequest(account, request, Port.WITHDRAW_DEPOSIT_LISTENER, ResponseMessage.class);
+        if (ResponseMessage.SUCCESS.equals(response)) {
             return true;
         }
         throw new BrokerException(response.getCode(), response.getMessage());
@@ -198,26 +198,26 @@ public class DefaultBrokerConnector implements PrimaryBrokerConnector
     @Override
     public boolean hasUserDetails(final UUID userId) {
         final UserDetailsRequest request = new UserDetailsRequest(UserDetailsRequest.Type.EXIST, this.brokerMapper.getBlankUserDetails(userId));
-        return this.socketsManager.request((IKryoSerializable)request, Port.ADDITIONAL_INFO_LISTENER, Boolean.class);
+        return this.socketsManager.request(request, Port.ADDITIONAL_INFO_LISTENER, Boolean.class);
     }
     
     @Override
     public Collection<Country> getCountries() {
         final InfoRequest request = new InfoRequest(InfoRequest.Type.COUNTRIES);
-        return this.brokerMapper.toClientModel(this.socketsManager.request((IKryoSerializable)request, Port.ADDITIONAL_INFO_LISTENER, com.sharedobjects.client.Country[].class));
+        return this.brokerMapper.toClientModel(this.socketsManager.request(request, Port.ADDITIONAL_INFO_LISTENER, com.sharedobjects.client.Country[].class));
     }
     
     @Override
     public Collection<Candlestick> getCandlesticks(final int tradePairCode, final CandlestickStep step) {
         final CandlesticksRequest request = new CandlesticksRequest(step, tradePairCode);
-        final Candlestick[] response = this.socketsManager.request((IKryoSerializable)request, Port.ADDITIONAL_INFO_LISTENER, Candlestick[].class);
+        final Candlestick[] response = this.socketsManager.request(request, Port.ADDITIONAL_INFO_LISTENER, Candlestick[].class);
         return Arrays.asList(response);
     }
     
     @Override
     public boolean removeOrder(final UUID orderId, final Account account) {
-        final ResponseMessage response = this.socketsManager.signedRequest(account, (IKryoSerializable)new CancelOrderRequest(orderId), Port.ORDER_SERVER, ResponseMessage.class);
-        if (!ResponseMessage.SUCCESS.equals((Object)response)) {
+        final ResponseMessage response = this.socketsManager.signedRequest(account, new CancelOrderRequest(orderId), Port.ORDER_SERVER, ResponseMessage.class);
+        if (!ResponseMessage.SUCCESS.equals(response)) {
             throw new BrokerException(response.getCode(), response.getMessage());
         }
         return true;
@@ -225,20 +225,20 @@ public class DefaultBrokerConnector implements PrimaryBrokerConnector
     
     private com.sharedobjects.client.UserDetails getOriginalUserDetails(final Account account, final UUID userId) {
         final UserDetailsRequest request = new UserDetailsRequest(UserDetailsRequest.Type.GET, this.brokerMapper.getBlankUserDetails(userId));
-        return this.socketsManager.signedRequest(account, (IKryoSerializable)request, Port.ADDITIONAL_INFO_LISTENER, com.sharedobjects.client.UserDetails.class);
+        return this.socketsManager.signedRequest(account, request, Port.ADDITIONAL_INFO_LISTENER, com.sharedobjects.client.UserDetails.class);
     }
     
     @Override
     public Collection<KickstartReceiveAccount> getKickstartReceiveAccounts() {
         final InfoRequest infoRequest = new InfoRequest(InfoRequest.Type.KICKSTART_ACCOUNTS);
-        final com.sharedobjects.client.KickstartReceiveAccount[] accounts = this.socketsManager.request((IKryoSerializable)infoRequest, Port.ADDITIONAL_INFO_LISTENER, com.sharedobjects.client.KickstartReceiveAccount[].class);
-        return Arrays.stream(accounts).map((Function<? super com.sharedobjects.client.KickstartReceiveAccount, KickstartReceiveAccount>)this.brokerMapper::toClientModel).collect(Collectors.toList());
+        final com.sharedobjects.client.KickstartReceiveAccount[] accounts = this.socketsManager.request(infoRequest, Port.ADDITIONAL_INFO_LISTENER, com.sharedobjects.client.KickstartReceiveAccount[].class);
+        return Arrays.stream(accounts).map(this.brokerMapper::toClientModel).collect(Collectors.toList());
     }
     
     private Amount getResponseFee(final InfoRequest request) {
         try {
-            final Long fee = this.socketsManager.request((IKryoSerializable)request, Port.ADDITIONAL_INFO_LISTENER, Long.class);
-            return Amount.fromNem((long)fee);
+            final Long fee = this.socketsManager.request(request, Port.ADDITIONAL_INFO_LISTENER, Long.class);
+            return Amount.fromNem(fee);
         }
         catch (Exception ex) {
             ex.printStackTrace();
