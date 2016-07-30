@@ -14,7 +14,13 @@ import java.util.*;
 public class NemEscrowsLocator extends DefaultEscrowsLocator<EscrowAccount, DiscoveredPublicKey>
 {
     public NemEscrowsLocator(final PrimaryNisConnector nisConnector, final PrimaryBrokerConnector brokerConnector, final SecureRequestMapper secureRequestMapper, final TradingStorageServices tradingStorageServices) {
-        super(nisConnector, secureRequestMapper, tradingStorageServices, brokerConnector::getXemEscrowAccountTransmitters, (tradingStorage, discoveredPublicKeys) -> tradingStorage.addXemEscrowPublicKeys(discoveredPublicKeys), TradingStorage::getXemEscrowPublicKeys, brokerConnector::getXemEscrowBalances);
+        super(nisConnector,
+                secureRequestMapper,
+                tradingStorageServices,
+                brokerConnector::getXemEscrowAccountTransmitters,
+                (tradingStorage, discoveredPublicKeys) -> tradingStorage.addXemEscrowPublicKeys(discoveredPublicKeys),
+                TradingStorage::getXemEscrowPublicKeys,
+                brokerConnector::getXemEscrowBalances);
     }
     
     @Override
