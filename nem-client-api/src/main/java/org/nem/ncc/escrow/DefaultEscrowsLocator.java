@@ -37,8 +37,14 @@ public abstract class DefaultEscrowsLocator<TEscrow extends EscrowAccount, TDisc
     private final BiFunction<Account, Collection<TDiscoveredEntity>, Collection<TEscrow>> balancesSupplier;
     private final SecureRequestMapper secureRequestMapper;
     private final TradingStorageServices tradingStorageServices;
-    
-    public DefaultEscrowsLocator(final PrimaryNisConnector nisConnector, final SecureRequestMapper secureRequestMapper, final TradingStorageServices tradingStorageServices, final Supplier<EscrowAccountTransmittersResponse[]> transmittersResponseSupplier, final BiConsumer<TradingStorage, Collection<TDiscoveredEntity>> entitiesSaver, final Function<TradingStorage, Collection<TDiscoveredEntity>> entitiesSupplier, final BiFunction<Account, Collection<TDiscoveredEntity>, Collection<TEscrow>> balancesSupplier) {
+
+    public DefaultEscrowsLocator(final PrimaryNisConnector nisConnector,
+                                 final SecureRequestMapper secureRequestMapper,
+                                 final TradingStorageServices tradingStorageServices,
+                                 final Supplier<EscrowAccountTransmittersResponse[]> transmittersResponseSupplier,
+                                 final BiConsumer<TradingStorage, Collection<TDiscoveredEntity>> entitiesSaver,
+                                 final Function<TradingStorage, Collection<TDiscoveredEntity>> entitiesSupplier,
+                                 final BiFunction<Account, Collection<TDiscoveredEntity>, Collection<TEscrow>> balancesSupplier) {
         this.secureRequestMapper = secureRequestMapper;
         this.tradingStorageServices = tradingStorageServices;
         this.nisConnector = nisConnector;
