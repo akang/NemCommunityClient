@@ -377,7 +377,8 @@ this.changeTradingStorageName(bag);
 	private AddressBookNamePasswordPair createAddressNamePasswordPair(final WalletNamePasswordPair pair) {
 		return new AddressBookNamePasswordPair(pair.getName().toString(), pair.getPassword().toString());
 	}
-private TradingStorage createTradingStorage(final WalletNamePasswordPair pair) {
+
+	private TradingStorage createTradingStorage(final WalletNamePasswordPair pair) {
         return this.tradingStorageServices.create(this.createTradingStorageNamePasswordPair(pair));
     }
     
