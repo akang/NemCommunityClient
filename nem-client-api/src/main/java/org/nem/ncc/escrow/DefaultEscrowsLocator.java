@@ -1,23 +1,32 @@
 package org.nem.ncc.escrow;
 
-import org.nem.ncc.model.*;
-import com.sharedobjects.broker.*;
-import com.google.common.base.*;
-import java.util.function.*;
-import org.nem.ncc.services.*;
-import org.nem.ncc.trading.storage.*;
+import com.sharedobjects.broker.EscrowAccountTransmittersResponse;
+import com.sharedobjects.nis.NisTransactionHistoryHelper;
+import com.sharedobjects.nis.PrimaryNisConnector;
+import org.nem.core.crypto.PublicKey;
+import org.nem.core.model.Account;
+import org.nem.core.model.Address;
+import org.nem.core.model.Message;
+import org.nem.core.model.TransferTransaction;
+import org.nem.core.model.ncc.TransactionMetaDataPair;
+import org.nem.core.time.UnixTime;
+import org.nem.core.utils.StringEncoder;
+import org.nem.ncc.model.EscrowAccount;
+import org.nem.ncc.services.SecureRequestMapper;
+import org.nem.ncc.services.TradingStorageServices;
+import org.nem.ncc.trading.storage.DiscoveredEntity;
+import org.nem.ncc.trading.storage.TradingStorage;
+import org.nem.ncc.trading.storage.TradingStorageName;
 
+import java.time.Instant;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
-import java.util.stream.*;
-import org.nem.core.crypto.*;
-import com.sharedobjects.nis.*;
-import org.nem.core.model.ncc.*;
-import java.util.*;
-import org.nem.core.utils.*;
-import org.nem.core.time.*;
-import java.time.*;
-import org.nem.core.model.*;
+import java.util.stream.Collectors;
 
 public abstract class DefaultEscrowsLocator<TEscrow extends EscrowAccount, TDiscoveredEntity extends DiscoveredEntity>
 {
@@ -43,7 +52,7 @@ public abstract class DefaultEscrowsLocator<TEscrow extends EscrowAccount, TDisc
         final TradingStorage tradingStorage = this.tradingStorageServices.get(name);
         final Collection<TDiscoveredEntity> discoveredEntities = this.discoverEntities(tradingStorage);
         this.entitiesSaver.accept(tradingStorage, discoveredEntities);
-        final Collection<TDiscoveredEntity> fullList = (Collection<TDiscoveredEntity>)this.entitiesSupplier.apply(tradingStorage);
+        final Collection<TDiscoveredEntity> fullList = this.entitiesSupplier.apply(tradingStorage);
         return this.balancesSupplier.apply(this.secureRequestMapper.toTradingAccount(tradingStorage), fullList);
     }
     
@@ -57,20 +66,20 @@ public abstract class DefaultEscrowsLocator<TEscrow extends EscrowAccount, TDisc
         final Address to = Address.fromPublicKey(PublicKey.fromHexString(transmittersResponse.getToPubKey()));
         final int instrumentCode = transmittersResponse.getTradeInstumentCode();
         final Long stopAtTxId = tradingStorage.getLastScannedTxId(instrumentCode);
-        final List<TransactionMetaDataPair> publishTxs = (List<TransactionMetaDataPair>)NisTransactionHistoryHelper.getAllOutgoingTransactions(this.nisConnector, from, (Long)null, txPair -> this.isEscrowPublishTx(txPair, to), txPair -> ((TransactionMetaData)txPair.getMetaData()).getId().equals(stopAtTxId));
+        final List<TransactionMetaDataPair> publishTxs = NisTransactionHistoryHelper.getAllOutgoingTransactions(this.nisConnector, from, null, txPair -> this.isEscrowPublishTx(txPair, to), txPair -> txPair.getMetaData().getId().equals(stopAtTxId));
         if (publishTxs.size() > 0) {
-            final long lastScannedTxId = ((TransactionMetaData)publishTxs.get(publishTxs.size() - 1).getMetaData()).getId();
+            final long lastScannedTxId = publishTxs.get(publishTxs.size() - 1).getMetaData().getId();
             tradingStorage.setLastScannedTxId(instrumentCode, lastScannedTxId);
         }
         return publishTxs.stream().map(txPair -> this.extractEntity(txPair, to)).collect(Collectors.toList());
     }
     
     private TDiscoveredEntity extractEntity(final TransactionMetaDataPair trPair, final Address recipient) {
-        if (((Transaction)trPair.getEntity()).getType() != 257) {
+        if (trPair.getEntity().getType() != 257) {
             return null;
         }
         final TransferTransaction tr = (TransferTransaction)trPair.getEntity();
-        if (!recipient.equals((Object)tr.getRecipient().getAddress())) {
+        if (!recipient.equals(tr.getRecipient().getAddress())) {
             return null;
         }
         final Message message = tr.getMessage();
@@ -82,7 +91,7 @@ public abstract class DefaultEscrowsLocator<TEscrow extends EscrowAccount, TDisc
             return null;
         }
         final String messageData = StringEncoder.getString(payload);
-        final Instant created = Instant.ofEpochMilli(UnixTime.fromTimeInstant(((Transaction)trPair.getEntity()).getTimeStamp()).getMillis());
+        final Instant created = Instant.ofEpochMilli(UnixTime.fromTimeInstant(trPair.getEntity().getTimeStamp()).getMillis());
         return this.extractEntity(messageData, created);
     }
     
