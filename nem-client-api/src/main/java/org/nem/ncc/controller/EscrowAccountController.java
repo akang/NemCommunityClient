@@ -1,18 +1,30 @@
 package org.nem.ncc.controller;
 
-import org.nem.ncc.connector.*;
-import org.nem.ncc.services.*;
-import org.nem.core.serialization.*;
-import org.nem.ncc.controller.viewmodels.*;
+import org.nem.core.serialization.SerializableList;
+import org.nem.ncc.connector.PrimaryBrokerConnector;
+import org.nem.ncc.connector.TxBrokerConnector;
+import org.nem.ncc.controller.viewmodels.EscrowAccountViewModel;
+import org.nem.ncc.escrow.BtcEscrowsLocator;
+import org.nem.ncc.escrow.DefaultEscrowsLocator;
+import org.nem.ncc.escrow.EscrowMapper;
+import org.nem.ncc.escrow.FiatEscrowsLocator;
+import org.nem.ncc.escrow.NemEscrowsLocator;
+import org.nem.ncc.model.EscrowAccount;
+import org.nem.ncc.services.TradingStorageServices;
+import org.nem.ncc.trading.storage.DiscoveredPublicKey;
+import org.nem.ncc.trading.storage.TradingStorage;
+import org.nem.ncc.trading.storage.TradingStorageName;
+import org.nem.ncc.trading.storage.TradingStorageNamePasswordPair;
+import org.nem.ncc.wallet.WalletNamePasswordPair;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-import org.nem.ncc.model.*;
-import java.util.*;
-import java.util.stream.*;
-import org.nem.ncc.wallet.*;
-import org.nem.ncc.trading.storage.*;
-import org.nem.ncc.escrow.*;
-import org.nem.ncc.storable.entity.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Collection;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @RestController
 public class EscrowAccountController
@@ -52,7 +64,7 @@ public class EscrowAccountController
     @RequestMapping(value = { "/trading/accounts/escrow" }, method = { RequestMethod.POST })
     public SerializableList<EscrowAccountViewModel> getEscrowAccounts(@RequestBody final TradingStorageName name) {
         Stream<EscrowAccountViewModel> escrows = Stream.concat(this.getBtcEscrows(name).asCollection().stream(), this.getXemEscrows(name).asCollection().stream());
-        escrows = Stream.concat((Stream<? extends EscrowAccountViewModel>)escrows, this.getFiatEscrows(name).asCollection().stream());
+        escrows = Stream.concat(escrows, this.getFiatEscrows(name).asCollection().stream());
         return (SerializableList<EscrowAccountViewModel>)new SerializableList((Collection)escrows.collect(Collectors.toList()));
     }
     
@@ -60,6 +72,6 @@ public class EscrowAccountController
     public void requestNewBtcEscrowAccount(@RequestBody final TradingStorageNamePasswordPair pair) {
         final WalletNamePasswordPair walletPair = pair.toWalletNamePasswordPair();
         final TradingStorage tradingStorage = this.tradingStorageServices.open(pair);
-        this.txBrokerConnector.requestNewBtcEscrowAccount(((StorableEntityNamePasswordPair<WalletName, WalletPassword, WalletNamePasswordPair>)walletPair).getName(), tradingStorage.getTradingAccountAddress(), ((StorableEntityNamePasswordPair<WalletName, WalletPassword, WalletNamePasswordPair>)walletPair).getPassword());
+        this.txBrokerConnector.requestNewBtcEscrowAccount(walletPair.getName(), tradingStorage.getTradingAccountAddress(), walletPair.getPassword());
     }
 }
