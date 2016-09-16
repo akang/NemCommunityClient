@@ -22,6 +22,7 @@ function(languages,
     var NccRactive = Ractive.extend({
         el: document.body,
         template: '#template',
+        enablePolling: false, //if true, all continuous polling javascript functions will be enabled. The makes the app updates appear automatically.
         components: {
             errorModal: NccModal,
             yikesModal: NccModal,
@@ -592,7 +593,7 @@ function(languages,
                     clearInterval(interval);
                 }
             };
-            interval = setInterval(checkBroker, 3000);
+            //interval = setInterval(checkBroker, 3000);
             checkBroker();
         },
 

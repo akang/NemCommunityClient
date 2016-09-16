@@ -113,8 +113,9 @@ define(['ncc'], function(ncc) {
         });
     };
     ncc.refreshVersionStatus();
-    setInterval(ncc.refreshVersionStatus, 10000);
-
+    if(ncc.enablePolling) {
+        setInterval(ncc.refreshVersionStatus, 10000);
+    }
     ncc.refreshNccStatus = function(complete) {
         var success = false;
         ncc.getRequest('status',
@@ -135,8 +136,9 @@ define(['ncc'], function(ncc) {
         );
     };
     ncc.refreshNccStatus();
-    setInterval(ncc.refreshNccStatus, 3000);
-
+    if(ncc.enablePolling) {
+        setInterval(ncc.refreshNccStatus, 3000);
+    }
     ncc.refreshNisStatus = function(complete) {
         var success = false;
         ncc.getRequest('node/status',
@@ -159,8 +161,9 @@ define(['ncc'], function(ncc) {
         );
     };
     ncc.refreshNisStatus();
-    setInterval(ncc.refreshNisStatus, 3000);
-
+    if(ncc.enablePolling) {
+        setInterval(ncc.refreshNisStatus, 3000);
+    }
     ncc.refreshBrokerStatus = function(complete) {
         var success = false;
         ncc.getRequest('broker/info',
@@ -184,7 +187,9 @@ define(['ncc'], function(ncc) {
     };
 
     ncc.refreshBrokerStatus(function iteratee() {
-        setTimeout(ncc.refreshBrokerStatus.bind(ncc, iteratee), 10000);
+        if(ncc.enablePolling) {
+            setTimeout(ncc.refreshBrokerStatus.bind(ncc, iteratee), 10000);
+        }
     });
 
     ncc.refreshAppStatus = function(complete) {
@@ -222,7 +227,9 @@ define(['ncc'], function(ncc) {
                 },
                 {
                     complete: function() {
-                        t = setTimeout(ncc.refreshNisInfo, waitTime);
+                        if(ncc.enablePolling) {
+                            t = setTimeout(ncc.refreshNisInfo, waitTime);
+                        }
                     }
                 },
                 true
@@ -244,5 +251,7 @@ define(['ncc'], function(ncc) {
         }, null, true);
     };
     ncc.refreshChainHeight();
-    setInterval(ncc.refreshChainHeight, 3000);
+    if(ncc.enablePolling) {
+        setInterval(ncc.refreshChainHeight, 3000);
+    }
 });

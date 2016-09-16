@@ -223,10 +223,13 @@ define(['jquery', 'ncc', 'NccLayout', 'Utils', 'Pager', 'TradingOperationType'],
                 this.loadEscrowAccounts();
                 this.loadTradingOperations('reload');
 
-                this.local.intervalJobs.push(setInterval(this.loadTradingOperations.bind(this, 'refresh'),
-                    this.local.autoRefreshInterval));
-                this.local.intervalJobs.push(setInterval(this.loadEscrowAccounts.bind(this),
-                    this.local.autoRefreshInterval));
+                if(ncc.enablePolling) {
+
+                     this.local.intervalJobs.push(setInterval(this.loadTradingOperations.bind(this, 'refresh'),
+                     this.local.autoRefreshInterval));
+                     this.local.intervalJobs.push(setInterval(this.loadEscrowAccounts.bind(this),
+                     this.local.autoRefreshInterval));
+                }
             }.bind(this));
         },
         fillEscrowAccounts: function() {

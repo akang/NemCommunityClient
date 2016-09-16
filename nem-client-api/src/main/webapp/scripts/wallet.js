@@ -1459,10 +1459,14 @@ define(['jquery', 'ncc', 'NccLayout', 'Utils', 'TransactionType', 'filesaver', '
                 })
             };
 
-            local.intervalJobs.push(setInterval(ncc.refreshAccount.bind(null, null, null, true), local.autoRefreshInterval));
-            local.intervalJobs.push(setInterval(ncc.refreshTradingAccounts.bind(null, null), local.autoRefreshInterval));
-            local.intervalJobs.push(setInterval(ncc.refreshBankAccounts.bind(null, null, true), local.autoRefreshInterval));
-
+            if(ncc.enablePolling) {
+                local.intervalJobs.push(setInterval(ncc.refreshAccount.bind(null, null, null, true),
+                                                    local.autoRefreshInterval));
+                local.intervalJobs.push(setInterval(ncc.refreshTradingAccounts.bind(null, null),
+                                                    local.autoRefreshInterval));
+                local.intervalJobs.push(setInterval(ncc.refreshBankAccounts.bind(null, null, true),
+                                                    local.autoRefreshInterval));
+            }
             ncc.refreshAppStatus(function() {
                 if (ncc.get('settings.firstStart') === 0 || ncc.get('settings.firstStart') === 1) {
                     ncc.showMessage(
