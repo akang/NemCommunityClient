@@ -269,7 +269,7 @@ public class DefaultBrokerConnector implements PrimaryBrokerConnector
     @Override
     public Account requestBrokerAccount() {
         final InfoRequest request = new InfoRequest(InfoRequest.Type.BROKER_XEM_PUBLIC_KEY);
-        final String publicKeyStr = this.socketsManager.request((IKryoSerializable)request, Port.ADDITIONAL_INFO_LISTENER, String.class);
+        final String publicKeyStr = this.socketsManager.request(request, Port.ADDITIONAL_INFO_LISTENER, String.class);
         final PublicKey publicKey = PublicKey.fromHexString(publicKeyStr);
         final KeyPair keyPair = new KeyPair(publicKey);
         return new Account(keyPair);
