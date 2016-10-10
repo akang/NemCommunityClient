@@ -54,11 +54,15 @@ public class BtcEscrowsLocator
     }
     
     public Collection<BtcEscrowAccount> getEscrowBalances(final TradingStorageName name) {
+
         final TradingStorage tradingStorage = this.tradingStorageServices.get(name);
+
         final Pair<Collection<DiscoveredAddress>, Integer> discoveredAddresses = this.discoverAddresses(tradingStorage);
         tradingStorage.addBtcEscrowAddresses(discoveredAddresses.getLeft());
+
         final Collection<DiscoveredAddress> fullList = tradingStorage.getBtcEscrowAddresses();
         final Collection<BtcEscrowAccount> escrowBalances = this.getBalances(this.secureRequestMapper.toTradingAccount(tradingStorage), fullList);
+
         escrowBalances.addAll(this.getEmptyAccounts(discoveredAddresses.getRight(), tradingStorage.getTradingAccountAddress()));
         return escrowBalances;
     }
@@ -104,17 +108,32 @@ public class BtcEscrowsLocator
     }
     
     private Pair<Collection<DiscoveredAddress>, Integer> discoverAddresses(final TradingStorage tradingStorage) {
+
+        //get the current wallet's trading account
         final Account tradingAccount = this.secureRequestMapper.toTradingAccount(tradingStorage);
+
+        //trading instrument = BTC
         final TradeInstrument btc = this.instrumentsProvider.getBtc();
+
+        //get the Broker's BTC Account
         final Collection<Address> brokerAddresses = Arrays.asList(this.brokerConnector.requestBrokerAccount().getAddress());
+
+        //get all transaction requests made against the Broker's address (ie read direct from the trading account local storage)
         final List<TransactionMetaDataPair> requests = this.getBtcEscrowRequests(tradingAccount.getAddress(), brokerAddresses, tradingStorage.getLastScannedTxId(btc.getCode()));
+
+        //get all transaction responses made against the Broker's address (ie read direct from the trading account local storage)
         final List<TransactionMetaDataPair> responses = this.getBtcEscrowResponses(tradingAccount, brokerAddresses, tradingStorage.getLastScannedTxId(btc.getCode()));
 
+
+        //get BTC Escrow Address associated with the current user's trading account
         final List<TradeAddress> processedAddresses = tradingStorage.getBtcEscrowAddresses().stream()
                                                                                             .map(DiscoveredAddress::getAddress)
                                                                                             .collect(Collectors.toList());
 
+        //
         final List<ImmutablePair<TransactionMetaDataPair, DiscoveredAddress>> matched = this.btcEscrowsServices.match(tradingAccount, requests, responses, processedAddresses);
+
+
 
         this.btcEscrowsServices.getLastToScanTx(matched)
                                 .ifPresent(txId -> tradingStorage.setLastScannedTxId(btc.getCode(), txId));
