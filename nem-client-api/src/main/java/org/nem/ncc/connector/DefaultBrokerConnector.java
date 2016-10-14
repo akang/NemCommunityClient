@@ -99,7 +99,15 @@ public class DefaultBrokerConnector implements PrimaryBrokerConnector
     @Override
     public Collection<TradeHistoryTransaction> getTradeHistoryTransactions(final int tradePairCode, final int count, final int skip) {
         final TradeHistoryRequest request = new TradeHistoryRequest(tradePairCode, count, skip);
-        return this.brokerMapper.toClientModel(this.socketsManager.request(request, Port.ADDITIONAL_INFO_LISTENER, TradeHistoryTransaction[].class));
+
+        try{
+            TradeHistoryTransaction[] transactions = this.socketsManager.request(request, Port.ADDITIONAL_INFO_LISTENER, TradeHistoryTransaction[].class);
+            Collection<TradeHistoryTransaction> result = this.brokerMapper.toClientModel(transactions);
+            return result;
+        }catch (Exception ex){
+            logger.error(ex.getMessage());
+            return Collections.<TradeHistoryTransaction>emptyList();
+        }
     }
     
     @Override

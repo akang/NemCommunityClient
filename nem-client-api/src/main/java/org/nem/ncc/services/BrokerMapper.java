@@ -105,6 +105,8 @@ public class BrokerMapper
     }
 
     public Collection<org.nem.ncc.model.TradeHistoryTransaction> toClientModel(final TradeHistoryTransaction[] transactions) {
+        if(transactions == null)
+            return Collections.<TradeHistoryTransaction>emptyList();
         return Arrays.stream(transactions).map((Function<? super TradeHistoryTransaction, org.nem.ncc.model.TradeHistoryTransaction>)this::toClientModel).collect(Collectors.toList());
     }
 
